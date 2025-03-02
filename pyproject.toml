@@ -28,7 +28,7 @@ dev = [
 
 [project.urls]
 bugs = "https://github.com/Tagbliton/my_nodes/issues"
-homepage = "https://github.com/Tagbliton/my_nodes"
+homepage = "https://github.com/Tagbliton/ComfyUI-my-nodes"
 
 
 [tool.comfy]
