@@ -642,15 +642,30 @@ class choice:
 #宽高比预设
 class size:
 
+    PRESETS = {
+        "16:9": (1280, 720),
+        "9:16": (720, 1280),
+        "4:3": (1000, 750),
+        "3:4": (750, 1000),
+        "2:1": (1000, 500),
+        "1:2": (500, 1000),
+        "自定义": (1024, 1024)  # 默认值
+    }
+
+
+
     def __init__(self):
         pass
 
     @classmethod
     def INPUT_TYPES(s):
+
+        presets = list(s.PRESETS.keys())
+        presets.insert(0, "自定义")  # 确保自定义选项在首位
         return {
             "required": {
-                "mode": (["自定义", "16:9", "9:16", "4:3", "3:4", "2:1", "1:2"],),
-                "size":("STRING", {"multiline": False, "default": "1024*1024", "lazy": True}),
+                "mode": (presets, {"default": "自定义"}),
+                "size":("STRING", {"multiline": False, "default": "1024*1024", "tooltip": "输入格式：宽度*高度（例如：800*600）", "lazy": True}),
             },
         }
 
@@ -666,39 +681,22 @@ class size:
     CATEGORY = "我的节点"
 
     def action(self, mode, size):
+        # 使用预设值或解析自定义尺寸
+        if mode != "自定义":
+            return self.PRESETS[mode]
 
-        #设置默认宽高
-        width = 1024
-        height = 1024
+        try:
+            width_str, height_str = size.replace(' ', '').split('*')
+            width = int(width_str)
+            height = int(height_str)
 
-        if mode == "自定义":
-            width, height = size.split('*')
-            width = int(width)
-            height = int(height)
+            # 添加合理性检查
+            if width <= 0 or height <= 0:
+                raise ValueError("尺寸必须为正值")
 
-        elif mode == "16:9":
-            width = 1280
-            height = 720
-
-        elif mode == "9:16":
-            width = 720
-            height = 1280
-
-        elif mode == "4:3":
-            width = 1000
-            height = 750
-
-        elif mode == "3:4":
-            width = 750
-            height = 1000
-
-        elif mode == "2:1":
-            width = 1000
-            height = 500
-
-        elif mode == "1:2":
-            width = 500
-            height = 1000
+        except (ValueError, AttributeError) as e:
+            print(f"⚠️ 无效尺寸输入，已使用默认值 1024x1024。错误详情：{str(e)}")
+            width, height = self.PRESETS["自定义"]
 
 
         return (width, height, )
