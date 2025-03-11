@@ -266,9 +266,9 @@ class AI101:
                 "api_key": ("STRING", {"multiline": False, "default": "", "lazy": True}),
                 "base_url": ("STRING", {"multiline": False, "default": "","lazy": True}),
                 "model": ("STRING", {"multiline": False, "default": "","lazy": True}),
-                "temperature": ("FLOAT", {"default": 1.3,"min": 0.0,"max": 2,"step": 0.1,"round": False, "display": "number","lazy": False}),
+                "temperature": ("FLOAT", {"default": 1.3,"min": 0.0,"max": 2,"step": 0.1,"round": False, "display": "number", "tooltip": "较高的值将使输出更加随机，而较低的值将使其更加集中和确定性", "lazy": False}),
                 "mode": (["AI翻译", "AI翻译+润色", "自定义", "无"],),
-                "role": ("STRING", {"multiline": True, "default": "自定义AI","lazy": True}),
+                "role": ("STRING", {"multiline": True, "default": "自定义AI", "tooltip": "输入自定义AI角色", "lazy": True}),
                 "text": ("STRING", {"multiline": True, "default": "","lazy": True}),
             },
         }
@@ -394,10 +394,12 @@ class AI200:
                 "api_key": ("STRING", {"multiline": False, "default": "", "lazy": True}),
                 "model": (["flux-schnell", "flux-dev", "flux-merged"],),
                 "seed":("INT", {"default": 0, "min": 0, "max": 4294967290}),
-                "steps":("INT", {"default": 30, "min": 0, "max": 100,"step": 1,"round": False, "display": "number","lazy": False}),
-                "guidance":("FLOAT", {"default": 3.5, "min": 0, "max": 100, "step": 0.1,"round": False, "display": "number","lazy": False}),
+                "steps":("INT", {"default": 30, "min": 0, "max": 100,"step": 1,"round": False, "display": "number", "tooltip": "图片生成的推理步数，如果不提供，则默认为30。 flux-schnell 模型官方默认 steps 为4，flux-dev 模型官方默认 steps 为50。", "lazy": False}),
+                "guidance":("FLOAT", {"default": 3.5, "min": 0, "max": 100, "step": 0.1,"round": False, "display": "number", "tooltip": "指导度量值，用于在图像生成过程中调整模型的创造性与文本指导的紧密度。较高的值会使得生成的图像更忠于文本提示，但可能减少多样性；较低的值则允许更多创造性，增加图像变化。默认值为3.5。", "lazy": False}),
                 "size": (["1024*1024", "512*1024", "768*512", "768*1024", "1024*576", "576*1024"],),
-                "offload":(["False", "True"],),
+                "offload":(["False", "True"], {
+                    "default": "False",
+                    "tooltip": "一个布尔值，表示是否在采样过程中将部分计算密集型组件临时从GPU卸载到CPU，以减轻内存压力或提升效率。如果您的系统资源有限或希望加速采样过程，可以启用此选项，默认为False。", } ),
                 "prompt": ("STRING", {"multiline": True, "default": "","lazy": True}),
             },
         }
