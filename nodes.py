@@ -124,9 +124,9 @@ def encode_image(image):
 
 
 #Qwen多模态接口
-def Qwen(api_key, base_url, model, language, image):
+def Qwen1(api_key, base_url, model, role, image, text):
 
-    #输入 Base64 编码的本地文件
+    # 输入 Base64 编码的本地文件
     base64_image = encode_image(image)
 
     client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
@@ -134,21 +134,52 @@ def Qwen(api_key, base_url, model, language, image):
     completion = client.chat.completions.create(
         model=model,
         messages=[
-            {
-                "role": "system",
-                "content": [{"type": "text", "text": "You are a helpful assistant."}],
-            },
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "image_url",
-                        "image_url": {"url": f"data:image/png;base64,{base64_image}"},
-                    },
-                    {"type": "text", "text": f"提示词反推，直接描述，无需引导句，{language}"},
-                ],
-            },
-        ],
+                {
+                    "role": "system",
+                    "content": [{"type": "text", "text": role}],
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{base64_image}"}},
+                        {"type": "text", "text": text},
+                    ],
+                },
+            ],
+        # 设置输出数据的模态，当前支持["text"]
+        modalities=["text"],
+        # stream 必须设置为 True，否则会报错
+        stream=True,
+        stream_options={
+            "include_usage": True
+        }
+    )
+
+
+
+    #流式输出结果合并
+    result = []  # 初始化结果列表
+
+    for chunk in completion:
+        if chunk.choices:
+            delta = chunk.choices[0].delta
+            # 提取有效内容并添加到结果列表
+            if delta.content not in (None, ''):
+                result.append(delta.content)
+
+    # 合并所有内容片段
+    output = ''.join(result)
+
+    return output
+
+def Qwen2(api_key, base_url, model, role, text):
+
+    client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
+
+    completion = client.chat.completions.create(
+        model=model,
+        messages=[{"role": "system", "content": role},
+                       {"role": "user", "content": text},],
         # 设置输出数据的模态，当前支持["text"]
         modalities=["text"],
         # stream 必须设置为 True，否则会报错
@@ -187,9 +218,15 @@ def DelImg(image):
     else:
         pass
 
-
-
-
+#提前定义AI角色
+role1 = "你是一个中英文翻译专家，可以将用户输入的文本翻译成英文。确保翻译结果符合中英文语言习惯，并考虑到某些词语的文化内涵和地区差异。只回答英文，不回答任何额外的解释。"
+role2 = '''你是一个精通中英文的自然语言大师，可以将用户输入的文本翻译成英文，并在保持原文句意不变的情况下，根据文生图提示词的规则对文本进行润色，只回答润色后的英文结果，不回答任何额外的解释。
+                示例1：
+                原文：一个孤独的树在夜晚的月光下。
+                翻译：A solitary tree stands under the soft glow of the moon on a tranquil night. The silvery moonlight bathes the landscape, casting long, gentle shadows and highlighting the tree's lone figure against the dark sky.
+                示例2：
+                原文：The quick brown fox jumps over the lazy dog.
+                翻译：A swift brown fox, elegantly leaping over a lazy dog, in an open field, under a clear blue sky.'''
 
 
 #AI多模态模型
@@ -203,14 +240,17 @@ class AI100:
 
         return {
             "required": {
-                "image":("IMAGE",),
 
                 "api_key": ("STRING", {"multiline": False, "default": "", "lazy": True}),
-                "base_url": ("STRING",{"multiline": False, "default": "","lazy": True}),
+                "base_url": ("STRING", {"multiline": False, "default": "","lazy": True}),
                 "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-01-19"],),
+                "mode":(["AI翻译", "AI翻译+润色", "提示词反推", "自定义", "无"],),
 
-                "language":(["中文", "英文"],),
-
+            },
+            "optional": {
+                "image": ("IMAGE",),
+                "role": ("STRING", {"multiline": True, "default": "自定义AI", "tooltip": "输入自定义AI角色", "lazy": True}),
+                "text": ("STRING", {"multiline": True, "default": "", "lazy": True}),
             },
         }
 
@@ -227,26 +267,48 @@ class AI100:
 
 
 
-    def action(sefl, api_key, base_url, model, language, image):
-
-        #tensor张量转PIL图片
-        image = TensorToPil(image)
+    def action(sefl, api_key, base_url, model, mode, role, text ,image=None):
 
 
-        # 保存图片
-        image.save("temp.png")
-        image = "temp.png"
+        if mode == "提示词反推":
 
-        if language == "中文":
-            language = "请输出中文"
+            role = "You are a helpful assistant."
+            text = "提示词反推，直接描述，无需引导句，请输出英文"
+
+
+            #tensor张量转PIL图片
+            image = TensorToPil(image)
+
+            # 保存图片
+            image.save("temp.png")
+            image = "temp.png"
+
+
+
+
+            text = Qwen1(api_key, base_url, model, role, image, text)
+
+            # 删除图片
+            DelImg(image)
+
+
+
+        elif mode == "AI翻译":
+            role = role1
+
+            text = Qwen2(api_key, base_url, model, role, text)
+
+        elif mode == "AI翻译+润色":
+            role = role2
+
+            text = Qwen2(api_key, base_url, model, role, text)
+
+        elif mode == "自定义":
+
+            text = Qwen2(api_key, base_url, model, role, text)
+
         else:
-            language = "请输出英文"
-
-
-        text = Qwen(api_key, base_url, model, language, image)
-
-        # 删除图片
-        DelImg(image)
+            text = text
 
         return (text,)
 
@@ -289,15 +351,9 @@ class AI101:
             text = text
         else:
             if mode == "AI翻译":
-                role = "你是一个中英文翻译专家，可以将用户输入的文本翻译成英文。确保翻译结果符合中英文语言习惯，并考虑到某些词语的文化内涵和地区差异。只回答英文，不回答任何额外的解释。"
+                role = role1
             elif mode == "AI翻译+润色":
-                role = '''你是一个精通中英文的自然语言大师，可以将用户输入的文本翻译成英文，并在保持原文句意不变的情况下，根据文生图提示词的规则对文本进行润色，只回答润色后的英文结果，不回答任何额外的解释。
-                示例1：
-                原文：一个孤独的树在夜晚的月光下。
-                翻译：A solitary tree stands under the soft glow of the moon on a tranquil night. The silvery moonlight bathes the landscape, casting long, gentle shadows and highlighting the tree's lone figure against the dark sky.
-                示例2：
-                原文：The quick brown fox jumps over the lazy dog.
-                翻译：A swift brown fox, elegantly leaping over a lazy dog, in an open field, under a clear blue sky.'''
+                role = role2
             else:
                 role = f"{role}"
 
@@ -322,7 +378,7 @@ class AI102:
                 "image": ("IMAGE",),
                 "api_key": ("STRING", {"multiline": False, "default": "", "lazy": True}),
                 "base_url": ("STRING", {"multiline": False, "default": "", "lazy": True}),
-                "model": (["qwen2.5-vl-7b-instruct", "qwen2.5-vl-72b-instruct ", "qvq-72b-preview"],),
+                "model": (["qwen2.5-vl-7b-instruct", "qwen2.5-vl-72b-instruct", "qvq-72b-preview"],),
                 "mode": (["默认", "简短", "详细"],),
                 "language": (["中文", "英文"],),
 
@@ -362,21 +418,6 @@ class AI102:
         DelImg(image)
 
         return (text,)
-
-
-# NODE_CLASS_MAPPINGS = {"多模态AI助手": AI100,
-#                        "AI助手": AI101,
-#                        "AI图片理解": AI102,}
-# NODE_DISPLAY_NAME_MAPPINGS = {"多模态AI助手": "多模态AI助手",
-#                               "AI助手": "AI助手",
-#                               "AI图片理解": "AI图片理解",}
-
-
-
-
-
-
-
 
 #Flux助手高级
 class AI200:
@@ -449,7 +490,6 @@ class AI200:
 
         return (tensor, )
 
-
 #Flux助手简易
 class AI201:
 
@@ -516,23 +556,6 @@ class AI201:
                   (rsp.status_code, rsp.code, rsp.message))
 
         return (tensor, )
-
-
-
-# NODE_CLASS_MAPPINGS = {"Flux助手(高级)": AI200,
-#                        "Flux助手(简易)": AI201,}
-# NODE_DISPLAY_NAME_MAPPINGS = {"Flux助手(高级)": "Flux助手(高级)",
-#                               "Flux助手(简易)": "Flux助手(简易)",}
-
-
-
-
-
-
-
-
-
-
 
 #比较分流器
 class comparator:
