@@ -7,7 +7,6 @@ import torch
 import io
 from PIL import Image
 from http import HTTPStatus
-from Tools.demo.sortvisu import steps
 from dashscope import ImageSynthesis
 from .TensorAndPil import TensorToPil, PilToTensor
 import requests
