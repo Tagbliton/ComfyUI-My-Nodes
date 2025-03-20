@@ -1,4 +1,4 @@
-# my-nodes
+# My-Nodes
 
 AI助手
 测试
