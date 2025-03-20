@@ -33,8 +33,8 @@ Flux助手
 
 
 
-<img src="assets/list.png" width="400" alt="自定义宽度" />
-<img src="assets/1.png" width="400" alt="自定义宽度" />
-<img src="assets/2.png" width="400" alt="自定义宽度" />
-<img src="assets/3.png" width="400" alt="自定义宽度" />
-<img src="assets/4.png" width="400" alt="自定义宽度" />
+<img src="IMG/list.png" width="400" alt="自定义宽度" />
+<img src="IMG/1.png" width="400" alt="自定义宽度" />
+<img src="IMG/2.png" width="400" alt="自定义宽度" />
+<img src="IMG/3.png" width="400" alt="自定义宽度" />
+<img src="IMG/4.png" width="400" alt="自定义宽度" />
