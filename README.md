@@ -16,25 +16,24 @@ AI助手
 
 
 ## 📑 列表
+- 列表
+<img src="IMG/list.png" width="800" alt="自定义宽度" />
 
-![列表](IMG/list.png)
+- 多模态AI助手
+<img src="IMG/1.png" width="800" alt="自定义宽度" />
 
-多模态AI助手
-![多模态AI助手](IMG/1.png)
+- AI助手
+<img src="IMG/2.png" width="800" alt="自定义宽度" />
 
-AI助手
-![AI助手](IMG/2.png)
+- AI图片理解
+<img src="IMG/3.png" width="800" alt="自定义宽度" />
 
-AI图片理解
-![AI图片理解](IMG/3.png)
-
-Flux助手
-![Flux助手](IMG/4.png)
+- Flux助手
+<img src="IMG/4.png" width="800" alt="自定义宽度" />
 
 
 
-<img src="IMG/list.png" width="400" alt="自定义宽度" />
-<img src="IMG/1.png" width="400" alt="自定义宽度" />
-<img src="IMG/2.png" width="400" alt="自定义宽度" />
-<img src="IMG/3.png" width="400" alt="自定义宽度" />
-<img src="IMG/4.png" width="400" alt="自定义宽度" />
+
+
+
+
