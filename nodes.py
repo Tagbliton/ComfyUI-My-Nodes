@@ -24,6 +24,10 @@ class AlwaysEqualProxy(str):
 
 any_type = AlwaysEqualProxy("*")
 
+#  Base64 编码格式
+def encode_file(file):
+    with open(file, "rb") as file:
+        return base64.b64encode(file.read()).decode("utf-8")
 
 
 #openai接口
@@ -49,7 +53,7 @@ def openai(api_key, base_url, model, temperature, role, text):
 def openaiVL(api_key, base_url, model, text, image):
 
     #输入 Base64 编码的本地文件
-    base64_image = encode_image(image)
+    base64_image = encode_file(image)
 
     client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
 
@@ -80,17 +84,50 @@ def openaiVL(api_key, base_url, model, text, image):
     return result
 
 
-#  Base64 编码格式
-def encode_image(image):
-    with open(image, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode("utf-8")
 
 
 #Qwen多模态接口
-def Qwen1(api_key, base_url, model, role, image, text):
+
+#文本
+def Qwen1(api_key, base_url, model, role, text):
+
+    client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
+
+    completion = client.chat.completions.create(
+        model=model,
+        messages=[{"role": "system", "content": role},
+                       {"role": "user", "content": text},],
+        # 设置输出数据的模态，当前支持["text"]
+        modalities=["text"],
+        # stream 必须设置为 True，否则会报错
+        stream=True,
+        stream_options={
+            "include_usage": True
+        }
+    )
+
+
+
+    #流式输出结果合并
+    result = []  # 初始化结果列表
+
+    for chunk in completion:
+        if chunk.choices:
+            delta = chunk.choices[0].delta
+            # 提取有效内容并添加到结果列表
+            if delta.content not in (None, ''):
+                result.append(delta.content)
+
+    # 合并所有内容片段
+    output = ''.join(result)
+
+    return output
+
+#图片
+def Qwen2(api_key, base_url, model, role, image, text):
 
     # 输入 Base64 编码的本地文件
-    base64_image = encode_image(image)
+    base64_image = encode_file(image)
 
     client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
 
@@ -135,14 +172,29 @@ def Qwen1(api_key, base_url, model, role, image, text):
 
     return output
 
-def Qwen2(api_key, base_url, model, role, text):
+#音频
+def Qwen3(api_key, base_url, model, role, audio, text):
+
+    # 输入 Base64 编码的本地文件
+    base64_audio = encode_file(audio)
 
     client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
 
     completion = client.chat.completions.create(
         model=model,
-        messages=[{"role": "system", "content": role},
-                       {"role": "user", "content": text},],
+        messages=[
+                {
+                    "role": "system",
+                    "content": [{"type": "text", "text": role}],
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "input_audio", "input_audio": {"data": f"data:;base64,{base64_audio}","format": "mp3",}},
+                        {"type": "text", "text": text},
+                    ],
+                },
+            ],
         # 设置输出数据的模态，当前支持["text"]
         modalities=["text"],
         # stream 必须设置为 True，否则会报错
@@ -168,6 +220,56 @@ def Qwen2(api_key, base_url, model, role, text):
     output = ''.join(result)
 
     return output
+
+#视频
+def Qwen4(api_key, base_url, model, role, video, text):
+
+    # 输入 Base64 编码的本地文件
+    base64_video = encode_file(video)
+
+    client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
+
+    completion = client.chat.completions.create(
+        model=model,
+        messages=[
+                {
+                    "role": "system",
+                    "content": [{"type": "text", "text": role}],
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "video_url", "video_url": {"url": f"data:;base64,{base64_video}"}},
+                        {"type": "text", "text": text},
+                    ],
+                },
+            ],
+        # 设置输出数据的模态，当前支持["text"]
+        modalities=["text"],
+        # stream 必须设置为 True，否则会报错
+        stream=True,
+        stream_options={
+            "include_usage": True
+        }
+    )
+
+
+
+    #流式输出结果合并
+    result = []  # 初始化结果列表
+
+    for chunk in completion:
+        if chunk.choices:
+            delta = chunk.choices[0].delta
+            # 提取有效内容并添加到结果列表
+            if delta.content not in (None, ''):
+                result.append(delta.content)
+
+    # 合并所有内容片段
+    output = ''.join(result)
+
+    return output
+
 
 #删除文件
 def DelImg(image):
@@ -212,7 +314,7 @@ class AI100:
                 "base_url": ("STRING", {"multiline": False, "default": "","lazy": True}),
                 "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-01-19"],),
                 "mode":(["AI翻译", "AI翻译+润色", "提示词反推", "自定义", "无"],),
-                "out_language":(["英文", "中文"], {"tooltip": "输出语言"}),
+                "out_language":(["英文", "中文"], {"tooltip": "输出语言，如果模式为自定义则不会发生作用"}),
 
             },
             "optional": {
@@ -254,7 +356,7 @@ class AI100:
 
 
 
-            text = Qwen1(api_key, base_url, model, role, image, text)
+            text = Qwen2(api_key, base_url, model, role, image, text)
 
             # 删除图片
             DelImg(image)
@@ -264,16 +366,16 @@ class AI100:
         elif mode == "AI翻译":
             role = role1(out_language)
 
-            text = Qwen2(api_key, base_url, model, role, text)
+            text = Qwen1(api_key, base_url, model, role, text)
 
         elif mode == "AI翻译+润色":
             role = role2(out_language)
 
-            text = Qwen2(api_key, base_url, model, role, text)
+            text = Qwen1(api_key, base_url, model, role, text)
 
         elif mode == "自定义":
 
-            text = Qwen2(api_key, base_url, model, role, text)
+            text = Qwen1(api_key, base_url, model, role, text)
 
         else:
             text = text
@@ -297,7 +399,7 @@ class AI101:
                 "model": ("STRING", {"multiline": False, "default": "","lazy": True}),
                 "temperature": ("FLOAT", {"default": 1.3,"min": 0.0,"max": 2,"step": 0.1,"round": False, "display": "number", "tooltip": "较高的值将使输出更加随机，而较低的值将使其更加集中和确定性", "lazy": False}),
                 "mode": (["AI翻译", "AI翻译+润色", "自定义", "无"],),
-                "out_language": (["英文", "中文"], {"tooltip": "输出语言"}),
+                "out_language": (["英文", "中文"], {"tooltip": "输出语言，如果模式为自定义则不会发生作用"}),
                 "role": ("STRING", {"multiline": True, "default": "自定义AI", "tooltip": "输入自定义AI角色", "lazy": True}),
                 "text": ("STRING", {"multiline": True, "default": "","lazy": True}),
             },
