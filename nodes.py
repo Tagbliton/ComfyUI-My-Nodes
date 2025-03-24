@@ -12,7 +12,7 @@ from .TensorAndPil import TensorToPil, PilToTensor
 import requests
 
 
-#复制easy-use定义“*”类型
+#定义“*”类型
 class AlwaysEqualProxy(str):
     def __eq__(self, _):
         return True
@@ -572,9 +572,6 @@ class comparator:
 
         return (output1, output2, boolean, )
 
-
-
-
 #选择输出器
 class choice:
 
@@ -587,8 +584,8 @@ class choice:
             "required": {},
             "optional": {
                 "bool": ("BOOLEAN", {"default": None, "lazy": True}),
-                "any1": (any_type, {}),
-                "any2": (any_type, {}),
+                "if_True": (any_type, {}),
+                "if_False": (any_type, {}),
             }
         }
 
@@ -602,26 +599,15 @@ class choice:
 
     CATEGORY = "我的节点"
 
-    def action(self, bool, any1, any2):
+    def action(self, bool, if_True, if_False):
         if bool == True:
-            anything = any1
+            anything = if_True
         elif bool == False:
-            anything = any2
+            anything = if_False
         else:
-            anything = any1
+            anything = if_True
 
         return (anything,)
-
-
-
-
-
-
-# NODE_CLASS_MAPPINGS = {"比较器": comparator,
-#                        "选择器": choice,}
-# NODE_DISPLAY_NAME_MAPPINGS = {"比较器": "比较器",
-#                               "选择器": "选择器",}
-
 
 
 #宽高比预设
@@ -687,10 +673,6 @@ class size:
         return (width, height, )
 
 
-# NODE_CLASS_MAPPINGS = {"宽高比": size,}
-# NODE_DISPLAY_NAME_MAPPINGS = {"宽高比": "宽高比",}
-
-
 
 
 
@@ -712,5 +694,4 @@ NODE_DISPLAY_NAME_MAPPINGS = {"多模态AI助手": "多模态AI助手",
                               "选择输出器": "选择输出器",
                               "宽高比": "宽高比",
                               }
-
 
