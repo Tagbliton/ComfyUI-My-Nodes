@@ -212,7 +212,7 @@ class AI100:
                 "base_url": ("STRING", {"multiline": False, "default": "","lazy": True}),
                 "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-01-19"],),
                 "mode":(["AI翻译", "AI翻译+润色", "提示词反推", "自定义", "无"],),
-                "language":(["英文", "中文"],),
+                "out_language":(["英文", "中文"], {"tooltip": "输出语言"}),
 
             },
             "optional": {
@@ -235,13 +235,13 @@ class AI100:
 
 
 
-    def action(sefl, api_key, base_url, model, mode, role, text ,image=None):
+    def action(sefl, api_key, base_url, model, mode, out_language, role, text ,image=None):
 
 
         if mode == "提示词反推":
 
             role = "You are a helpful assistant."
-            text = "提示词反推，直接描述，无需引导句，请输出英文"
+            text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
 
 
             #tensor张量转PIL图片
@@ -262,12 +262,12 @@ class AI100:
 
 
         elif mode == "AI翻译":
-            role = role1
+            role = role1(out_language)
 
             text = Qwen2(api_key, base_url, model, role, text)
 
         elif mode == "AI翻译+润色":
-            role = role2
+            role = role2(out_language)
 
             text = Qwen2(api_key, base_url, model, role, text)
 
@@ -297,6 +297,7 @@ class AI101:
                 "model": ("STRING", {"multiline": False, "default": "","lazy": True}),
                 "temperature": ("FLOAT", {"default": 1.3,"min": 0.0,"max": 2,"step": 0.1,"round": False, "display": "number", "tooltip": "较高的值将使输出更加随机，而较低的值将使其更加集中和确定性", "lazy": False}),
                 "mode": (["AI翻译", "AI翻译+润色", "自定义", "无"],),
+                "out_language": (["英文", "中文"], {"tooltip": "输出语言"}),
                 "role": ("STRING", {"multiline": True, "default": "自定义AI", "tooltip": "输入自定义AI角色", "lazy": True}),
                 "text": ("STRING", {"multiline": True, "default": "","lazy": True}),
             },
@@ -312,16 +313,16 @@ class AI101:
     CATEGORY = "我的节点"
 
 
-    def action(self, api_key, base_url, model, temperature, mode, role, text):
+    def action(self, api_key, base_url, model, temperature, mode, out_language, role, text):
 
         #判断模式
         if mode == "无":
             text = text
         else:
             if mode == "AI翻译":
-                role = role1
+                role = role1(out_language)
             elif mode == "AI翻译+润色":
-                role = role2
+                role = role2(out_language)
             else:
                 role = f"{role}"
 
@@ -348,7 +349,7 @@ class AI102:
                 "base_url": ("STRING", {"multiline": False, "default": "", "lazy": True}),
                 "model": (["qwen2.5-vl-7b-instruct", "qwen2.5-vl-72b-instruct", "qvq-72b-preview"],),
                 "mode": (["默认", "简短", "详细"],),
-                "language": (["中文", "英文"],),
+                "out_language": (["中文", "英文"], {"tooltip": "输出语言"}),
 
             },
         }
@@ -363,7 +364,7 @@ class AI102:
     CATEGORY = "我的节点"
 
 
-    def action(self, api_key, base_url, model, mode, language, image):
+    def action(self, api_key, base_url, model, mode, out_language, image):
 
         #tensor张量转PIL图片
         image = TensorToPil(image)
@@ -375,9 +376,9 @@ class AI102:
 
 
         if mode == "默认":
-            text = f"提示词反推，直接描述，无需引导句，输出{language}"
+            text = f"提示词反推，直接描述，无需引导句，输出{out_language}"
         else:
-            text = f"提示词反推，直接描述，无需引导句，描述尽量{mode}，输出{language}"
+            text = f"提示词反推，直接描述，无需引导句，描述尽量{mode}，输出{out_language}"
 
 
         text = openaiVL(api_key, base_url, model, text, image)
