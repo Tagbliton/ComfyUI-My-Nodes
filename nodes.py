@@ -1,15 +1,17 @@
-from openai import OpenAI
+import requests
 import base64
 import json
 import os
 import numpy as np
 import torch
 import io
+
 from PIL import Image
+from openai import OpenAI
 from http import HTTPStatus
 from dashscope import ImageSynthesis
 from .TensorAndPil import TensorToPil, PilToTensor
-import requests
+
 
 
 #定义“*”类型
