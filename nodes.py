@@ -182,14 +182,18 @@ def DelImg(image):
         pass
 
 #提前定义AI角色
-role1 = "你是一个中英文翻译专家，可以将用户输入的文本翻译成英文。确保翻译结果符合中英文语言习惯，并考虑到某些词语的文化内涵和地区差异。只回答英文，不回答任何额外的解释。"
-role2 = '''你是一个精通中英文的自然语言大师，可以将用户输入的文本翻译成英文，并在保持原文句意不变的情况下，根据文生图提示词的规则对文本进行润色，只回答润色后的英文结果，不回答任何额外的解释。
+def role1(language):
+    role1 = f"你是一个多国语言翻译专家，可以将用户输入的文本进行翻译。确保翻译结果符合目标语言习惯，并考虑到某些词语的文化内涵和地区差异。只回答{language}，不回答任何额外的解释。"
+    return role1
+def role2(language):
+    role2 = f'''你是一个精通多国语言的自然语言大师，可以将用户输入的文本进行翻译，并在保持原文句意不变的情况下，根据文生图提示词的规则对文本进行润色，只回答润色后的{language}结果，不回答任何额外的解释。
                 示例1：
                 原文：一个孤独的树在夜晚的月光下。
                 翻译：A solitary tree stands under the soft glow of the moon on a tranquil night. The silvery moonlight bathes the landscape, casting long, gentle shadows and highlighting the tree's lone figure against the dark sky.
                 示例2：
                 原文：The quick brown fox jumps over the lazy dog.
                 翻译：A swift brown fox, elegantly leaping over a lazy dog, in an open field, under a clear blue sky.'''
+    return role2
 
 
 #AI多模态模型
@@ -208,6 +212,7 @@ class AI100:
                 "base_url": ("STRING", {"multiline": False, "default": "","lazy": True}),
                 "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-01-19"],),
                 "mode":(["AI翻译", "AI翻译+润色", "提示词反推", "自定义", "无"],),
+                "language":(["英文", "中文"],),
 
             },
             "optional": {
@@ -678,22 +683,22 @@ class size:
 
 
 
-NODE_CLASS_MAPPINGS = {"多模态AI助手": AI100,
-                       "AI助手": AI101,
-                       "AI图片理解": AI102,
-                       "Flux助手(高级)": AI200,
-                       "Flux助手(简易)": AI201,
-                       "比较分流器": comparator,
-                       "选择输出器": choice,
-                       "宽高比": size,
+NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
+                       "AI assistant": AI101,
+                       "AI Vision-Language": AI102,
+                       "Flux assistant(advanced)": AI200,
+                       "Flux assistant(simple)": AI201,
+                       "Digital Comparator": comparator,
+                       "Output Selector": choice,
+                       "Aspect Ratio Preset": size,
                        }
-NODE_DISPLAY_NAME_MAPPINGS = {"多模态AI助手": "多模态AI助手",
-                              "AI助手": "AI助手",
-                              "AI图片理解": "AI图片理解",
-                              "Flux助手(高级)": "Flux助手(高级)",
-                              "Flux助手(简易)": "Flux助手(简易)",
-                              "比较分流器": "比较分流器",
-                              "选择输出器": "选择输出器",
-                              "宽高比": "宽高比",
+NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
+                              "AI assistant": "AI助手",
+                              "AI Vision-Language": "AI图片理解",
+                              "Flux assistant(advanced)": "Flux助手(高级)",
+                              "Flux assistant(simple)": "Flux助手(简易)",
+                              "Digital Comparator": "比较分流器",
+                              "Output Selector": "选择输出器",
+                              "Aspect Ratio Preset": "宽高比",
                               }
 
