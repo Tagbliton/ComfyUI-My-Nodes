@@ -382,7 +382,7 @@ class AI100:
 
         return (text,)
 
-#AI助手
+#通用AI助手
 class AI101:
 
     def __init__(self):
@@ -787,7 +787,7 @@ class size:
 
 
 NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
-                       "AI assistant": AI101,
+                       "General AI assistant": AI101,
                        "AI Vision-Language": AI102,
                        "Flux assistant(advanced)": AI200,
                        "Flux assistant(simple)": AI201,
@@ -796,7 +796,7 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "Aspect Ratio Preset": size,
                        }
 NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
-                              "AI assistant": "AI助手",
+                              "General AI assistant": "通用AI助手",
                               "AI Vision-Language": "AI图片理解",
                               "Flux assistant(advanced)": "Flux助手(高级)",
                               "Flux assistant(simple)": "Flux助手(简易)",
