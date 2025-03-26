@@ -276,7 +276,7 @@ def save_audio(audio_data):
     """极简音频保存函数
     Args:
         audio_data (dict): 包含waveform和sample_rate的音频字典
-        output_path (str): 可选保存路径，默认输出到output目录的temp.mp3
+        output_path (str): 可选保存路径，默认输出到comfyui根目录的temp.mp3
     """
     # 设置默认保存路径
     output_path = ("temp.mp3")
