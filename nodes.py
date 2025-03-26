@@ -5,6 +5,7 @@ import os
 import numpy as np
 import torch
 import io
+import torchaudio
 
 from PIL import Image
 from openai import OpenAI
@@ -270,13 +271,34 @@ def Qwen4(api_key, base_url, model, role, video, text):
 
     return output
 
+#保存音频
+def save_audio(audio_data):
+    """极简音频保存函数
+    Args:
+        audio_data (dict): 包含waveform和sample_rate的音频字典
+        output_path (str): 可选保存路径，默认输出到output目录的temp.mp3
+    """
+    # 设置默认保存路径
+    output_path = ("temp.mp3")
+
+    # 处理音频数据维度
+    waveform = audio_data["waveform"].squeeze(0)  # 去除batch维度
+
+    # 保存音频文件
+    torchaudio.save(
+        output_path,
+        waveform,
+        audio_data["sample_rate"],
+        format="mp3"
+    )
+
 
 #删除文件
-def DelImg(image):
+def DelFile(file):
     # 先检查文件是否存在（避免 FileNotFoundError）
-    if os.path.exists(image):
+    if os.path.exists(file):
         try:
-            os.remove(image)  # 永久删除文件
+            os.remove(file)  # 永久删除文件
 
         except Exception as e:
             pass
@@ -313,12 +335,14 @@ class AI100:
                 "api_key": ("STRING", {"multiline": False, "default": "", "lazy": True}),
                 "base_url": ("STRING", {"multiline": False, "default": "","lazy": True}),
                 "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-01-19"],),
-                "mode":(["AI翻译", "AI翻译+润色", "提示词反推", "自定义", "无"],),
+                "mode":(["AI翻译", "AI翻译+润色", "图片反推", "音频反推", "视频反推", "自定义", "无"],),
                 "out_language":(["英文", "中文"], {"tooltip": "输出语言，如果模式为自定义则不会发生作用"}),
 
             },
             "optional": {
                 "image": ("IMAGE",),
+                "audio": ("AUDIO",),
+                "video": ("VIDEO",),
                 "role": ("STRING", {"multiline": True, "default": "自定义AI", "tooltip": "输入自定义AI角色", "lazy": True}),
                 "text": ("STRING", {"multiline": True, "default": "", "lazy": True}),
             },
@@ -337,14 +361,13 @@ class AI100:
 
 
 
-    def action(sefl, api_key, base_url, model, mode, out_language, role, text ,image=None):
+    def action(self, api_key, base_url, model, mode, out_language, role, text ,image=None, audio=None, video=None):
 
 
-        if mode == "提示词反推":
+        if mode == "图片反推":
 
             role = "You are a helpful assistant."
             text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
-
 
             #tensor张量转PIL图片
             image = TensorToPil(image)
@@ -353,15 +376,35 @@ class AI100:
             image.save("temp.png")
             image = "temp.png"
 
-
-
-
             text = Qwen2(api_key, base_url, model, role, image, text)
 
             # 删除图片
-            DelImg(image)
+            DelFile(image)
 
 
+        elif mode == "音频反推":
+
+            role = "You are a helpful assistant."
+            text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
+
+            save_audio(audio)
+            audio = "temp.mp3"
+            text = Qwen3(api_key, base_url, model, role, audio, text)
+
+            DelFile(audio)
+
+
+        elif mode == "视频反推":
+
+            role = "You are a helpful assistant."
+            text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
+
+            video.save("temp.mp4")
+            video = "temp.mp4"
+
+            text = Qwen4(api_key, base_url, model, role, video, text)
+
+            DelFile(video)
 
         elif mode == "AI翻译":
             role = role1(out_language)
@@ -486,7 +529,7 @@ class AI102:
         text = openaiVL(api_key, base_url, model, text, image)
 
         # 删除图片
-        DelImg(image)
+        DelFile(image)
 
         return (text,)
 
@@ -539,10 +582,6 @@ class AI200:
         if rsp.status_code == HTTPStatus.OK:
             print(rsp.output)
             print(rsp.usage)
-
-
-
-
 
 
             # 解析 JSON
@@ -804,4 +843,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
                               "Output Selector": "选择输出器",
                               "Aspect Ratio Preset": "宽高比",
                               }
-
