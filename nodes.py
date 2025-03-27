@@ -842,10 +842,9 @@ class ScanFileCountNode:
     自定义节点：文件夹文件计数器
     功能：统计指定路径下所有文件数量（默认过滤子目录）
     """
-    CATEGORY = "CustomUtils/File"  # 节点分类路径
-    RETURN_TYPES = ("INT", "STRING")  # 输出类型
-    RETURN_NAMES = ("文件数量", "统计信息")  # 输出名称
-    FUNCTION = "execute"  # 入口函数
+
+
+
 
     def __init__(self):
         pass
@@ -858,17 +857,16 @@ class ScanFileCountNode:
                     "default": "./input",
                     "dynamicPrompts": False,
                     "multiline": False
+                    "tooltip": "文件夹路径"
                 }),
             },
             "optional": {
-                "include_subfolders": ("BOOLEAN", {"default": False}),
-                "file_extensions": ("STRING", {"default": "*"})
+                "include_subfolders": ("BOOLEAN", {"default": False, "tooltip": "是否包含子文件夹"}),
+                "file_extensions": ("STRING", {"default": "*", "tooltip": "计数文件格式，如png、jpg、txt，*表示所有文件"})
             }
         }
-    RETURN_TYPES = ("INT",
-                    "STRING",)
-    RETURN_NAMES = ("total_count",
-                    "stats",)
+    RETURN_TYPES = ("INT", "STRING")  # 输出类型
+    RETURN_NAMES = ("文件数量", "统计信息")  # 输出名称
 
     FUNCTION = "action"
 
