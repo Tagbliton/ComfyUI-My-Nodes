@@ -318,6 +318,11 @@ def role2(language):
                 原文：The quick brown fox jumps over the lazy dog.
                 翻译：A swift brown fox, elegantly leaping over a lazy dog, in an open field, under a clear blue sky.'''
     return role2
+def role3(language):
+    role3 = f"你是一个精通多国语言的自然语言提示词专家，可以根据用户输入的主题去描绘一个画面。只回答{language}，不回答任何额外的解释。"
+    return role3
+
+
 
 
 #AI多模态模型
@@ -335,7 +340,7 @@ class AI100:
                 "api_key": ("STRING", {"multiline": False, "default": "", "lazy": True}),
                 "base_url": ("STRING", {"multiline": False, "default": "","lazy": True}),
                 "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-01-19"],),
-                "mode":(["AI翻译", "AI翻译+润色", "图片反推", "音频反推", "视频反推", "自定义", "无"],),
+                "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片反推", "音频反推", "视频反推", "自定义", "无"],),
                 "out_language":(["英文", "中文"], {"tooltip": "输出语言，如果模式为自定义则不会发生作用"}),
 
             },
@@ -416,6 +421,11 @@ class AI100:
 
             text = Qwen1(api_key, base_url, model, role, text)
 
+        elif mode == "主题创意":
+            role = role3(out_language)
+
+            text = Qwen1(api_key, base_url, model, role, text)
+
         elif mode == "自定义":
 
             text = Qwen1(api_key, base_url, model, role, text)
@@ -468,6 +478,8 @@ class AI101:
                 role = role1(out_language)
             elif mode == "AI翻译+润色":
                 role = role2(out_language)
+            elif mode == "主题创意":
+                role = role3(out_language)
             else:
                 role = f"{role}"
 
@@ -824,6 +836,79 @@ class size:
 
 
 
+#文件计数器
+class ScanFileCountNode:
+    """
+    自定义节点：文件夹文件计数器
+    功能：统计指定路径下所有文件数量（默认过滤子目录）
+    """
+    CATEGORY = "CustomUtils/File"  # 节点分类路径
+    RETURN_TYPES = ("INT", "STRING")  # 输出类型
+    RETURN_NAMES = ("文件数量", "统计信息")  # 输出名称
+    FUNCTION = "execute"  # 入口函数
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "folder_path": ("STRING", {
+                    "default": "./input",
+                    "dynamicPrompts": False,
+                    "multiline": False
+                }),
+            },
+            "optional": {
+                "include_subfolders": ("BOOLEAN", {"default": False}),
+                "file_extensions": ("STRING", {"default": "*"})
+            }
+        }
+    RETURN_TYPES = ("INT",
+                    "STRING",)
+    RETURN_NAMES = ("total_count",
+                    "stats",)
+
+    FUNCTION = "action"
+
+    # OUTPUT_NODE = False
+
+    CATEGORY = "我的节点"
+    def action(self, folder_path, include_subfolders=False, file_extensions="*"):
+        # 输入验证
+        if not os.path.exists(folder_path):
+            raise ValueError(f"路径不存在: {folder_path}")
+        if not os.path.isdir(folder_path):
+            raise ValueError(f"路径不是目录: {folder_path}")
+
+        # 处理文件扩展名过滤
+        ext_list = [ext.strip().lower() for ext in file_extensions.split(",")] if file_extensions != "*" else []
+
+        # 递归扫描函数
+        def scan_recursive(path):
+            count = 0
+            for entry in os.scandir(path):
+                if entry.is_file():
+                    if not ext_list or entry.name.split('.')[-1].lower() in ext_list:
+                        nonlocal total_count
+                        total_count += 1
+                elif include_subfolders and entry.is_dir():
+                    scan_recursive(entry.path)
+            return count
+
+        total_count = 0
+        scan_recursive(folder_path)
+
+        # 生成统计信息
+        ext_info = "所有类型" if file_extensions == "*" else f"指定类型: {file_extensions}"
+        scan_mode = "包含子目录" if include_subfolders else "仅当前目录"
+        stats = f"扫描完成 | 路径: {folder_path}\n模式: {scan_mode}\n类型: {ext_info}\n总任务数: {total_count}"
+
+        return (total_count, stats)
+
+
+# 节点注册
 
 NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "General AI assistant": AI101,
@@ -833,6 +918,7 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "Digital Comparator": comparator,
                        "Output Selector": choice,
                        "Aspect Ratio Preset": size,
+                       "Scan File Count Node": ScanFileCountNode,
                        }
 NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
                               "General AI assistant": "通用AI助手",
@@ -842,4 +928,5 @@ NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
                               "Digital Comparator": "比较分流器",
                               "Output Selector": "选择输出器",
                               "Aspect Ratio Preset": "宽高比",
+                              "Scan File Count Node": "文件计数器",
                               }
