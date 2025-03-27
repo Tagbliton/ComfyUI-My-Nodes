@@ -35,7 +35,7 @@ AI助手
 - 比较分流器
 <img src="IMG/5.png" width="800" alt="自定义宽度" />
 true                                      false
-<img src="IMG/5.1.png" width="800" alt="自定义宽度" /><img src="IMG/5.2.png" width="800" alt="自定义宽度" />
+<img src="IMG/5.1.png" width="400" alt="自定义宽度" /><img src="IMG/5.2.png" width="400" alt="自定义宽度" />
 
 
 - 文件计数器
