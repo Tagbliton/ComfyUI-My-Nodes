@@ -842,10 +842,6 @@ class ScanFileCountNode:
     自定义节点：文件夹文件计数器
     功能：统计指定路径下所有文件数量（默认过滤子目录）
     """
-
-
-
-
     def __init__(self):
         pass
 
@@ -856,7 +852,7 @@ class ScanFileCountNode:
                 "folder_path": ("STRING", {
                     "default": "./input",
                     "dynamicPrompts": False,
-                    "multiline": False
+                    "multiline": False,
                     "tooltip": "文件夹路径"
                 }),
             },
