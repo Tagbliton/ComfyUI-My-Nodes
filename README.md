@@ -33,7 +33,7 @@ AI助手
 <img src="IMG/4.png" width="800" alt="自定义宽度" />
 
 - 文件计数器
-<img src="IMG/7.png" width="400" alt="自定义宽度" /><img src="IMG/7.1.png" width="400" alt="自定义宽度" />
+<img src="IMG/7.png" width="400" alt="自定义宽度" /> <img src="IMG/7.1.png" width="400" alt="自定义宽度" />
 
 
 
