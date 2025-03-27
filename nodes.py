@@ -744,7 +744,7 @@ class choice:
         return {
             "required": {},
             "optional": {
-                "bool": ("BOOLEAN", {"default": None, "lazy": True}),
+                "bool": ("BOOLEAN", {"default": True, "lazy": True}),
                 "if_True": (any_type, {}),
                 "if_False": (any_type, {}),
             }
