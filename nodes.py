@@ -6,13 +6,17 @@ import numpy as np
 import torch
 import io
 import torchaudio
+import soundfile as sf
+import subprocess
+import re
+import folder_paths
+
 
 from PIL import Image
 from openai import OpenAI
 from http import HTTPStatus
 from dashscope import ImageSynthesis
 from .TensorAndPil import TensorToPil, PilToTensor
-
 
 
 #定义“*”类型
@@ -85,9 +89,9 @@ def openaiVL(api_key, base_url, model, text, image):
     return result
 
 
-
-
 #Qwen多模态接口
+
+#输出类型“文本”
 
 #文本
 def Qwen1(api_key, base_url, model, role, text):
@@ -98,31 +102,16 @@ def Qwen1(api_key, base_url, model, role, text):
         model=model,
         messages=[{"role": "system", "content": role},
                        {"role": "user", "content": text},],
-        # 设置输出数据的模态，当前支持["text"]
+        # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
         modalities=["text"],
+
         # stream 必须设置为 True，否则会报错
         stream=True,
         stream_options={
             "include_usage": True
         }
     )
-
-
-
-    #流式输出结果合并
-    result = []  # 初始化结果列表
-
-    for chunk in completion:
-        if chunk.choices:
-            delta = chunk.choices[0].delta
-            # 提取有效内容并添加到结果列表
-            if delta.content not in (None, ''):
-                result.append(delta.content)
-
-    # 合并所有内容片段
-    output = ''.join(result)
-
-    return output
+    return completion
 
 #图片
 def Qwen2(api_key, base_url, model, role, image, text):
@@ -147,8 +136,9 @@ def Qwen2(api_key, base_url, model, role, image, text):
                     ],
                 },
             ],
-        # 设置输出数据的模态，当前支持["text"]
+        # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
         modalities=["text"],
+
         # stream 必须设置为 True，否则会报错
         stream=True,
         stream_options={
@@ -156,22 +146,7 @@ def Qwen2(api_key, base_url, model, role, image, text):
         }
     )
 
-
-
-    #流式输出结果合并
-    result = []  # 初始化结果列表
-
-    for chunk in completion:
-        if chunk.choices:
-            delta = chunk.choices[0].delta
-            # 提取有效内容并添加到结果列表
-            if delta.content not in (None, ''):
-                result.append(delta.content)
-
-    # 合并所有内容片段
-    output = ''.join(result)
-
-    return output
+    return completion
 
 #音频
 def Qwen3(api_key, base_url, model, role, audio, text):
@@ -191,13 +166,14 @@ def Qwen3(api_key, base_url, model, role, audio, text):
                 {
                     "role": "user",
                     "content": [
-                        {"type": "input_audio", "input_audio": {"data": f"data:;base64,{base64_audio}","format": "mp3",}},
+                        {"type": "input_audio", "input_audio": {"data": f"data:;base64,{base64_audio}","format": "wav",}},
                         {"type": "text", "text": text},
                     ],
                 },
             ],
-        # 设置输出数据的模态，当前支持["text"]
+        # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
         modalities=["text"],
+
         # stream 必须设置为 True，否则会报错
         stream=True,
         stream_options={
@@ -205,22 +181,7 @@ def Qwen3(api_key, base_url, model, role, audio, text):
         }
     )
 
-
-
-    #流式输出结果合并
-    result = []  # 初始化结果列表
-
-    for chunk in completion:
-        if chunk.choices:
-            delta = chunk.choices[0].delta
-            # 提取有效内容并添加到结果列表
-            if delta.content not in (None, ''):
-                result.append(delta.content)
-
-    # 合并所有内容片段
-    output = ''.join(result)
-
-    return output
+    return completion
 
 #视频
 def Qwen4(api_key, base_url, model, role, video, text):
@@ -245,8 +206,9 @@ def Qwen4(api_key, base_url, model, role, video, text):
                     ],
                 },
             ],
-        # 设置输出数据的模态，当前支持["text"]
+        # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
         modalities=["text"],
+
         # stream 必须设置为 True，否则会报错
         stream=True,
         stream_options={
@@ -254,32 +216,146 @@ def Qwen4(api_key, base_url, model, role, video, text):
         }
     )
 
+    return completion
 
 
-    #流式输出结果合并
-    result = []  # 初始化结果列表
+#输出类型“文本+音频”
 
-    for chunk in completion:
-        if chunk.choices:
-            delta = chunk.choices[0].delta
-            # 提取有效内容并添加到结果列表
-            if delta.content not in (None, ''):
-                result.append(delta.content)
+#文本
+def Qwen11(api_key, base_url, model, role, text, audio_voice):
 
-    # 合并所有内容片段
-    output = ''.join(result)
+    client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
 
-    return output
+    completion = client.chat.completions.create(
+        model=model,
+        messages=[{"role": "system", "content": role},
+                       {"role": "user", "content": text},],
+        # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
+        modalities=["text", "audio"],
+        audio={"voice": audio_voice, "format": "wav"},
+        # stream 必须设置为 True，否则会报错
+        stream=True,
+        stream_options={
+            "include_usage": True
+        }
+    )
+    return completion
+
+#图片
+def Qwen22(api_key, base_url, model, role, image, text, audio_voice):
+
+    # 输入 Base64 编码的本地文件
+    base64_image = encode_file(image)
+
+    client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
+
+    completion = client.chat.completions.create(
+        model=model,
+        messages=[
+                {
+                    "role": "system",
+                    "content": [{"type": "text", "text": role}],
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{base64_image}"}},
+                        {"type": "text", "text": text},
+                    ],
+                },
+            ],
+        # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
+        modalities=["text", "audio"],
+        audio={"voice": audio_voice, "format": "wav"},
+        # stream 必须设置为 True，否则会报错
+        stream=True,
+        stream_options={
+            "include_usage": True
+        }
+    )
+
+    return completion
+
+#音频
+def Qwen33(api_key, base_url, model, role, audio, text, audio_voice):
+
+    # 输入 Base64 编码的本地文件
+    base64_audio = encode_file(audio)
+
+    client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
+
+    completion = client.chat.completions.create(
+        model=model,
+        messages=[
+                {
+                    "role": "system",
+                    "content": [{"type": "text", "text": role}],
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "input_audio", "input_audio": {"data": f"data:;base64,{base64_audio}","format": "wav",}},
+                        {"type": "text", "text": text},
+                    ],
+                },
+            ],
+        # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
+        modalities=["text", "audio"],
+        audio={"voice": audio_voice, "format": "wav"},
+        # stream 必须设置为 True，否则会报错
+        stream=True,
+        stream_options={
+            "include_usage": True
+        }
+    )
+
+    return completion
+
+#视频
+def Qwen44(api_key, base_url, model, role, video, text, audio_voice):
+
+    # 输入 Base64 编码的本地文件
+    base64_video = encode_file(video)
+
+    client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
+
+    completion = client.chat.completions.create(
+        model=model,
+        messages=[
+                {
+                    "role": "system",
+                    "content": [{"type": "text", "text": role}],
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "video_url", "video_url": {"url": f"data:;base64,{base64_video}"}},
+                        {"type": "text", "text": text},
+                    ],
+                },
+            ],
+        # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
+        modalities=["text", "audio"],
+        audio={"voice": audio_voice, "format": "wav"},
+        # stream 必须设置为 True，否则会报错
+        stream=True,
+        stream_options={
+            "include_usage": True
+        }
+    )
+
+    return completion
+
 
 #保存音频
 def save_audio(audio_data):
     """极简音频保存函数
     Args:
         audio_data (dict): 包含waveform和sample_rate的音频字典
-        output_path (str): 可选保存路径，默认输出到comfyui根目录的temp.mp3
+        output_path (str): 可选保存路径，默认输出到comfyui根目录的temp.wav
     """
     # 设置默认保存路径
-    output_path = ("temp.mp3")
+    output_path = ("temp.wav")
 
     # 处理音频数据维度
     waveform = audio_data["waveform"].squeeze(0)  # 去除batch维度
@@ -289,7 +365,7 @@ def save_audio(audio_data):
         output_path,
         waveform,
         audio_data["sample_rate"],
-        format="mp3"
+        format="wav"
     )
 
 
@@ -304,6 +380,81 @@ def DelFile(file):
             pass
     else:
         pass
+
+#流式输出结果合并
+def StreamText(completion):
+    #流式输出结果合并
+    result = []  # 初始化结果列表
+
+    for chunk in completion:
+        if chunk.choices:
+            delta = chunk.choices[0].delta
+            # 提取有效内容并添加到结果列表
+            if delta.content not in (None, ''):
+                result.append(delta.content)
+
+    # 合并所有内容片段
+    output = ''.join(result)
+    return output
+
+
+#流式输出音频解码1
+# 方式1: 待生成结束后再进行解码
+def StreamAudio1(completion):
+    # 方式1: 待生成结束后再进行解码
+    audio_string = ""
+    result = []
+    for chunk in completion:
+        if chunk.choices:
+            if hasattr(chunk.choices[0].delta, "audio"):
+                try:
+                    audio_string += chunk.choices[0].delta.audio["data"]
+                except Exception as e:
+                    result.append(chunk.choices[0].delta.audio["transcript"])
+
+        else:
+            output = ''.join(result)
+
+    wav_bytes = base64.b64decode(audio_string)
+    audio_np = np.frombuffer(wav_bytes, dtype=np.int16)
+    sf.write("out_temp.wav", audio_np, samplerate=24000)
+
+    return output
+
+
+# # 方式2: 边生成边解码(使用方式2请将方式1的代码进行注释)
+# def StreamAudio2(completion):
+#     # 初始化 PyAudio
+#     import pyaudio
+#     import time
+#     p = pyaudio.PyAudio()
+#     # 创建音频流
+#     stream = p.open(format=pyaudio.paInt16,
+#                     channels=1,
+#                     rate=24000,
+#                     output=True)
+
+#     for chunk in completion:
+#         if chunk.choices:
+#             if hasattr(chunk.choices[0].delta, "audio"):
+#                 try:
+#                     audio_string = chunk.choices[0].delta.audio["data"]
+#                     wav_bytes = base64.b64decode(audio_string)
+#                     audio_np = np.frombuffer(wav_bytes, dtype=np.int16)
+#                     # 直接播放音频数据
+#                     stream.write(audio_np.tobytes())
+#                 except Exception as e:
+#                     print(chunk.choices[0].delta.audio["transcript"])
+
+#     time.sleep(0.8)
+#     # 清理资源
+#     stream.stop_stream()
+#     stream.close()
+#     p.terminate()
+
+
+
+
 
 #提前定义AI角色
 def role1(language):
@@ -324,6 +475,19 @@ def role3(language):
 
 
 
+def validate_path(path, allow_none=False, allow_url=True):
+    if path is None:
+        return allow_none
+    if is_url(path):
+        #Probably not feasible to check if url resolves here
+        if not allow_url:
+            return "URLs are unsupported for this path"
+        return is_safe_path(path)
+    if not os.path.isfile(strip_path(path)):
+        return "Invalid file path: {}".format(path)
+    return is_safe_path(path)
+
+
 
 #AI多模态模型
 class AI100:
@@ -339,22 +503,24 @@ class AI100:
 
                 "api_key": ("STRING", {"multiline": False, "default": "", "lazy": True}),
                 "base_url": ("STRING", {"multiline": False, "default": "","lazy": True}),
-                "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-01-19"],),
+                "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-03-26", "qwen-omni-turbo-2025-01-19"],),
                 "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片反推", "音频反推", "视频反推", "自定义", "无"],),
                 "out_language":(["英文", "中文"], {"tooltip": "输出语言，如果模式为自定义则不会发生作用"}),
+                "out_audio":("BOOLEAN", {"default": False, "tooltip":"是否开启语音输出"}),
+                "audio_voice":(["Cherry", "Serena", "Ethan", "Chelsie"], {"tooltip": "语音输出音色选择"})
 
             },
             "optional": {
                 "image": ("IMAGE",),
                 "audio": ("AUDIO",),
-                "video": ("VIDEO",),
+                "video": ("STRING", {"multiline": False, "tooltip": "输入视频地址", "lazy": True}),
                 "role": ("STRING", {"multiline": True, "default": "自定义AI", "tooltip": "输入自定义AI角色", "lazy": True}),
                 "text": ("STRING", {"multiline": True, "default": "", "lazy": True}),
             },
         }
 
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("text",)
+    RETURN_TYPES = ("STRING", "AUDIO")
+    RETURN_NAMES = ("OutText", "OutAudio")
 
     FUNCTION = "action"
 
@@ -366,7 +532,12 @@ class AI100:
 
 
 
-    def action(self, api_key, base_url, model, mode, out_language, role, text ,image=None, audio=None, video=None):
+    def action(self, api_key, base_url, model, mode, out_language, out_audio, audio_voice, role, text ,image=None, audio=None, video=None):
+        # 判断输出类型
+
+
+
+
 
 
         if mode == "图片反推":
@@ -381,7 +552,10 @@ class AI100:
             image.save("temp.png")
             image = "temp.png"
 
-            text = Qwen2(api_key, base_url, model, role, image, text)
+            if out_audio:
+                completion = Qwen22(api_key, base_url, model, role, image, text, audio_voice)
+            else:
+                completion = Qwen2(api_key, base_url, model, role, image, text)
 
             # 删除图片
             DelFile(image)
@@ -393,8 +567,12 @@ class AI100:
             text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
 
             save_audio(audio)
-            audio = "temp.mp3"
-            text = Qwen3(api_key, base_url, model, role, audio, text)
+            audio = "temp.wav"
+
+            if out_audio:
+                completion = Qwen33(api_key, base_url, model, role, audio, text, audio_voice)
+            else:
+                completion = Qwen3(api_key, base_url, model, role, audio, text)
 
             DelFile(audio)
 
@@ -404,36 +582,62 @@ class AI100:
             role = "You are a helpful assistant."
             text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
 
-            video.save("temp.mp4")
-            video = "temp.mp4"
+            if out_audio:
+                completion = Qwen44(api_key, base_url, model, role, video, text, audio_voice)
+            else:
+                completion = Qwen4(api_key, base_url, model, role, video, text)
 
-            text = Qwen4(api_key, base_url, model, role, video, text)
-
-            DelFile(video)
 
         elif mode == "AI翻译":
             role = role1(out_language)
 
-            text = Qwen1(api_key, base_url, model, role, text)
+            if out_audio:
+                completion = Qwen11(api_key, base_url, model, role, text, audio_voice)
+            else:
+                completion = Qwen1(api_key, base_url, model, role, text)
 
         elif mode == "AI翻译+润色":
             role = role2(out_language)
 
-            text = Qwen1(api_key, base_url, model, role, text)
+            if out_audio:
+                completion = Qwen11(api_key, base_url, model, role, text, audio_voice)
+            else:
+                completion = Qwen1(api_key, base_url, model, role, text)
 
         elif mode == "主题创意":
             role = role3(out_language)
 
-            text = Qwen1(api_key, base_url, model, role, text)
+            if out_audio:
+                completion = Qwen11(api_key, base_url, model, role, text, audio_voice)
+            else:
+                completion = Qwen1(api_key, base_url, model, role, text)
 
         elif mode == "自定义":
 
-            text = Qwen1(api_key, base_url, model, role, text)
+            if out_audio:
+                completion = Qwen11(api_key, base_url, model, role, text, audio_voice)
+            else:
+                completion = Qwen1(api_key, base_url, model, role, text)
 
         else:
-            text = text
+            completion = text
 
-        return (text,)
+        if mode == "无":
+            OutText = completion
+        else:
+            if out_audio:
+                OutText = StreamAudio1(completion)
+
+                audio_path = "out_temp.wav"
+                waveform, sample_rate = torchaudio.load(audio_path)
+                audio = {"waveform": waveform.unsqueeze(0), "sample_rate": sample_rate}
+
+                OutAudio = audio
+            else:
+                OutText = StreamText(completion)
+                OutAudio = None
+
+        return (OutText, OutAudio, )
 
 #通用AI助手
 class AI101:
