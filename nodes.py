@@ -7,8 +7,6 @@ import torch
 import io
 import torchaudio
 import soundfile as sf
-import subprocess
-import re
 import folder_paths
 
 
