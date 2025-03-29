@@ -500,7 +500,7 @@ class AI100:
             "required": {
 
                 "api_key": ("STRING", {"multiline": False, "default": "", "lazy": True}),
-                "base_url": ("STRING", {"multiline": False, "default": "","lazy": True}),
+                "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1","lazy": True}),
                 "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-03-26", "qwen-omni-turbo-2025-01-19"],),
                 "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片反推", "音频反推", "视频反推", "自定义", "无"],),
                 "out_language":(["英文", "中文"], {"tooltip": "输出语言，如果模式为自定义则不会发生作用"}),
@@ -705,7 +705,7 @@ class AI102:
             "required": {
                 "image": ("IMAGE",),
                 "api_key": ("STRING", {"multiline": False, "default": "", "lazy": True}),
-                "base_url": ("STRING", {"multiline": False, "default": "", "lazy": True}),
+                "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1", "lazy": True}),
                 "model": (["qwen2.5-vl-7b-instruct", "qwen2.5-vl-72b-instruct", "qvq-72b-preview"],),
                 "mode": (["默认", "简短", "详细"],),
                 "out_language": (["中文", "英文"], {"tooltip": "输出语言"}),
