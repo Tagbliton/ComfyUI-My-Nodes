@@ -47,7 +47,8 @@ if false
 <img src="IMG/7.1.png" width="800" alt="自定义宽度" />
 
 
-
+## 📑 API获取方法
+https://help.aliyun.com/zh/model-studio/getting-started/what-is-model-studio
 
 
 
