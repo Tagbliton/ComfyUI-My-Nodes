@@ -1,0 +1,15 @@
+[project]
+name = "My-Nodes"
+description = "一个支持在ComfyUI中使用阿里百炼模型库的插件"
+version = "1.0.0"
+license = { file = "LICENSE" }
+
+[project.urls]
+Repository = "https://github.com/Tagbliton/ComfyUI-My-Nodes.git"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool]
+[tool.comfy]
+PublisherId = "tagbliton"
+DisplayName = "My-Nodes"
+Icon = ""
