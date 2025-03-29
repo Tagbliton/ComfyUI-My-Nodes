@@ -1,5 +1,5 @@
 [project]
-name = "My-Nodes"
+name = "ComfyUI-My-Nodes"
 description = "一个支持在ComfyUI中使用阿里百炼模型库的插件"
 version = "1.0.0"
 license = { file = "LICENSE" }
@@ -11,5 +11,5 @@ Repository = "https://github.com/Tagbliton/ComfyUI-My-Nodes.git"
 [tool]
 [tool.comfy]
 PublisherId = "tagbliton"
-DisplayName = "My-Nodes"
+DisplayName = "ComfyUI-My-Nodes"
 Icon = ""
