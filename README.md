@@ -6,7 +6,7 @@ AI助手
 
 ## 📑 API获取方法
 阿里百炼大模型-技术文档
-'https://help.aliyun.com/zh/model-studio/getting-started/what-is-model-studio'
+`https://help.aliyun.com/zh/model-studio/getting-started/what-is-model-studio`
 
 
 
