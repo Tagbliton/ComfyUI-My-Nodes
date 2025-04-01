@@ -56,7 +56,7 @@ AI助手
 
 - 通用AI助手
 
-  支持openai格式
+  支持使用openai的大多数模型，需要注意不同模型的temperature值的上限不同，具体参考使用模型的技术文档
 <img src="IMG/2.png" width="800" alt="自定义宽度" />
 
 - AI图片理解
