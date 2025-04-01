@@ -1,7 +1,7 @@
 [project]
 name = "ComfyUI-My-Nodes"
 description = "一个支持在ComfyUI中使用阿里百炼模型库的插件"
-version = "1.0.0"
+version = "1.0.1"
 license = { file = "LICENSE" }
 
 [project.urls]
