@@ -1109,7 +1109,90 @@ class ScanFileCountNode:
         scan_mode = "包含子目录" if include_subfolders else "仅当前目录"
         stats = f"扫描完成 | 路径: {folder_path}\n模式: {scan_mode}\n类型: {ext_info}\n总任务数: {total_count}"
 
-        return (total_count, stats)
+        return (total_count, stats, )
+
+
+class GetApiFromConfig:
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {},
+            }
+
+    RETURN_TYPES = ("STRING", )
+    RETURN_NAMES = ("api_key", )
+
+    FUNCTION = "action"
+
+    # OUTPUT_NODE = False
+
+    CATEGORY = "我的节点"
+
+    def action(self,):
+        api_key = None  # 初始化变量
+        base_url = None
+
+        try:
+            with open('./custom_nodes/ComfyUI-My-Nodes/config.txt', 'r') as file:  # 打开文件
+                for line in file:
+                    line = line.strip()  # 去除两端空白
+                    if line.startswith('api_key'):  # 查找以api_key开头的行
+                        # 分割键和值
+                        key_part, sep, value_part = line.partition('=')
+                        if not sep:
+                            continue  # 无等号，跳过
+                        key1 = key_part.strip()
+                        value1 = value_part.strip().strip('\'"')  # 去除值两端的引号和空格
+
+                        # 检查是否为非默认值
+                        if key1 == 'api_key' and value1 != 'YourApiKey':
+                            api_key=value1
+                            break  # 找到有效值，退出循环
+
+                        # if line.startswith('base_url'):  # 查找以api_key开头的行
+                        #     # 分割键和值
+                        #     key_part, sep, value_part = line.partition('=')
+                        #     if not sep:
+                        #         continue  # 无等号，跳过
+                        #     key2 = key_part.strip()
+                        #     value2 = value_part.strip().strip('\'"')  # 去除值两端的引号和空格
+                        #
+                        #     # 检查是否为非默认值
+                        #     if key2 == 'base_url':
+                        #         base_url = value2
+                        #         break  # 找到有效值，退出循环
+
+
+        except FileNotFoundError:
+            print("未找到配置文件config.txt")
+        except Exception as e:
+            print(f"读取文件时发生错误：{e}")
+
+        # 根据结果输出提示
+        if api_key:
+            print("成功读取API密钥")
+            # 在此处使用api_key进行后续操作
+        else:
+            print("未找到有效API密钥")
+
+
+
+        # if base_url:
+        #     print("成功读取base_url")
+        #     # 在此处使用base_url进行后续操作
+        # else:
+        #     print("未找到有效base_url")
+
+        return (api_key, )
+
+
+
+
+
 
 
 # 节点注册
@@ -1123,6 +1206,7 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "Output Selector": choice,
                        "Aspect Ratio Preset": size,
                        "Scan File Count Node": ScanFileCountNode,
+                       "Get Api From Config":GetApiFromConfig
                        }
 NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
                               "General AI assistant": "通用AI助手",
@@ -1133,4 +1217,5 @@ NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
                               "Output Selector": "选择输出器",
                               "Aspect Ratio Preset": "宽高比",
                               "Scan File Count Node": "文件计数器",
+                              "Get Api From Config": "从配置文件获取API"
                               }
