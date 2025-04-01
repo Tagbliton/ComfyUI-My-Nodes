@@ -13,7 +13,7 @@ AI助手
 
 `../custom_nodes/ComfyUI-My-Nodes/config.txt`
 
-`api_key=YourApiKey           #“=”后替换为你的api_key`
+`api_key=YourApiKey    # '=' 后替换为你的api_key`
 
 
 
