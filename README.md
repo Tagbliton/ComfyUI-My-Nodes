@@ -31,7 +31,7 @@ AI助手
 
 ## 📑 列表
 - 多模态AI助手
-- AI助手
+- 通用AI助手
 - AI图片理解
 - Flux助手
 - 比较分流器
@@ -54,7 +54,7 @@ AI助手
   支持输出 -文本 -音频
 <img src="IMG/1.png" width="800" alt="自定义宽度" />
 
-- AI助手
+- 通用AI助手
 
   通用openai格式
 <img src="IMG/2.png" width="800" alt="自定义宽度" />
