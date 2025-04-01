@@ -1,0 +1,2 @@
+api_key=Your_Api_Key
+#“=”后替换为你的api_key
