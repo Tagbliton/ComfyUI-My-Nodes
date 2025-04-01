@@ -17,6 +17,13 @@ from dashscope import ImageSynthesis
 from .TensorAndPil import TensorToPil, PilToTensor
 
 
+
+
+
+
+
+
+
 #定义“*”类型
 class AlwaysEqualProxy(str):
     def __eq__(self, _):
@@ -226,8 +233,7 @@ def Qwen11(api_key, base_url, model, role, text, audio_voice):
 
     completion = client.chat.completions.create(
         model=model,
-        messages=[{"role": "system", "content": role},
-                       {"role": "user", "content": text},],
+        messages=[{"role": "user", "content": f"{role}输入：'{text}'"},],
         # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
         modalities=["text", "audio"],
         audio={"voice": audio_voice, "format": "wav"},
@@ -415,7 +421,7 @@ def StreamAudio1(completion):
 
     wav_bytes = base64.b64decode(audio_string)
     audio_np = np.frombuffer(wav_bytes, dtype=np.int16)
-    sf.write("out_temp.wav", audio_np, samplerate=24000)
+    sf.write("./temp/out_temp.wav", audio_np, samplerate=24000)
 
     return output
 
@@ -461,29 +467,31 @@ def role1(language):
 def role2(language):
     role2 = f'''你是一个精通多国语言的自然语言大师，可以将用户输入的文本进行翻译，并在保持原文句意不变的情况下，根据文生图提示词的规则对文本进行润色，只回答润色后的{language}结果，不回答任何额外的解释。
                 示例1：
-                原文：一个孤独的树在夜晚的月光下。
-                翻译：A solitary tree stands under the soft glow of the moon on a tranquil night. The silvery moonlight bathes the landscape, casting long, gentle shadows and highlighting the tree's lone figure against the dark sky.
+                输入：一个孤独的树在夜晚的月光下。
+                中文输出：在一个宁静的夜晚，一棵孤零零的树矗立在柔和的月光下。银色的月光沐浴着大地，投下长长的柔和的阴影，在黑暗的天空中突出了那棵树孤独的身影。
+                英文输出：A solitary tree stands under the soft glow of the moon on a tranquil night. The silvery moonlight bathes the landscape, casting long, gentle shadows and highlighting the tree's lone figure against the dark sky.
                 示例2：
-                原文：The quick brown fox jumps over the lazy dog.
-                翻译：A swift brown fox, elegantly leaping over a lazy dog, in an open field, under a clear blue sky.'''
+                输入：The quick brown fox jumps over the lazy dog.
+                中文输出：在晴朗的蓝天下，开阔的田野上，一只敏捷的棕色狐狸优雅地跳过一只懒惰的狗。
+                英文输出：A swift brown fox, elegantly leaping over a lazy dog, in an open field, under a clear blue sky.'''
     return role2
 def role3(language):
     role3 = f"你是一个精通多国语言的自然语言提示词专家，可以根据用户输入的主题去描绘一个画面。只回答{language}，不回答任何额外的解释。"
     return role3
 
 
-
-def validate_path(path, allow_none=False, allow_url=True):
-    if path is None:
-        return allow_none
-    if is_url(path):
-        #Probably not feasible to check if url resolves here
-        if not allow_url:
-            return "URLs are unsupported for this path"
-        return is_safe_path(path)
-    if not os.path.isfile(strip_path(path)):
-        return "Invalid file path: {}".format(path)
-    return is_safe_path(path)
+#
+# def validate_path(path, allow_none=False, allow_url=True):
+#     if path is None:
+#         return allow_none
+#     if is_url(path):
+#         #Probably not feasible to check if url resolves here
+#         if not allow_url:
+#             return "URLs are unsupported for this path"
+#         return is_safe_path(path)
+#     if not os.path.isfile(strip_path(path)):
+#         return "Invalid file path: {}".format(path)
+#     return is_safe_path(path)
 
 
 
@@ -626,7 +634,7 @@ class AI100:
             if out_audio:
                 OutText = StreamAudio1(completion)
 
-                audio_path = "out_temp.wav"
+                audio_path = "./temp/out_temp.wav"
                 waveform, sample_rate = torchaudio.load(audio_path)
                 audio = {"waveform": waveform.unsqueeze(0), "sample_rate": sample_rate}
 
