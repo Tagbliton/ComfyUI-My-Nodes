@@ -9,6 +9,15 @@ AI助手
 
 `https://help.aliyun.com/zh/model-studio/getting-started/what-is-model-studio`
 
+获取的API可以填写到插件根目录下的配置文件中以通过节点调取（可选）
+
+`../custom_nodes/ComfyUI-My-Nodes/config.txt`
+
+```api_key=Your_Api_Key
+#“=”后替换为你的api_key```
+
+
+
 默认base_url
 
 `https://dashscope.aliyuncs.com/compatible-mode/v1`
