@@ -56,7 +56,7 @@ AI助手
 
 - 通用AI助手
 
-  通用openai格式
+  支持openai格式
 <img src="IMG/2.png" width="800" alt="自定义宽度" />
 
 - AI图片理解
