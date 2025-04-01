@@ -5,11 +5,11 @@ AI助手
 
 
 ## 📑 API获取方法
-阿里百炼大模型-技术文档
+- 阿里百炼大模型-技术文档
 
 `https://help.aliyun.com/zh/model-studio/getting-started/what-is-model-studio`
 
-获取的API可以填写到插件根目录下的配置文件中以通过节点调取（可选）
+- 获取的API可以填写到插件根目录下的配置文件中以通过节点调取（可选）
 
 `../custom_nodes/ComfyUI-My-Nodes/config.txt`
 
@@ -19,7 +19,7 @@ AI助手
 
 
 
-默认base_url
+- 默认base_url
 
 `https://dashscope.aliyuncs.com/compatible-mode/v1`
 
