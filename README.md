@@ -9,6 +9,10 @@ AI助手
 
 `https://help.aliyun.com/zh/model-studio/getting-started/what-is-model-studio`
 
+- 如何获取API
+
+`https://help.aliyun.com/zh/model-studio/user-guide/first-api-call-to-qwen`
+
 - 获取的API可以填写到插件根目录下的配置文件中以通过节点调取（可选）
 
 `../custom_nodes/ComfyUI-My-Nodes/config.txt`
