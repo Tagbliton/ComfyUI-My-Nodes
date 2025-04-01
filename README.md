@@ -88,6 +88,7 @@ if false
 <img src="IMG/7.1.png" width="800" alt="自定义宽度" />
 
 - 从配置文件获取API
+  
   目前更改配置文件后需重启comfyui才能获取最新配置
 
 
