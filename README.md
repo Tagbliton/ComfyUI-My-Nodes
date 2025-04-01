@@ -7,25 +7,25 @@ AI助手
 ## 📑 API获取方法
 - 阿里百炼大模型-技术文档
 
-`https://help.aliyun.com/zh/model-studio/getting-started/what-is-model-studio`
+  `https://help.aliyun.com/zh/model-studio/getting-started/what-is-model-studio`
 
 - 如何获取API
 
-`https://help.aliyun.com/zh/model-studio/user-guide/first-api-call-to-qwen`
+  `https://help.aliyun.com/zh/model-studio/user-guide/first-api-call-to-qwen`
 
 - 获取的API可以填写到插件根目录下的配置文件中以通过节点调取（可选）
 
-`../custom_nodes/ComfyUI-My-Nodes/config.txt`
+  `../custom_nodes/ComfyUI-My-Nodes/config.txt`
 
-`api_key=YourApiKey`
+  `api_key=YourApiKey`
 
-将 '=' 后替换为你的api_key
+  将 '=' 后替换为你的api_key
 
 
 
 - 默认base_url
 
-`https://dashscope.aliyuncs.com/compatible-mode/v1`
+  `https://dashscope.aliyuncs.com/compatible-mode/v1`
 
 
 
