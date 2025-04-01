@@ -9,6 +9,10 @@ AI助手
 
 `https://help.aliyun.com/zh/model-studio/getting-started/what-is-model-studio`
 
+默认base_url
+
+`https://dashscope.aliyuncs.com/compatible-mode/v1`
+
 
 
 ## 📑 列表
