@@ -506,7 +506,7 @@ class AI100:
         return {
             "required": {
 
-                "api_key": ("STRING", {"multiline": False, "default": "", "lazy": True}),
+                "api_key": ("STRING", {"multiline": False, "default": default_api_key, "lazy": True}),
                 "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1","lazy": True}),
                 "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-03-26", "qwen-omni-turbo-2025-01-19"],),
                 "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片反推", "音频反推", "视频反推", "自定义", "无"],),
