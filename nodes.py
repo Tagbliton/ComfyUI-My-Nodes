@@ -18,8 +18,8 @@ from .TensorAndPil import TensorToPil, PilToTensor
 
 
 
-
-
+# 默认填入API_KEY
+default_api_key=os.getenv("DASHSCOPE_API_KEY")
 
 
 
@@ -64,7 +64,6 @@ def openaiVL(api_key, base_url, model, text, image):
 
     #输入 Base64 编码的本地文件
     base64_image = encode_file(image)
-
     client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
 
     completion = client.chat.completions.create(
@@ -517,9 +516,9 @@ class AI100:
 
             },
             "optional": {
-                "image": ("IMAGE",),
-                "audio": ("AUDIO",),
-                "video": ("STRING", {"multiline": False, "tooltip": "输入视频地址", "lazy": True}),
+                "image": ("IMAGE",{"lazy": True}),
+                "audio": ("AUDIO",{"lazy": True}),
+                "video": ("STRING", {"multiline": False, "tooltip": "输入视频地址"}),
                 "role": ("STRING", {"multiline": True, "default": "自定义AI", "tooltip": "输入自定义AI角色", "lazy": True}),
                 "text": ("STRING", {"multiline": True, "default": "", "lazy": True}),
             },
@@ -539,13 +538,8 @@ class AI100:
 
 
     def action(self, api_key, base_url, model, mode, out_language, out_audio, audio_voice, role, text ,image=None, audio=None, video=None):
+
         # 判断输出类型
-
-
-
-
-
-
         if mode == "图片反推":
 
             role = "You are a helpful assistant."
@@ -657,9 +651,9 @@ class AI101:
         return {
             "required": {
 
-                "api_key": ("STRING", {"multiline": False, "default": "", "lazy": True}),
-                "base_url": ("STRING", {"multiline": False, "default": "","lazy": True}),
-                "model": ("STRING", {"multiline": False, "default": "","lazy": True}),
+                "api_key": ("STRING", {"multiline": False, "default": default_api_key, "lazy": True}),
+                "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1","lazy": True}),
+                "model": ("STRING", {"multiline": False, "default": "deepseek-v3","lazy": True}),
                 "temperature": ("FLOAT", {"default": 1.3,"min": 0.0,"max": 2,"step": 0.1,"round": False, "display": "number", "tooltip": "较高的值将使输出更加随机，而较低的值将使其更加集中和确定性", "lazy": False}),
                 "mode": (["AI翻译", "AI翻译+润色", "自定义", "无"],),
                 "out_language": (["英文", "中文"], {"tooltip": "输出语言，如果模式为自定义则不会发生作用"}),
@@ -712,11 +706,11 @@ class AI102:
         return {
             "required": {
                 "image": ("IMAGE",),
-                "api_key": ("STRING", {"multiline": False, "default": "", "lazy": True}),
+                "api_key": ("STRING", {"multiline": False, "default": default_api_key, "lazy": True}),
                 "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1", "lazy": True}),
                 "model": (["qwen2.5-vl-7b-instruct", "qwen2.5-vl-72b-instruct", "qvq-72b-preview"],),
                 "mode": (["默认", "简短", "详细"],),
-                "out_language": (["中文", "英文"], {"tooltip": "输出语言"}),
+                "out_language": (["英文", "中文"], {"tooltip": "输出语言"}),
 
             },
         }
@@ -767,16 +761,19 @@ class AI200:
         return {
             "required": {
 
-                "api_key": ("STRING", {"multiline": False, "default": "", "lazy": True}),
+
                 "model": (["flux-schnell", "flux-dev", "flux-merged"],),
                 "seed":("INT", {"default": 0, "min": 0, "max": 4294967290}),
-                "steps":("INT", {"default": 30, "min": 0, "max": 100,"step": 1,"round": False, "display": "number", "tooltip": "图片生成的推理步数，如果不提供，则默认为30。 flux-schnell 模型官方默认 steps 为4，flux-dev 模型官方默认 steps 为50。", "lazy": False}),
+                "steps":("INT", {"default": 50, "min": 0, "max": 100,"step": 1,"round": False, "display": "number", "tooltip": "图片生成的推理步数，如果不提供，则默认为30。 flux-schnell 模型官方默认 steps 为4，flux-dev 模型官方默认 steps 为50。", "lazy": False}),
                 "guidance":("FLOAT", {"default": 3.5, "min": 0, "max": 100, "step": 0.1,"round": False, "display": "number", "tooltip": "指导度量值，用于在图像生成过程中调整模型的创造性与文本指导的紧密度。较高的值会使得生成的图像更忠于文本提示，但可能减少多样性；较低的值则允许更多创造性，增加图像变化。默认值为3.5。", "lazy": False}),
                 "size": (["1024*1024", "512*1024", "768*512", "768*1024", "1024*576", "576*1024"],),
                 "offload":(["False", "True"], {
                     "default": "False",
                     "tooltip": "一个布尔值，表示是否在采样过程中将部分计算密集型组件临时从GPU卸载到CPU，以减轻内存压力或提升效率。如果您的系统资源有限或希望加速采样过程，可以启用此选项，默认为False。", } ),
                 "prompt": ("STRING", {"multiline": True, "default": "","lazy": True}),
+            },
+            "optional": {
+                "api_key": ("STRING", {"multiline": False, "lazy": True}),
             },
         }
 
@@ -791,7 +788,9 @@ class AI200:
     CATEGORY = "我的节点"
 
 
-    def action(self, api_key, model, seed, steps, guidance, size, offload, prompt):
+    def action(self, model, seed, steps, guidance, size, offload, prompt, api_key=None):
+        if api_key is None:
+            api_key=os.getenv("DASHSCOPE_API_KEY")
         rsp = ImageSynthesis.call(api_key=api_key,
                                   model=model,
                                   seed=seed,
@@ -834,10 +833,13 @@ class AI201:
         return {
             "required": {
 
-                "api_key": ("STRING", {"multiline": False, "default": "", "lazy": True}),
+
                 "model": (["flux-schnell(快速)", "flux-dev(高质量)", "flux-merged(优化)"],),
                 "size": (["1024*1024", "512*1024", "768*512", "768*1024", "1024*576", "576*1024"],),
                 "prompt": ("STRING", {"multiline": True, "default": "","lazy": True}),
+            },
+            "optional": {
+                "api_key": ("STRING", {"multiline": False, "lazy": True}),
             },
         }
 
@@ -852,7 +854,9 @@ class AI201:
     CATEGORY = "我的节点"
 
 
-    def action(self, api_key, model, size, prompt):
+    def action(self, model, size, prompt, api_key=None):
+        if api_key is None:
+            api_key=os.getenv("DASHSCOPE_API_KEY")
         if model == "flux-schnell(快速)":
             model = "flux-schnell"
             steps = 4
@@ -1112,86 +1116,55 @@ class ScanFileCountNode:
         return (total_count, stats, )
 
 
+
+
+
+
 class GetApiFromConfig:
-
-    def __init__(self):
-        pass
-
     @classmethod
-    def INPUT_TYPES(s):
+    def INPUT_TYPES(cls):
         return {
-            "required": {},
-            }
+            "required": {
+                "file_path": ("STRING", {"default": "./custom_nodes/ComfyUI-My-Nodes/config.txt", "tooltip": "文件路径"})
+            },
+        }
 
     RETURN_TYPES = ("STRING", )
-    RETURN_NAMES = ("api_key", )
-
+    RETURN_NAMES = ("API_KEY", )
     FUNCTION = "action"
-
-    # OUTPUT_NODE = False
-
     CATEGORY = "我的节点"
 
-    def action(self,):
-        api_key = None  # 初始化变量
-        base_url = None
+    def action(self, file_path):
+        api_key = ""
+
 
         try:
-            with open('./custom_nodes/ComfyUI-My-Nodes/config.txt', 'r') as file:  # 打开文件
-                for line in file:
-                    line = line.strip()  # 去除两端空白
-                    if line.startswith('api_key'):  # 查找以api_key开头的行
-                        # 分割键和值
-                        key_part, sep, value_part = line.partition('=')
-                        if not sep:
-                            continue  # 无等号，跳过
-                        key1 = key_part.strip()
-                        value1 = value_part.strip().strip('\'"')  # 去除值两端的引号和空格
+            # 检查文件是否存在
+            if not os.path.isfile(file_path):
+                raise FileNotFoundError(f"Config file not found: {file_path}")
 
-                        # 检查是否为非默认值
-                        if key1 == 'api_key' and value1 != 'YourApiKey':
-                            api_key=value1
-                            break  # 找到有效值，退出循环
+            # 读取并解析文件
+            with open(file_path, "r") as f:
+                for line in f:
+                    line = line.strip()
+                    if line.startswith("api_key="):
+                        api_key = line.split("=", 1)[1].strip()
 
-                        # if line.startswith('base_url'):  # 查找以api_key开头的行
-                        #     # 分割键和值
-                        #     key_part, sep, value_part = line.partition('=')
-                        #     if not sep:
-                        #         continue  # 无等号，跳过
-                        #     key2 = key_part.strip()
-                        #     value2 = value_part.strip().strip('\'"')  # 去除值两端的引号和空格
-                        #
-                        #     # 检查是否为非默认值
-                        #     if key2 == 'base_url':
-                        #         base_url = value2
-                        #         break  # 找到有效值，退出循环
+            if api_key == "YourApiKey":
+                raise ValueError("API key not found in config file")
+            # 验证结果
+            if not api_key:
+                raise ValueError("API key not found in config file")
 
 
-        except FileNotFoundError:
-            print("未找到配置文件config.txt")
         except Exception as e:
-            print(f"读取文件时发生错误：{e}")
-
-        # 根据结果输出提示
-        if api_key:
-            print("成功读取API密钥")
-            # 在此处使用api_key进行后续操作
-        else:
-            print("未找到有效API密钥")
-
-
-
-        # if base_url:
-        #     print("成功读取base_url")
-        #     # 在此处使用base_url进行后续操作
-        # else:
-        #     print("未找到有效base_url")
+            print(f"Error reading config file: {str(e)}")
+            return ("", )  # 返回空值或抛出异常
 
         return (api_key, )
-
-
-
-
+    @classmethod
+    def IS_CHANGED(s, api_key):
+       return ""
 
 
 
