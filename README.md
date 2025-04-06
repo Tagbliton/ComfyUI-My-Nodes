@@ -54,7 +54,7 @@ AI助手
 
 - 图片反推：如果使用**多模态AI助手**提示`'NoneType' object has no attribute 'is_cuda'`，可以尝试使用**AI图片理解**节点
 
-- 视频反推：如果提示`Exceeded limit on max bytes per data-uri item : 1048576`，可能因为视频比特率过高
+- 视频反推：如果提示`Exceeded limit on max bytes per data-uri item : 10485760`，可能因为视频比特率过高
 
 
 
