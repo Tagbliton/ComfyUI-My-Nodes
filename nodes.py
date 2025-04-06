@@ -506,7 +506,7 @@ class AI100:
         return {
             "required": {
 
-                "api_key": ("STRING", {"multiline": False, "default": default_api_key, "lazy": True}),
+                "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
                 "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1","lazy": True}),
                 "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-03-26", "qwen-omni-turbo-2025-01-19"],),
                 "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片反推", "音频反推", "视频反推", "自定义", "无"],),
@@ -651,7 +651,7 @@ class AI101:
         return {
             "required": {
 
-                "api_key": ("STRING", {"multiline": False, "default": default_api_key, "lazy": True}),
+                "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
                 "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1","lazy": True}),
                 "model": ("STRING", {"multiline": False, "default": "deepseek-v3","lazy": True}),
                 "temperature": ("FLOAT", {"default": 1.3,"min": 0.0,"max": 2,"step": 0.1,"round": False, "display": "number", "tooltip": "较高的值将使输出更加随机，而较低的值将使其更加集中和确定性", "lazy": False}),
@@ -706,7 +706,7 @@ class AI102:
         return {
             "required": {
                 "image": ("IMAGE",),
-                "api_key": ("STRING", {"multiline": False, "default": default_api_key, "lazy": True}),
+                "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
                 "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1", "lazy": True}),
                 "model": (["qwen2.5-vl-7b-instruct", "qwen2.5-vl-72b-instruct", "qvq-72b-preview"],),
                 "mode": (["默认", "简短", "详细"],),
@@ -761,7 +761,7 @@ class AI200:
         return {
             "required": {
 
-
+                "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
                 "model": (["flux-schnell", "flux-dev", "flux-merged"],),
                 "seed":("INT", {"default": 0, "min": 0, "max": 4294967290}),
                 "steps":("INT", {"default": 50, "min": 0, "max": 100,"step": 1,"round": False, "display": "number", "tooltip": "图片生成的推理步数，如果不提供，则默认为30。 flux-schnell 模型官方默认 steps 为4，flux-dev 模型官方默认 steps 为50。", "lazy": False}),
@@ -771,9 +771,6 @@ class AI200:
                     "default": "False",
                     "tooltip": "一个布尔值，表示是否在采样过程中将部分计算密集型组件临时从GPU卸载到CPU，以减轻内存压力或提升效率。如果您的系统资源有限或希望加速采样过程，可以启用此选项，默认为False。", } ),
                 "prompt": ("STRING", {"multiline": True, "default": "","lazy": True}),
-            },
-            "optional": {
-                "api_key": ("STRING", {"multiline": False, "lazy": True}),
             },
         }
 
@@ -788,7 +785,7 @@ class AI200:
     CATEGORY = "我的节点"
 
 
-    def action(self, model, seed, steps, guidance, size, offload, prompt, api_key=None):
+    def action(self, api_key, model, seed, steps, guidance, size, offload, prompt):
         if api_key is None:
             api_key=os.getenv("DASHSCOPE_API_KEY")
         rsp = ImageSynthesis.call(api_key=api_key,
@@ -833,13 +830,10 @@ class AI201:
         return {
             "required": {
 
-
+                "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
                 "model": (["flux-schnell(快速)", "flux-dev(高质量)", "flux-merged(优化)"],),
                 "size": (["1024*1024", "512*1024", "768*512", "768*1024", "1024*576", "576*1024"],),
                 "prompt": ("STRING", {"multiline": True, "default": "","lazy": True}),
-            },
-            "optional": {
-                "api_key": ("STRING", {"multiline": False, "lazy": True}),
             },
         }
 
@@ -854,7 +848,7 @@ class AI201:
     CATEGORY = "我的节点"
 
 
-    def action(self, model, size, prompt, api_key=None):
+    def action(selft, api_key, model, size, promp):
         if api_key is None:
             api_key=os.getenv("DASHSCOPE_API_KEY")
         if model == "flux-schnell(快速)":
