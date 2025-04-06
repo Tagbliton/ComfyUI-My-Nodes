@@ -52,7 +52,7 @@ AI助手
 
 ## 相关问题
 
-- 图片反推：如果使用`多模态AI助手`提示`'NoneType' object has no attribute 'is_cuda'`，可以尝试使用`AI图片理解`节点
+- 图片反推：如果使用**多模态AI助手**提示`'NoneType' object has no attribute 'is_cuda'`，可以尝试使用**AI图片理解**节点
 
 
 
