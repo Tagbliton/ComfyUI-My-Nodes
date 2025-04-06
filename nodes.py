@@ -516,8 +516,8 @@ class AI100:
 
             },
             "optional": {
-                "image": ("IMAGE",{"lazy": True}),
-                "audio": ("AUDIO",{"lazy": True}),
+                "image": ("IMAGE",),
+                "audio": ("AUDIO",),
                 "video": ("STRING", {"multiline": False, "tooltip": "输入视频地址"}),
                 "role": ("STRING", {"multiline": True, "default": "自定义AI", "tooltip": "输入自定义AI角色", "lazy": True}),
                 "text": ("STRING", {"multiline": True, "default": "", "lazy": True}),
