@@ -120,7 +120,7 @@ AI助手
 
   通过判断来选择输出结果
   
-<img src="IMG/6.png" width="800" alt="自定义宽度" />
+  <img src="IMG/6.png" width="800" alt="自定义宽度" />
 
 
 - **文件计数器**
