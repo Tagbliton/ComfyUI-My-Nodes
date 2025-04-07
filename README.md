@@ -32,9 +32,7 @@ AI助手
 
       将 '=' 后替换为你的**api_key**
 
-     **注**：如果使用此方法，提示API相关问题，可能因为节点执行顺序原因导致没有先输入API
-     
-     **解决方法**：可以尝试在该节点后连接`EasyUse`插件中**展示任何**`show any`处理
+
      
   3. （推荐）将API写入环境变量
   
@@ -50,11 +48,14 @@ AI助手
 
 
 
-## 相关问题
+## ❓相关问题
+
+- 连接错误：提示`Connection error`，请检查网络连接或IP代理
 
 - 图片反推：如果使用**多模态AI助手**提示`'NoneType' object has no attribute 'is_cuda'`，可以尝试使用**AI图片理解**节点
 
 - 视频反推：如果提示`Exceeded limit on max bytes per data-uri item : 10485760`，可能因为视频比特率过高
+
 
 
 
