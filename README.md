@@ -2,9 +2,9 @@
 
 AI助手
 
-一个支持在Comfyui中使用阿里百炼模型库的插件
+一个支持在Comfyui中使用阿里百炼模型库的插件(测试版)
 
-
+稳定版可以在comfyui-manager管理器下载最新版本
 ## 📑 说明书
 - 阿里百炼大模型-技术文档
 
@@ -45,10 +45,21 @@ AI助手
       使用此方法后每次新建节点都会预先填入API
 
 ## 📠OSS（可选节点）
+- 如何加载该节点
+  在comfyui命令行界面输入`pip install oss2`后重启即可成功加载节点
 
-  对象存储OSS教程
+- 如何使用该节点
+  创建对象存储OSS
+  
+  官方教程
   
   ```https://developer.aliyun.com/adc/tutorial/612670```
+
+  Bucket权限设置
+  
+  关闭阻止公共访问，读写权限设置为公共读
+  
+  随后在右上角个人-Accesskey获取节点所需的AccessKey ID及AccessKey Secret
 
 
 ## ❓相关问题
