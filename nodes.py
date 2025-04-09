@@ -1167,6 +1167,7 @@ class GetApiFromConfig:
 NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "General AI assistant": AI101,
                        "AI Vision-Language": AI102,
+                       "AI image processing": AI103,
                        "Flux assistant(advanced)": AI200,
                        "Flux assistant(simple)": AI201,
                        "Digital Comparator": comparator,
@@ -1178,6 +1179,7 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
 NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
                               "General AI assistant": "通用AI助手",
                               "AI Vision-Language": "AI图片理解",
+                              "AI image processing": "AI图片处理",
                               "Flux assistant(advanced)": "Flux助手(高级)",
                               "Flux assistant(simple)": "Flux助手(简易)",
                               "Digital Comparator": "比较分流器",
@@ -1186,3 +1188,44 @@ NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
                               "Scan File Count Node": "文件计数器",
                               "Get Api From Config": "从配置文件获取API"
                               }
+
+
+print("\n\033[32;36m=============================comfyui-my-nodes基础节点已载入成功=============================\033[0m")
+
+
+#尝试导入可选节点，如未安装环境依赖则失败
+try:
+    from .oss.oss import ImageToUrl
+
+    # 节点注册
+
+    NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
+                           "General AI assistant": AI101,
+                           "AI Vision-Language": AI102,
+                           "AI image processing": AI103,
+                           "Flux assistant(advanced)": AI200,
+                           "Flux assistant(simple)": AI201,
+                           "Image To Url": ImageToUrl,
+                           "Digital Comparator": comparator,
+                           "Output Selector": choice,
+                           "Aspect Ratio Preset": size,
+                           "Scan File Count Node": ScanFileCountNode,
+                           "Get Api From Config": GetApiFromConfig
+                           }
+    NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
+                                  "General AI assistant": "通用AI助手",
+                                  "AI Vision-Language": "AI图片理解",
+                                  "AI image processing": "AI图片处理",
+                                  "Flux assistant(advanced)": "Flux助手(高级)",
+                                  "Flux assistant(simple)": "Flux助手(简易)",
+                                  "Image To Url": "图片转URL",
+                                  "Digital Comparator": "比较分流器",
+                                  "Output Selector": "选择输出器",
+                                  "Aspect Ratio Preset": "宽高比",
+                                  "Scan File Count Node": "文件计数器",
+                                  "Get Api From Config": "从配置文件获取API"
+                                  }
+    print("\033[32;36m===============================comfyui-my-nodes已载入可选节点===============================\033[0m\n")
+except:
+    print("\033[33;36m===============================comfyui-my-nodes未载入可选节点===============================\033[0m\n")
+    pass
