@@ -1,16 +1,12 @@
 import requests
 import base64
-import json
 import os
 import numpy as np
-import torch
-import io
 import torchaudio
 import soundfile as sf
-import folder_paths
+import time
 
 
-from PIL import Image
 from openai import OpenAI
 from http import HTTPStatus
 from dashscope import ImageSynthesis
@@ -34,10 +30,15 @@ class AlwaysEqualProxy(str):
 
 any_type = AlwaysEqualProxy("*")
 
+
+
+
 #  Base64 编码格式
 def encode_file(file):
     with open(file, "rb") as file:
         return base64.b64encode(file.read()).decode("utf-8")
+
+
 
 
 #openai接口
@@ -91,6 +92,9 @@ def openaiVL(api_key, base_url, model, text, image):
     result = completion.choices[0].message.content
 
     return result
+
+
+
 
 
 #Qwen多模态接口
@@ -352,11 +356,6 @@ def Qwen44(api_key, base_url, model, role, video, text, audio_voice):
 
 #保存音频
 def save_audio(audio_data):
-    """极简音频保存函数
-    Args:
-        audio_data (dict): 包含waveform和sample_rate的音频字典
-        output_path (str): 可选保存路径，默认输出到comfyui根目录的temp.wav
-    """
     # 设置默认保存路径
     output_path = ("temp.wav")
 
@@ -384,6 +383,7 @@ def DelFile(file):
     else:
         pass
 
+
 #流式输出结果合并
 def StreamText(completion):
     #流式输出结果合并
@@ -401,8 +401,7 @@ def StreamText(completion):
     return output
 
 
-#流式输出音频解码1
-# 方式1: 待生成结束后再进行解码
+#流式输出音频解码
 def StreamAudio1(completion):
     # 方式1: 待生成结束后再进行解码
     audio_string = ""
@@ -424,36 +423,6 @@ def StreamAudio1(completion):
 
     return output
 
-
-# # 方式2: 边生成边解码(使用方式2请将方式1的代码进行注释)
-# def StreamAudio2(completion):
-#     # 初始化 PyAudio
-#     import pyaudio
-#     import time
-#     p = pyaudio.PyAudio()
-#     # 创建音频流
-#     stream = p.open(format=pyaudio.paInt16,
-#                     channels=1,
-#                     rate=24000,
-#                     output=True)
-
-#     for chunk in completion:
-#         if chunk.choices:
-#             if hasattr(chunk.choices[0].delta, "audio"):
-#                 try:
-#                     audio_string = chunk.choices[0].delta.audio["data"]
-#                     wav_bytes = base64.b64decode(audio_string)
-#                     audio_np = np.frombuffer(wav_bytes, dtype=np.int16)
-#                     # 直接播放音频数据
-#                     stream.write(audio_np.tobytes())
-#                 except Exception as e:
-#                     print(chunk.choices[0].delta.audio["transcript"])
-
-#     time.sleep(0.8)
-#     # 清理资源
-#     stream.stop_stream()
-#     stream.close()
-#     p.terminate()
 
 
 
@@ -479,19 +448,13 @@ def role3(language):
     return role3
 
 
-#
-# def validate_path(path, allow_none=False, allow_url=True):
-#     if path is None:
-#         return allow_none
-#     if is_url(path):
-#         #Probably not feasible to check if url resolves here
-#         if not allow_url:
-#             return "URLs are unsupported for this path"
-#         return is_safe_path(path)
-#     if not os.path.isfile(strip_path(path)):
-#         return "Invalid file path: {}".format(path)
-#     return is_safe_path(path)
 
+
+
+
+
+
+#######################################            节点            #######################################
 
 
 #AI多模态模型
