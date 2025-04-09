@@ -712,6 +712,148 @@ class AI102:
 
         return (text,)
 
+
+#AI图片处理
+class AI103:
+    MODE = {
+        "全局风格化": "stylization_all",
+        "局部风格化": "stylization_local",
+        "局部重绘": "description_edit_with_mask",
+        "去水印": "remove_watermark",
+        "扩图": "expand",
+        "图像超分": "super_resolution",
+        "图像上色": "colorization",
+        "线稿生图": "doodle",
+        "垫图": "control_cartoon_feature"
+    }
+
+
+    def __init__(self):
+        pass
+    @classmethod
+    def INPUT_TYPES(s):
+
+        mode = list(s.MODE.keys())
+        return {
+            "required": {
+                "image_url":("STRING",),
+                "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
+                "mode": (mode,),
+                "text": ("STRING", {"multiline": True, "default": ""}),
+            },
+            "optional": {
+                "mask_url": ("STRING",),
+            },
+        }
+
+    RETURN_TYPES = ("IMAGE", "STRING", )
+    RETURN_NAMES = ("image", "url" )
+    FUNCTION = "action"
+    CATEGORY = "我的节点"
+
+    def action(self, api_key, mode, text, image_url, mask_url):
+        function = self.MODE[mode]
+        url = "https://dashscope.aliyuncs.com/api/v1/services/aigc/image2image/image-synthesis"
+
+        headers = {
+            "X-DashScope-Async": "enable",
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+
+        payload = {
+            "model": "wanx2.1-imageedit",
+            "input": {
+                "function": function,
+                "prompt": text,
+                "base_image_url": image_url
+            },
+            "parameters": {
+                "n": 1
+            }
+        }
+
+        try:
+            response = requests.post(url, headers=headers, json=payload)
+            response.raise_for_status()  # 检查HTTP错误
+
+            print("请求成功！响应内容：")
+            print(response.json()['output'])
+
+        except requests.exceptions.RequestException as e:
+            print(f"请求失败: {e}")
+            if response:
+                print(f"响应状态码: {response.status_code}")
+                print(f"错误详情: {response.text}")
+
+        # 状态查询
+        task_id = f"{response.json()['output']['task_id']}"
+        task_status = response.json()['output']['task_status']
+
+        print(f"任务ID: {task_id}")
+        print(f"状态: {task_status}")
+        if task_status == 'PENDING':
+
+            url = f"https://dashscope.aliyuncs.com/api/v1/tasks/{task_id}"
+
+            headers = {"Authorization": f"Bearer {api_key}"}
+
+            time.sleep(2.5)
+
+            while task_status != 'SUCCEEDED':
+
+                # 需要查询的任务ID（替换为实际ID）
+
+                try:
+                    response = requests.get(url, headers=headers)
+                    response.raise_for_status()  # 检查HTTP错误
+
+                    result = response.json()
+                    task_status = result['output']['task_status']
+
+                    print(f"状态: {task_status}")
+                    print(result)
+
+
+                except requests.exceptions.RequestException as e:
+                    print(f"请求失败: {e}")
+                    if 'response' in locals():
+                        print(f"响应状态码: {response.status_code}")
+                        print(f"错误详情: {response.text}")
+
+                if task_status == 'FAILED':
+                    break
+
+
+
+                time.sleep(2.5)
+            if task_status == 'SUCCEEDED':
+                print("任务成功！")
+                url = result['output']['results'][0]['url']
+
+
+                #通过url下载
+                response = requests.get(url)
+                response.raise_for_status()  # 检查HTTP错误
+
+                #PIL图片转terson张量
+                terson = PilToTensor(response)
+
+                return (terson, url,)
+            if task_status == 'FAILED':
+                print(f"响应状态码: {response.status_code}")
+                print(f"错误类型: {response.json()['output']['code']}")
+                print(f"错误详情: {response.json()['output']['message']}")
+                raise ValueError(f"{response.json()['output']['code']}:{response.json()['output']['message']}")
+                pass
+
+                return ()
+
+
+
+
+
+
 #Flux助手高级
 class AI200:
 
