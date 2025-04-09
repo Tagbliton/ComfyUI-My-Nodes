@@ -1158,7 +1158,7 @@ print("\n\033[32;36m=============================comfyui-my-nodes基础节点已
 
 #尝试导入可选节点，如未安装环境依赖则失败
 try:
-    from .oss.oss import ImageToUrl
+    from .oss.oss import ImageToUrlOSS
 
     # 节点注册
 
