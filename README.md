@@ -44,7 +44,11 @@ AI助手
 
       使用此方法后每次新建节点都会预先填入API
 
+## 📠OSS（可选节点）
 
+  对象存储OSS教程
+  
+  ```https://developer.aliyun.com/adc/tutorial/612670```
 
 
 ## ❓相关问题
