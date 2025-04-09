@@ -27,7 +27,7 @@ def upload_to_oss(image, OSS_ACCESS_KEY, OSS_SECRET_KEY, endpoint, bucket, file_
 
 
 #AI图片处理
-class ImageToUrl:
+class ImageToUrlOSS:
     ENDPOINT = {
         "华东1（杭州）": "oss-cn-hangzhou.aliyuncs.com",
         "华东2（上海）": "oss-cn-shanghai.aliyuncs.com",
