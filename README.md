@@ -24,25 +24,9 @@ AI助手
 - API填写的三种方式：
   1. 直接输入节点的文本框
   
-  3. （可选）获取的API可以填写到插件根目录下的配置文件中,以便通过节点`从配置文件获取API`调取
+  3. （可选）获取的API可以填写到插件根目录下的配置文件中,以便通过节点`从配置文件获取数据`调取
 
-     `路径：./custom_nodes/ComfyUI-My-Nodes/config.txt`
-
-     ```json
-
-     {
-	"api_key": "YourApiKey",
-	"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-	"OSS_ACCESS_KEY": "Your AccessKey ID",
-	"OSS_SECRET_KEY": "Your AccessKey Secret",
-	"Key": "Value"
-
-
-
-     }
-     ```
-	
-      将 ':' 后双引号中的内容替换为你的**api_key**
+      将 ':' 后双引号中的内容替换为你的**api_key**`具体细节详见 -功能- >> -从配置文件获取数据- `
 
       **注意**：在使用同一提示词批量生图的情况下，该节点可能导致AI助手被重复加载
 
@@ -63,44 +47,44 @@ AI助手
   
   在comfyui命令行界面输入`pip install oss2`后重启即可成功加载节点
 
-- 如何使用该节点
+  - 如何使用该节点
   
-  创建对象存储OSS
+    创建对象存储OSS
   
-  创建Bucket官方教程
+    创建Bucket官方教程
   
-  ```https://developer.aliyun.com/adc/tutorial/612670```
+    ```https://developer.aliyun.com/adc/tutorial/612670```
 
-  Bucket权限设置
+    Bucket权限设置
   
-  关闭阻止公共访问，读写权限设置为公共读
+    关闭阻止公共访问，读写权限设置为公共读
   
-  随后在右上角个人-Accesskey获取节点所需的AccessKey ID及AccessKey Secret
+    随后在右上角个人-Accesskey获取节点所需的AccessKey ID及AccessKey Secret
 
 
 ## ❓相关问题
 
 - 连接错误：提示`Connection error`，请检查网络连接或IP代理
 
-- 图片反推：如果使用**多模态AI助手**提示`'NoneType' object has no attribute 'is_cuda'`，可以尝试使用**AI图片理解**节点
+  - 图片反推：如果使用**多模态AI助手**提示`'NoneType' object has no attribute 'is_cuda'`，可以尝试使用**AI图片理解**节点
 
-- 视频反推：如果提示`Exceeded limit on max bytes per data-uri item : 10485760`，可能因为视频比特率过高
+  - 视频反推：如果提示`Exceeded limit on max bytes per data-uri item : 10485760`，可能因为视频比特率过高
 
 
 
 
 ## 📑 列表
 - 多模态AI助手
-- 通用AI助手
-- AI图片理解
-- `测试版`AI图片处理
-- Flux助手
-- 比较分流器
-- 选择输出器
-- 宽高比
-- 文件计数器
-- 从配置文件获取API
-- `测试版`（可选）图片转URL(oss)
+  - 通用AI助手
+  - AI图片理解
+  - `测试版`AI图片处理
+  - Flux助手
+  - 比较分流器
+  - 选择输出器
+  - 宽高比
+  - 文件计数器
+  - 从配置文件获取API
+  - `测试版`（可选）图片转URL(oss)
 
 
 
