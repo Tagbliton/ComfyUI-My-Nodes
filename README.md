@@ -28,7 +28,7 @@ AI助手
 
      `路径：./custom_nodes/ComfyUI-My-Nodes/config.txt`
 
-     ```
+```
 
      {
 	"api_key": "YourApiKey",
@@ -40,7 +40,7 @@ AI助手
 
 
      }
-     ```
+```
      
      
 
