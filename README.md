@@ -26,9 +26,9 @@ AI助手
   
   3. （可选）获取的API可以填写到插件根目录下的配置文件中,以便通过节点`从配置文件获取API`调取
      
-	```
-	路径：./custom_nodes/ComfyUI-My-Nodes/config.txt
-	内容：{
+	
+	`路径：./custom_nodes/ComfyUI-My-Nodes/config.txt`
+	```{
 	"api_key": "YourApiKey",
 	"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
 	"OSS_ACCESS_KEY": "Your AccessKey ID",
@@ -37,8 +37,8 @@ AI助手
 	
 	
 	
-	}
-	```
+	}```
+	
       将 ':' 后双引号中的内容替换为你的**api_key**
 
       **注意**：在使用同一提示词批量生图的情况下，该节点可能导致AI助手被重复加载
@@ -165,17 +165,15 @@ AI助手
 
   从config.json文件中获取数据(适用于方法2)
 
-   ```
-   路径：./custom_nodes/ComfyUI-My-Nodes/config.txt
-   内容：{
-  	"api_key": "YourApiKey",
-  	"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-  	"OSS_ACCESS_KEY": "Your AccessKey ID",
-  	"OSS_SECRET_KEY": "Your AccessKey Secret",
-  	"Key": "Value"
-  
-  
-  
-  }
-  ```
+`路径：./custom_nodes/ComfyUI-My-Nodes/config.txt`
+```{
+"api_key": "YourApiKey",
+"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+"OSS_ACCESS_KEY": "Your AccessKey ID",
+"OSS_SECRET_KEY": "Your AccessKey Secret",
+"Key": "Value"
+
+
+
+}```
   可以将自己需要快速获取的值按照以上示例填入，注意标点符号为英文，不要忘记可能丢失的`","`
