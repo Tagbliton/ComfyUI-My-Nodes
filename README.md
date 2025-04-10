@@ -26,19 +26,19 @@ AI助手
   
   3. （可选）获取的API可以填写到插件根目录下的配置文件中,以便通过节点`从配置文件获取API`调取
      
-   ```
-   路径：./custom_nodes/ComfyUI-My-Nodes/config.txt
-   内容：{
+	```
+	路径：./custom_nodes/ComfyUI-My-Nodes/config.txt
+	内容：{
 	"api_key": "YourApiKey",
 	"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
 	"OSS_ACCESS_KEY": "Your AccessKey ID",
 	"OSS_SECRET_KEY": "Your AccessKey Secret",
 	"Key": "Value"
-  
-  
-  
-  }
-  ```
+	
+	
+	
+	}
+	```
       将 ':' 后双引号中的内容替换为你的**api_key**
 
       **注意**：在使用同一提示词批量生图的情况下，该节点可能导致AI助手被重复加载
