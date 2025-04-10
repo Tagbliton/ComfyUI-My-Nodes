@@ -25,7 +25,7 @@ AI助手
   1. 直接输入节点的文本框
   
   3. （可选）获取的API可以填写到插件根目录下的配置文件中,以便通过节点`从配置文件获取API`调取
-      ```json
+      ```
       路径：./custom_nodes/ComfyUI-My-Nodes/config.txt
       内容：{
 	"api_key": "YourApiKey",
@@ -36,7 +36,7 @@ AI助手
 
 
 
-}
+	}
       ```
       将 ':' 后双引号中的内容替换为你的**api_key**
 
@@ -164,7 +164,7 @@ AI助手
 
   从config.json文件中获取数据(适用于方法2)
 
-   ```json
+   ```
    路径：./custom_nodes/ComfyUI-My-Nodes/config.txt
    内容：{
   	"api_key": "YourApiKey",
