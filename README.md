@@ -28,7 +28,7 @@ AI助手
 
      `路径：./custom_nodes/ComfyUI-My-Nodes/config.txt`
 
-```json
+     ```json
 
      {
 	"api_key": "YourApiKey",
@@ -40,11 +40,7 @@ AI助手
 
 
      }
-```
-     
-     
-
-
+     ```
 	
       将 ':' 后双引号中的内容替换为你的**api_key**
 
