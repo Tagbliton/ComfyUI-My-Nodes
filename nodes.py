@@ -1219,51 +1219,70 @@ class ScanFileCountNode:
 
 
 
-class GetApiFromConfig:
+#从配置文件获取数据
+class GetDataFromConfig:
+
+    def __init__(self):
+        pass
+
     @classmethod
     def INPUT_TYPES(cls):
+        # 获取节点文件所在目录路径
+
+        config_path = "./custom_nodes/ComfyUI-My-Nodes/config.json"
+
+        keys = []
+        try:
+            with open(config_path, "r") as f:
+                config = json.load(f)
+                keys = list(config.keys())
+                if not keys:
+                    keys = ["[ERROR] Empty config"]
+        except Exception as e:
+            print(f"❌ ConfigValueNode load failed: {str(e)}")
+            keys = ["[ERROR] Load config"]
+
         return {
             "required": {
-                "file_path": ("STRING", {"default": "./custom_nodes/ComfyUI-My-Nodes/config.txt", "tooltip": "文件路径"})
-            },
+                "key": (keys, {"default": keys[0] if keys else "error"})
+            }
         }
 
-    RETURN_TYPES = ("STRING", )
-    RETURN_NAMES = ("API_KEY", )
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("value",)
     FUNCTION = "action"
     CATEGORY = "我的节点"
 
-    def action(self, file_path):
-        api_key = ""
+    def action(self, key):
+        # 再次读取确保获取最新值
 
+        config_path = "./custom_nodes/ComfyUI-My-Nodes/config.json"
 
         try:
-            # 检查文件是否存在
-            if not os.path.isfile(file_path):
-                raise FileNotFoundError(f"Config file not found: {file_path}")
+            with open(config_path, "r") as f:
+                config = json.load(f)
 
-            # 读取并解析文件
-            with open(file_path, "r") as f:
-                for line in f:
-                    line = line.strip()
-                    if line.startswith("api_key="):
-                        api_key = line.split("=", 1)[1].strip()
+            if key.startswith("[ERROR]"):
+                return ("Configuration error detected",)
 
-            if api_key == "YourApiKey":
-                raise ValueError("API key not found in config file")
-            # 验证结果
-            if not api_key:
-                raise ValueError("API key not found in config file")
+            value = config.get(key, f"[MISSING] Key: {key}")
 
-
+        except FileNotFoundError:
+            value = "[ERROR] config.json not found"
+        except json.JSONDecodeError:
+            value = "[ERROR] Invalid JSON format"
         except Exception as e:
-            print(f"Error reading config file: {str(e)}")
-            return ("", )  # 返回空值或抛出异常
+            value = f"[ERROR] {str(e)}"
 
-        return (api_key, )
-    @classmethod
-    def IS_CHANGED(s, api_key):
-       return ""
+        return (value,)
+
+
+
+
+
+
+
+
 
 
 
@@ -1279,7 +1298,7 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "Output Selector": choice,
                        "Aspect Ratio Preset": size,
                        "Scan File Count Node": ScanFileCountNode,
-                       "Get Api From Config":GetApiFromConfig
+                       "Get Data From Config":GetDataFromConfig
                        }
 NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
                               "General AI assistant": "通用AI助手",
@@ -1291,7 +1310,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
                               "Output Selector": "选择输出器",
                               "Aspect Ratio Preset": "宽高比",
                               "Scan File Count Node": "文件计数器",
-                              "Get Api From Config": "从配置文件获取API"
+                              "Get Data From Config": "从配置文件获取数据"
                               }
 
 
@@ -1315,7 +1334,7 @@ try:
                            "Output Selector": choice,
                            "Aspect Ratio Preset": size,
                            "Scan File Count Node": ScanFileCountNode,
-                           "Get Api From Config": GetApiFromConfig
+                           "Get Data From Config":GetDataFromConfig
                            }
     NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
                                   "General AI assistant": "通用AI助手",
@@ -1328,7 +1347,7 @@ try:
                                   "Output Selector": "选择输出器",
                                   "Aspect Ratio Preset": "宽高比",
                                   "Scan File Count Node": "文件计数器",
-                                  "Get Api From Config": "从配置文件获取API"
+                                  "Get Data From Config": "从配置文件获取数据"
                                   }
     print("\033[32;36m===============================comfyui-my-nodes已载入可选节点===============================\033[0m\n")
 except:
