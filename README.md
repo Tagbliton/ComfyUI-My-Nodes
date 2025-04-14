@@ -39,6 +39,19 @@ AI助手
 
       使用此方法后每次新建节点都会预先填入API
 
+## 🚀更新内容
+- v1.1.2
+	添加AI图片处理节点
+	添加可选节点图片转URL(oss)
+	修复从配置文件获取数据逻辑
+	优化Flux助手获取文本逻辑
+	比较分流器和选择输出器可以进行空输入
+	添加示例工作流
+
+
+
+
+
 ## 📠图片转URL(OSS)（可选节点）
 
 - 如何加载该节点
@@ -75,14 +88,14 @@ AI助手
 - 多模态AI助手
   - 通用AI助手
   - AI图片理解
-  - `测试版`AI图片处理
+  - AI图片处理
   - Flux助手
   - 比较分流器
   - 选择输出器
   - 宽高比
   - 文件计数器
   - 从配置文件获取API
-  - `测试版`（可选）图片转URL(oss)
+  - （可选）图片转URL(oss)
 
 
 
@@ -159,6 +172,7 @@ AI助手
 	"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
 	"OSS_ACCESS_KEY": "Your AccessKey ID",
 	"OSS_SECRET_KEY": "Your AccessKey Secret",
+     	"bucket": "Your Bucket Name",
 	"Key": "Value"
 
 
