@@ -169,7 +169,8 @@ AI助手
 
   从config.json文件中获取数据(适用于方法2)
 
-     `路径：./custom_nodes/ComfyUI-My-Nodes/config.txt`
+  使用文本文档打开
+     `路径：./custom_nodes/ComfyUI-My-Nodes/config.json`
 
      ```json
 
