@@ -5,7 +5,7 @@ import numpy as np
 import torchaudio
 import soundfile as sf
 import time
-
+import json
 
 from openai import OpenAI
 from http import HTTPStatus
@@ -457,6 +457,11 @@ def role3(language):
 #######################################            节点            #######################################
 
 
+
+
+
+
+
 #AI多模态模型
 class AI100:
 
@@ -469,7 +474,7 @@ class AI100:
         return {
             "required": {
 
-                "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
+                "api_key": ("STRING", {"multiline": False, "default": default_api_key}),     #删除"lazy": True以保证优先加载api_key
                 "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1","lazy": True}),
                 "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-03-26", "qwen-omni-turbo-2025-01-19"],),
                 "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片反推", "音频反推", "视频反推", "自定义", "无"],),
@@ -713,6 +718,7 @@ class AI102:
         return (text,)
 
 
+
 #AI图片处理
 class AI103:
     MODE = {
@@ -751,8 +757,22 @@ class AI103:
     FUNCTION = "action"
     CATEGORY = "我的节点"
 
-    def action(self, api_key, mode, text, image_url, mask_url):
+    def action(self, api_key, mode, text, image_url, mask_url=None):
         function = self.MODE[mode]
+
+
+        if mode == "图像超分":
+            upscale_factor=2
+        else:
+            upscale_factor=None
+
+
+        if mode == "扩图":
+            value=1.5
+        else:
+            value=None
+
+
         url = "https://dashscope.aliyuncs.com/api/v1/services/aigc/image2image/image-synthesis"
 
         headers = {
@@ -766,9 +786,15 @@ class AI103:
             "input": {
                 "function": function,
                 "prompt": text,
-                "base_image_url": image_url
+                "base_image_url": image_url,
+                "mask_image_url": mask_url
             },
             "parameters": {
+                "upscale_factor": upscale_factor,
+                "top_scale": value,
+                "bottom_scale": value,
+                "left_scale": value,
+                "right_scale": value,
                 "n": 1
             }
         }
@@ -853,7 +879,6 @@ class AI103:
 
 
 
-
 #Flux助手高级
 class AI200:
 
@@ -875,7 +900,7 @@ class AI200:
                 "offload":(["False", "True"], {
                     "default": "False",
                     "tooltip": "一个布尔值，表示是否在采样过程中将部分计算密集型组件临时从GPU卸载到CPU，以减轻内存压力或提升效率。如果您的系统资源有限或希望加速采样过程，可以启用此选项，默认为False。", } ),
-                "prompt": ("STRING", {"multiline": True, "default": "","lazy": True}),
+                "prompt": ("STRING", {"multiline": True, "default": ""}),
             },
         }
 
@@ -938,7 +963,7 @@ class AI201:
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
                 "model": (["flux-schnell(快速)", "flux-dev(高质量)", "flux-merged(优化)"],),
                 "size": (["1024*1024", "512*1024", "768*512", "768*1024", "1024*576", "576*1024"],),
-                "prompt": ("STRING", {"multiline": True, "default": "","lazy": True}),
+                "prompt": ("STRING", {"multiline": True, "default": ""}),
             },
         }
 
@@ -1025,7 +1050,7 @@ class comparator:
 
     CATEGORY = "我的节点"
 
-    def action(self, mode, a, b, input1, input2):
+    def action(self, mode, a, b, input1=None, input2=None):
         comparators = {
             "==": lambda a, b: a == b,
             "!=": lambda a, b: a != b,
@@ -1073,7 +1098,7 @@ class choice:
 
     CATEGORY = "我的节点"
 
-    def action(self, bool, if_True, if_False):
+    def action(self, bool, if_True=None, if_False=None):
         if bool == True:
             anything = if_True
         elif bool == False:
@@ -1213,7 +1238,6 @@ class ScanFileCountNode:
         stats = f"扫描完成 | 路径: {folder_path}\n模式: {scan_mode}\n类型: {ext_info}\n总任务数: {total_count}"
 
         return (total_count, stats, )
-
 
 
 
