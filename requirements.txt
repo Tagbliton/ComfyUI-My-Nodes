@@ -3,3 +3,7 @@ openai
 requests
 soundfile
 numpy
+
+
+
+#可选 oss2
