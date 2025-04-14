@@ -178,7 +178,7 @@ AI助手
 	"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
 	"OSS_ACCESS_KEY": "Your AccessKey ID",
 	"OSS_SECRET_KEY": "Your AccessKey Secret",
-        "bucket": "Your Bucket Name",
+     "bucket": "Your Bucket Name",
 	"Key": "Value"
 
 
