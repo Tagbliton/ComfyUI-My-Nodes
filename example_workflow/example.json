@@ -1,0 +1,2409 @@
+{
+  "id": "c57d81bb-3257-4dff-ad79-7557cdaba4d0",
+  "revision": 0,
+  "last_node_id": 295,
+  "last_link_id": 313,
+  "nodes": [
+    {
+      "id": 18,
+      "type": "LoadImage",
+      "pos": [
+        -14850.8701171875,
+        2792.649169921875
+      ],
+      "size": [
+        315,
+        314
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": []
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "title": "5.提示词反推（图片输入）",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.14",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "画面2-4.png",
+        "image"
+      ]
+    },
+    {
+      "id": 19,
+      "type": "ShowText|pysssss",
+      "pos": [
+        -13976.0859375,
+        2819.83740234375
+      ],
+      "size": [
+        360.840087890625,
+        225.71595764160156
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "9f7b3215e6af317603056a9a1666bf6e83e28835",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        "",
+        "这是一幅色彩斑斓的抽象画，画面中充满了各种大小不一、颜色各异的圆点，散布在浅色的背景上。这些圆点有黄色、蓝色、橙色、粉色和绿色等，给人一种轻盈和梦幻的感觉。画面下方是几条绿色的波浪线条，仿佛是河流或海洋，线条之间点缀着一些小房子和树木，远处还有连绵的山脉。整体画面给人一种宁静而美好的感觉，仿佛置身于一个童话世界。"
+      ]
+    },
+    {
+      "id": 166,
+      "type": "ShowText|pysssss",
+      "pos": [
+        -16310.5009765625,
+        2179.200439453125
+      ],
+      "size": [
+        315,
+        112
+      ],
+      "flags": {},
+      "order": 29,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": 182
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "9f7b3215e6af317603056a9a1666bf6e83e28835",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        "",
+        "扫描完成 | 路径: .\\outbatch\n模式: 仅当前目录\n类型: 所有类型\n总任务数: 12"
+      ]
+    },
+    {
+      "id": 164,
+      "type": "easy string",
+      "pos": [
+        -17000,
+        1950
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "string",
+          "type": "STRING",
+          "slot_index": 0,
+          "links": [
+            181,
+            203
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "3e84b8cd77719341adc71b08b5789bdb07b1a543",
+        "Node name for S&R": "easy string"
+      },
+      "widgets_values": [
+        ".\\outbatch"
+      ]
+    },
+    {
+      "id": 12,
+      "type": "easy batchAnything",
+      "pos": [
+        -14677.041015625,
+        1935.798583984375
+      ],
+      "size": [
+        210,
+        46
+      ],
+      "flags": {},
+      "order": 40,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "any_1",
+          "type": "*",
+          "link": 24
+        },
+        {
+          "name": "any_2",
+          "type": "*",
+          "link": 201
+        }
+      ],
+      "outputs": [
+        {
+          "name": "batch",
+          "type": "*",
+          "slot_index": 0,
+          "links": [
+            16
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "3e84b8cd77719341adc71b08b5789bdb07b1a543",
+        "Node name for S&R": "easy batchAnything"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 9,
+      "type": "easy forLoopEnd",
+      "pos": [
+        -14257.1953125,
+        1807.2169189453125
+      ],
+      "size": [
+        178,
+        66
+      ],
+      "flags": {},
+      "order": 41,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "flow",
+          "shape": 5,
+          "type": "FLOW_CONTROL",
+          "link": 13
+        },
+        {
+          "name": "initial_value1",
+          "shape": 7,
+          "type": "*",
+          "link": 16
+        },
+        {
+          "name": "initial_value2",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value1",
+          "type": "*",
+          "slot_index": 0,
+          "links": [
+            7
+          ]
+        },
+        {
+          "name": "value2",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "3e84b8cd77719341adc71b08b5789bdb07b1a543",
+        "Node name for S&R": "easy forLoopEnd"
+      },
+      "widgets_values": [],
+      "color": "#1f1f48",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 6,
+      "type": "SaveImage",
+      "pos": [
+        -13873.22265625,
+        1772.19482421875
+      ],
+      "size": [
+        425.648193359375,
+        284.7604675292969
+      ],
+      "flags": {},
+      "order": 42,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 7
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.14",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 14,
+      "type": "PreviewImage",
+      "pos": [
+        -14782.162109375,
+        2124.819580078125
+      ],
+      "size": [
+        210,
+        246
+      ],
+      "flags": {},
+      "order": 39,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 200
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.14",
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 174,
+      "type": "Load Image Batch",
+      "pos": [
+        -15278.12890625,
+        2033.486083984375
+      ],
+      "size": [
+        315,
+        270
+      ],
+      "flags": {},
+      "order": 37,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "index",
+          "type": "INT",
+          "widget": {
+            "name": "index"
+          },
+          "link": 211
+        },
+        {
+          "name": "path",
+          "type": "STRING",
+          "widget": {
+            "name": "path"
+          },
+          "link": 203
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [
+            200,
+            201
+          ]
+        },
+        {
+          "name": "filename_text",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Load Image Batch"
+      },
+      "widgets_values": [
+        "single_image",
+        591917726452231,
+        "randomize",
+        0,
+        "Batch 001",
+        "",
+        "*",
+        "false",
+        "true"
+      ]
+    },
+    {
+      "id": 165,
+      "type": "Scan File Count Node",
+      "pos": [
+        -16710,
+        2100
+      ],
+      "size": [
+        315,
+        126
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "folder_path",
+          "type": "STRING",
+          "widget": {
+            "name": "folder_path"
+          },
+          "link": 181
+        }
+      ],
+      "outputs": [
+        {
+          "name": "文件数量",
+          "type": "INT",
+          "slot_index": 0,
+          "links": [
+            190,
+            208
+          ]
+        },
+        {
+          "name": "统计信息",
+          "type": "STRING",
+          "slot_index": 1,
+          "links": [
+            182
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Scan File Count Node",
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.0.1"
+      },
+      "widgets_values": [
+        "./input",
+        false,
+        "*"
+      ]
+    },
+    {
+      "id": 175,
+      "type": "easy showAnything",
+      "pos": [
+        -15376.7802734375,
+        1564.3665771484375
+      ],
+      "size": [
+        210,
+        88
+      ],
+      "flags": {},
+      "order": 36,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "shape": 7,
+          "type": "*",
+          "link": 209
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "slot_index": 0,
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "3e84b8cd77719341adc71b08b5789bdb07b1a543",
+        "Node name for S&R": "easy showAnything"
+      },
+      "widgets_values": [
+        "11"
+      ]
+    },
+    {
+      "id": 8,
+      "type": "easy forLoopStart",
+      "pos": [
+        -15792.9248046875,
+        1731.7852783203125
+      ],
+      "size": [
+        210,
+        118
+      ],
+      "flags": {},
+      "order": 28,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "initial_value1",
+          "shape": 7,
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "total",
+          "type": "INT",
+          "widget": {
+            "name": "total"
+          },
+          "link": 208
+        },
+        {
+          "name": "initial_value2",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "flow",
+          "shape": 5,
+          "type": "FLOW_CONTROL",
+          "slot_index": 0,
+          "links": [
+            13
+          ]
+        },
+        {
+          "name": "index",
+          "type": "INT",
+          "slot_index": 1,
+          "links": [
+            209,
+            211
+          ]
+        },
+        {
+          "name": "value1",
+          "type": "*",
+          "slot_index": 2,
+          "links": [
+            24
+          ]
+        },
+        {
+          "name": "value2",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "3e84b8cd77719341adc71b08b5789bdb07b1a543",
+        "Node name for S&R": "easy forLoopStart"
+      },
+      "widgets_values": [
+        3
+      ],
+      "color": "#1f1f48",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 172,
+      "type": "easy showAnything",
+      "pos": [
+        -16347.400390625,
+        1672.3001708984375
+      ],
+      "size": [
+        210,
+        88
+      ],
+      "flags": {},
+      "order": 27,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "shape": 7,
+          "type": "*",
+          "link": 190
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "slot_index": 0,
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "3e84b8cd77719341adc71b08b5789bdb07b1a543",
+        "Node name for S&R": "easy showAnything"
+      },
+      "widgets_values": [
+        "12"
+      ]
+    },
+    {
+      "id": 177,
+      "type": "easy forLoopStart",
+      "pos": [
+        -16136.521484375,
+        743.5748291015625
+      ],
+      "size": [
+        315,
+        98
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "initial_value1",
+          "shape": 7,
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "total",
+          "type": "INT",
+          "widget": {
+            "name": "total"
+          },
+          "link": 213
+        }
+      ],
+      "outputs": [
+        {
+          "name": "flow",
+          "shape": 5,
+          "type": "FLOW_CONTROL",
+          "slot_index": 0,
+          "links": [
+            212
+          ]
+        },
+        {
+          "name": "index",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "value1",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "3e84b8cd77719341adc71b08b5789bdb07b1a543",
+        "Node name for S&R": "easy forLoopStart"
+      },
+      "widgets_values": [
+        1
+      ],
+      "color": "#1f1f48",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 176,
+      "type": "Scan File Count Node",
+      "pos": [
+        -16539.43359375,
+        886.681396484375
+      ],
+      "size": [
+        315,
+        126
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "文件数量",
+          "type": "INT",
+          "slot_index": 0,
+          "links": [
+            213
+          ]
+        },
+        {
+          "name": "统计信息",
+          "type": "STRING",
+          "slot_index": 1,
+          "links": [
+            214
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Scan File Count Node",
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.0.1"
+      },
+      "widgets_values": [
+        ".\\outbatch",
+        false,
+        "*"
+      ]
+    },
+    {
+      "id": 179,
+      "type": "ShowText|pysssss",
+      "pos": [
+        -16147.0390625,
+        953.191650390625
+      ],
+      "size": [
+        323.26446533203125,
+        142.11570739746094
+      ],
+      "flags": {},
+      "order": 21,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": 214
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "9f7b3215e6af317603056a9a1666bf6e83e28835",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        "",
+        "扫描完成 | 路径: .\\outbatch\n模式: 仅当前目录\n类型: 所有类型\n总任务数: 19"
+      ]
+    },
+    {
+      "id": 178,
+      "type": "easy forLoopEnd",
+      "pos": [
+        -15008.759765625,
+        731.8953247070312
+      ],
+      "size": [
+        267,
+        46
+      ],
+      "flags": {},
+      "order": 30,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "flow",
+          "shape": 5,
+          "type": "FLOW_CONTROL",
+          "link": 212
+        },
+        {
+          "name": "initial_value1",
+          "shape": 7,
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "value1",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "3e84b8cd77719341adc71b08b5789bdb07b1a543",
+        "Node name for S&R": "easy forLoopEnd"
+      },
+      "widgets_values": [],
+      "color": "#1f1f48",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 184,
+      "type": "ShowText|pysssss",
+      "pos": [
+        -16107.6865234375,
+        43.42562484741211
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 32,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": 217
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "9f7b3215e6af317603056a9a1666bf6e83e28835",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 180,
+      "type": "Digital Comparator",
+      "pos": [
+        -16644.578125,
+        -84.21845245361328
+      ],
+      "size": [
+        315,
+        146
+      ],
+      "flags": {},
+      "order": 22,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "input1",
+          "shape": 7,
+          "type": "*",
+          "link": 218
+        },
+        {
+          "name": "input2",
+          "shape": 7,
+          "type": "*",
+          "link": 219
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output1",
+          "type": "*",
+          "slot_index": 0,
+          "links": [
+            216
+          ]
+        },
+        {
+          "name": "output2",
+          "type": "*",
+          "slot_index": 1,
+          "links": [
+            217
+          ]
+        },
+        {
+          "name": "boolean",
+          "type": "BOOLEAN",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Digital Comparator",
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.0.1"
+      },
+      "widgets_values": [
+        "==",
+        0,
+        0
+      ]
+    },
+    {
+      "id": 186,
+      "type": "ShowText|pysssss",
+      "pos": [
+        -17088.6796875,
+        -49.02635955810547
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "slot_index": 0,
+          "links": [
+            219
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "9f7b3215e6af317603056a9a1666bf6e83e28835",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 185,
+      "type": "ShowText|pysssss",
+      "pos": [
+        -17078.064453125,
+        -215.05819702148438
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "slot_index": 0,
+          "links": [
+            218
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "9f7b3215e6af317603056a9a1666bf6e83e28835",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 183,
+      "type": "ShowText|pysssss",
+      "pos": [
+        -16108.9599609375,
+        -73.96113586425781
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 31,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": 216
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "9f7b3215e6af317603056a9a1666bf6e83e28835",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 187,
+      "type": "Output Selector",
+      "pos": [
+        -16531.1640625,
+        -434.9523010253906
+      ],
+      "size": [
+        315,
+        78
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "if_True",
+          "shape": 7,
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "if_False",
+          "shape": 7,
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "slot_index": 0,
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Output Selector",
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.0.1"
+      },
+      "widgets_values": [
+        true
+      ]
+    },
+    {
+      "id": 194,
+      "type": "LoadAudio",
+      "pos": [
+        -15121.751953125,
+        211.03338623046875
+      ],
+      "size": [
+        315,
+        136
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.14",
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        "AI配音.wav",
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 195,
+      "type": "LoadAudio",
+      "pos": [
+        -14635.513671875,
+        268.8331298828125
+      ],
+      "size": [
+        315,
+        136
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.14",
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        "语音素材.mp3",
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 200,
+      "type": "LoadImage",
+      "pos": [
+        -14554.259765625,
+        726.1365356445312
+      ],
+      "size": [
+        315,
+        314
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [
+            224
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.14",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "226104432-ab2c5bce6d294a92da541a8628bd57fbfa172198bfc374ad5896ab3b5ad09044.JPG",
+        "image"
+      ]
+    },
+    {
+      "id": 201,
+      "type": "easy showAnything",
+      "pos": [
+        -13493.0654296875,
+        431.8904724121094
+      ],
+      "size": [
+        308.6023254394531,
+        151.13148498535156
+      ],
+      "flags": {},
+      "order": 33,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "shape": 7,
+          "type": "*",
+          "link": 225
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "3e84b8cd77719341adc71b08b5789bdb07b1a543",
+        "Node name for S&R": "easy showAnything"
+      },
+      "widgets_values": [
+        "嗯，那他可能在公园里散步呢。或者是在看风景，也可能是在等人吧。你怎么突然说起这个啦？是看到什么特别的事情了吗要是还有啥想法可以和我说哦。"
+      ]
+    },
+    {
+      "id": 203,
+      "type": "VHS_LoadAudio",
+      "pos": [
+        -13429.5380859375,
+        867.22021484375
+      ],
+      "size": [
+        216.23486328125,
+        82
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "slot_index": 0,
+          "links": [
+            228
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-videohelpersuite",
+        "ver": "c9dcc3a229437df232d61da4f9697c87c1f22428",
+        "Node name for S&R": "VHS_LoadAudio"
+      },
+      "widgets_values": {
+        "audio_file": "out_temp.wav",
+        "seek_seconds": 0
+      }
+    },
+    {
+      "id": 205,
+      "type": "PreviewAudio",
+      "pos": [
+        -13019.76171875,
+        861.5046997070312
+      ],
+      "size": [
+        315,
+        88
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 228
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.14",
+        "Node name for S&R": "PreviewAudio"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 197,
+      "type": "Multimodal AI assistant",
+      "pos": [
+        -14077.05078125,
+        729.7528076171875
+      ],
+      "size": [
+        400,
+        384
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 224
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "OutText",
+          "type": "STRING",
+          "slot_index": 0,
+          "links": [
+            225
+          ]
+        },
+        {
+          "name": "OutAudio",
+          "type": "AUDIO",
+          "slot_index": 1,
+          "links": [
+            229
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Multimodal AI assistant",
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.0.1"
+      },
+      "widgets_values": [
+        "sk-c800068d8fe24c6f826e55892e1835b7",
+        "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "qwen-omni-turbo-2025-03-26",
+        "自定义",
+        "英文",
+        true,
+        "Cherry",
+        "",
+        "你是一个精通多国语言的专家，将输入转换为英文，随后输出",
+        "一个人站在公园里"
+      ]
+    },
+    {
+      "id": 207,
+      "type": "LoadAudio",
+      "pos": [
+        -13868.7421875,
+        30.768035888671875
+      ],
+      "size": [
+        315,
+        136
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.14",
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        "temp.wav",
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 206,
+      "type": "PreviewAudio",
+      "pos": [
+        -13355.7431640625,
+        695.4950561523438
+      ],
+      "size": [
+        315,
+        88
+      ],
+      "flags": {},
+      "order": 34,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 229
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.14",
+        "Node name for S&R": "PreviewAudio"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 198,
+      "type": "Note",
+      "pos": [
+        -15154.2138671875,
+        932.4344482421875
+      ],
+      "size": [
+        504.4627990722656,
+        239.33883666992188
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "sk-c800068d8fe24c6f826e55892e1835b7\n\nhttps://dashscope.aliyuncs.com/compatible-mode/v1\n\ndeepseek-v3"
+      ],
+      "color": "#c09430",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 266,
+      "type": "LoadImage",
+      "pos": [
+        2101.600341796875,
+        1994.8990478515625
+      ],
+      "size": [
+        315,
+        314
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            287,
+            300
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            290,
+            295,
+            296
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.27",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "ComfyUI_temp_ofpkl_00001_.png",
+        "image",
+        ""
+      ]
+    },
+    {
+      "id": 265,
+      "type": "Image To Url(OSS)",
+      "pos": [
+        3077.273681640625,
+        1739.0262451171875
+      ],
+      "size": [
+        315,
+        150
+      ],
+      "flags": {},
+      "order": 44,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 287
+        },
+        {
+          "name": "mask",
+          "shape": 7,
+          "type": "MASK",
+          "link": 297
+        },
+        {
+          "name": "OSS_ACCESS_KEY",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "OSS_ACCESS_KEY"
+          },
+          "link": 307
+        },
+        {
+          "name": "OSS_SECRET_KEY",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "OSS_SECRET_KEY"
+          },
+          "link": 306
+        },
+        {
+          "name": "bucket",
+          "type": "STRING",
+          "widget": {
+            "name": "bucket"
+          },
+          "link": 308
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image_url",
+          "type": "STRING",
+          "links": [
+            285
+          ]
+        },
+        {
+          "name": "mask_url",
+          "type": "STRING",
+          "links": [
+            286
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Image To Url(OSS)"
+      },
+      "widgets_values": [
+        "temptest0",
+        "华东1（杭州）",
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 273,
+      "type": "PreviewImage",
+      "pos": [
+        3811.867919921875,
+        1727.7962646484375
+      ],
+      "size": [
+        399.8978576660156,
+        377.97381591796875
+      ],
+      "flags": {},
+      "order": 45,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 294
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.27",
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 291,
+      "type": "Multimodal AI assistant",
+      "pos": [
+        2629.449462890625,
+        838.008056640625
+      ],
+      "size": [
+        400,
+        354
+      ],
+      "flags": {},
+      "order": 26,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "api_key",
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": 310
+        }
+      ],
+      "outputs": [
+        {
+          "name": "OutText",
+          "type": "STRING",
+          "links": [
+            311
+          ]
+        },
+        {
+          "name": "OutAudio",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Multimodal AI assistant"
+      },
+      "widgets_values": [
+        "",
+        "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "qwen-omni-turbo",
+        "AI翻译+润色",
+        "英文",
+        false,
+        "Cherry",
+        "",
+        "自定义AI",
+        "IP形象设计：一个blender渲染风格的IP形象"
+      ]
+    },
+    {
+      "id": 276,
+      "type": "AI Vision-Language",
+      "pos": [
+        3079.120361328125,
+        1965.02294921875
+      ],
+      "size": [
+        315,
+        154
+      ],
+      "flags": {},
+      "order": 25,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 300
+        },
+        {
+          "name": "api_key",
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": null
+        },
+        {
+          "name": "base_url",
+          "type": "STRING",
+          "widget": {
+            "name": "base_url"
+          },
+          "link": 304
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "AI Vision-Language"
+      },
+      "widgets_values": [
+        "",
+        "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "qwen2.5-vl-7b-instruct",
+        "默认",
+        "英文"
+      ]
+    },
+    {
+      "id": 263,
+      "type": "AI image processing",
+      "pos": [
+        3427.64794921875,
+        1730.394287109375
+      ],
+      "size": [
+        351.2396545410156,
+        192
+      ],
+      "flags": {},
+      "order": 43,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "api_key",
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": 305
+        },
+        {
+          "name": "image_url",
+          "type": "STRING",
+          "widget": {
+            "name": "image_url"
+          },
+          "link": 285
+        },
+        {
+          "name": "mask_url",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "mask_url"
+          },
+          "link": 286
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            294
+          ]
+        },
+        {
+          "name": "url",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "AI image processing"
+      },
+      "widgets_values": [
+        "",
+        "",
+        "全局风格化",
+        "转换为法国绘本风",
+        ""
+      ]
+    },
+    {
+      "id": 286,
+      "type": "Get Data From Config",
+      "pos": [
+        2520.656494140625,
+        1583.85791015625
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "links": [
+            304,
+            305
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Get Data From Config"
+      },
+      "widgets_values": [
+        "api_key"
+      ]
+    },
+    {
+      "id": 287,
+      "type": "Get Data From Config",
+      "pos": [
+        2521.70654296875,
+        1697.5615234375
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "links": [
+            308
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Get Data From Config"
+      },
+      "widgets_values": [
+        "bucket"
+      ]
+    },
+    {
+      "id": 288,
+      "type": "Get Data From Config",
+      "pos": [
+        2523.088134765625,
+        1810.0721435546875
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "links": [
+            307
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Get Data From Config"
+      },
+      "widgets_values": [
+        "OSS_ACCESS_KEY"
+      ]
+    },
+    {
+      "id": 289,
+      "type": "Get Data From Config",
+      "pos": [
+        2523.17041015625,
+        1921.6644287109375
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "links": [
+            306
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Get Data From Config"
+      },
+      "widgets_values": [
+        "OSS_SECRET_KEY"
+      ]
+    },
+    {
+      "id": 274,
+      "type": "Output Selector",
+      "pos": [
+        2523.32763671875,
+        2034.6259765625
+      ],
+      "size": [
+        315,
+        78
+      ],
+      "flags": {},
+      "order": 46,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "if_True",
+          "shape": 7,
+          "type": "*",
+          "link": 296
+        },
+        {
+          "name": "if_False",
+          "shape": 7,
+          "type": "*",
+          "link": 295
+        }
+      ],
+      "outputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "links": [
+            297
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Output Selector"
+      },
+      "widgets_values": [
+        false
+      ]
+    },
+    {
+      "id": 292,
+      "type": "Get Data From Config",
+      "pos": [
+        2251.1923828125,
+        843.2916259765625
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "links": [
+            310,
+            312
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Get Data From Config"
+      },
+      "widgets_values": [
+        "api_key"
+      ]
+    },
+    {
+      "id": 293,
+      "type": "Flux assistant(advanced)",
+      "pos": [
+        3091.1005859375,
+        832.5394897460938
+      ],
+      "size": [
+        400,
+        280
+      ],
+      "flags": {},
+      "order": 35,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": 311
+        },
+        {
+          "name": "api_key",
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": 312
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            313
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Flux assistant(advanced)"
+      },
+      "widgets_values": [
+        "",
+        "flux-dev",
+        3913404385,
+        "randomize",
+        50,
+        3.5,
+        "1024*1024",
+        "False",
+        ""
+      ]
+    },
+    {
+      "id": 295,
+      "type": "PreviewImage",
+      "pos": [
+        3525.697265625,
+        828.9635009765625
+      ],
+      "size": [
+        369.0790100097656,
+        283.09222412109375
+      ],
+      "flags": {},
+      "order": 38,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 313
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.27",
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": [
+        ""
+      ]
+    }
+  ],
+  "links": [
+    [
+      7,
+      9,
+      0,
+      6,
+      0,
+      "IMAGE"
+    ],
+    [
+      13,
+      8,
+      0,
+      9,
+      0,
+      "FLOW_CONTROL"
+    ],
+    [
+      16,
+      12,
+      0,
+      9,
+      1,
+      "*"
+    ],
+    [
+      24,
+      8,
+      2,
+      12,
+      0,
+      "*"
+    ],
+    [
+      181,
+      164,
+      0,
+      165,
+      0,
+      "STRING"
+    ],
+    [
+      182,
+      165,
+      1,
+      166,
+      0,
+      "STRING"
+    ],
+    [
+      190,
+      165,
+      0,
+      172,
+      0,
+      "*"
+    ],
+    [
+      200,
+      174,
+      0,
+      14,
+      0,
+      "IMAGE"
+    ],
+    [
+      201,
+      174,
+      0,
+      12,
+      1,
+      "*"
+    ],
+    [
+      203,
+      164,
+      0,
+      174,
+      1,
+      "STRING"
+    ],
+    [
+      208,
+      165,
+      0,
+      8,
+      1,
+      "INT"
+    ],
+    [
+      209,
+      8,
+      1,
+      175,
+      0,
+      "*"
+    ],
+    [
+      211,
+      8,
+      1,
+      174,
+      0,
+      "INT"
+    ],
+    [
+      212,
+      177,
+      0,
+      178,
+      0,
+      "FLOW_CONTROL"
+    ],
+    [
+      213,
+      176,
+      0,
+      177,
+      1,
+      "INT"
+    ],
+    [
+      214,
+      176,
+      1,
+      179,
+      0,
+      "STRING"
+    ],
+    [
+      216,
+      180,
+      0,
+      183,
+      0,
+      "STRING"
+    ],
+    [
+      217,
+      180,
+      1,
+      184,
+      0,
+      "STRING"
+    ],
+    [
+      218,
+      185,
+      0,
+      180,
+      0,
+      "*"
+    ],
+    [
+      219,
+      186,
+      0,
+      180,
+      1,
+      "*"
+    ],
+    [
+      224,
+      200,
+      0,
+      197,
+      0,
+      "IMAGE"
+    ],
+    [
+      225,
+      197,
+      0,
+      201,
+      0,
+      "*"
+    ],
+    [
+      228,
+      203,
+      0,
+      205,
+      0,
+      "AUDIO"
+    ],
+    [
+      229,
+      197,
+      1,
+      206,
+      0,
+      "AUDIO"
+    ],
+    [
+      285,
+      265,
+      0,
+      263,
+      1,
+      "STRING"
+    ],
+    [
+      286,
+      265,
+      1,
+      263,
+      2,
+      "STRING"
+    ],
+    [
+      287,
+      266,
+      0,
+      265,
+      0,
+      "IMAGE"
+    ],
+    [
+      294,
+      263,
+      0,
+      273,
+      0,
+      "IMAGE"
+    ],
+    [
+      296,
+      266,
+      1,
+      274,
+      0,
+      "*"
+    ],
+    [
+      297,
+      274,
+      0,
+      265,
+      1,
+      "MASK"
+    ],
+    [
+      300,
+      266,
+      0,
+      276,
+      0,
+      "IMAGE"
+    ],
+    [
+      304,
+      286,
+      0,
+      276,
+      2,
+      "STRING"
+    ],
+    [
+      305,
+      286,
+      0,
+      263,
+      0,
+      "STRING"
+    ],
+    [
+      306,
+      289,
+      0,
+      265,
+      3,
+      "STRING"
+    ],
+    [
+      307,
+      288,
+      0,
+      265,
+      2,
+      "STRING"
+    ],
+    [
+      308,
+      287,
+      0,
+      265,
+      4,
+      "STRING"
+    ],
+    [
+      310,
+      292,
+      0,
+      291,
+      2,
+      "STRING"
+    ],
+    [
+      311,
+      291,
+      0,
+      293,
+      0,
+      "STRING"
+    ],
+    [
+      312,
+      292,
+      0,
+      293,
+      1,
+      "STRING"
+    ],
+    [
+      313,
+      293,
+      0,
+      295,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6830134553650705,
+      "offset": [
+        -1084.799875622051,
+        -555.6960707828595
+      ]
+    },
+    "node_versions": {
+      "comfy-core": "0.3.14",
+      "comfyui-custom-scripts": "9f7b3215e6af317603056a9a1666bf6e83e28835",
+      "comfyui-easy-use": "3e84b8cd77719341adc71b08b5789bdb07b1a543",
+      "comfyui-my-nodes": "1.1.1",
+      "comfyui-videohelpersuite": "c9dcc3a229437df232d61da4f9697c87c1f22428",
+      "comfyui_controlnet_aux": "83463c2e4b04e729268e57f638b4212e0da4badc",
+      "comfyui-advanced-controlnet": "da254b700db562a22e03358b933c85a9a3392540"
+    },
+    "ue_links": [],
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}
