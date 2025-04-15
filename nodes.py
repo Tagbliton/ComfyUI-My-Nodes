@@ -15,7 +15,10 @@ from .TensorAndPil import TensorToPil, PilToTensor
 
 
 # 默认填入API_KEY
-default_api_key=os.getenv("DASHSCOPE_API_KEY")
+try:
+    default_api_key=os.getenv("DASHSCOPE_API_KEY")
+except:
+    default_api_key=""
 
 
 
@@ -61,7 +64,7 @@ def openai(api_key, base_url, model, temperature, role, text):
 
 
 #图片理解模型接口
-def openaiVL(api_key, base_url, model, text, image):
+def openaiVL1(api_key, base_url, model, text, image, seed):
 
     #输入 Base64 编码的本地文件
     base64_image = encode_file(image)
@@ -88,13 +91,42 @@ def openaiVL(api_key, base_url, model, text, image):
                 ],
             }
         ],
+        seed=seed,
     )
     result = completion.choices[0].message.content
 
     return result
 
+#视觉理解模型接口
+def openaiVL2(api_key, base_url, model, text, video_url, seed):
 
+    #输入 Base64 编码的本地文件
+    base64_video = encode_file(video_url)
+    client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
 
+    completion = client.chat.completions.create(
+        model=model,  # 此处以qwen-vl-plus为例，可按需更换模型名称。模型列表：https://help.aliyun.com/zh/model-studio/getting-started/models
+        messages=[
+            {
+                "role": "system",
+                "content": [{"type": "text", "text": "You are a helpful assistant."}]},
+            {
+                "role": "user",
+                "content": [
+                    {
+                        # 直接传入视频文件时，请将type的值设置为video_url
+                        "type": "video_url",
+                        "video_url": {"url": f"data:video/mp4;base64,{base64_video}"},
+                    },
+                    {"type": "text", "text": text},
+                ],
+            }
+        ],
+        seed=seed,
+    )
+    result = completion.choices[0].message.content
+
+    return result
 
 
 #Qwen多模态接口
@@ -461,7 +493,7 @@ def role3(language):
 
 
 
-
+#######################################            AI助手            #######################################
 #AI多模态模型
 class AI100:
 
@@ -662,6 +694,9 @@ class AI101:
 
         return (text,)
 
+
+
+#######################################            AI视觉理解            #######################################
 #AI图片理解
 class AI102:
 
@@ -675,11 +710,11 @@ class AI102:
             "required": {
                 "image": ("IMAGE",),
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
-                "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1", "lazy": True}),
-                "model": (["qwen2.5-vl-7b-instruct", "qwen2.5-vl-72b-instruct", "qvq-72b-preview"],),
+                "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
+                "model": (["qwen2-vl-7b-instruct", "qwen-vl-plus", "qwen-vl-max-latest", "qwen2-vl-72b-instruct", "qwen2.5-vl-7b-instruct", "qwen2.5-vl-72b-instruct", "qvq-max", "qvq-72b-preview"],),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 2 ** 31 - 1}),
                 "mode": (["默认", "简短", "详细"],),
                 "out_language": (["英文", "中文"], {"tooltip": "输出语言"}),
-
             },
         }
 
@@ -693,7 +728,7 @@ class AI102:
     CATEGORY = "我的节点"
 
 
-    def action(self, api_key, base_url, model, mode, out_language, image):
+    def action(self, api_key, base_url, model, mode, out_language, image, seed):
 
         #tensor张量转PIL图片
         image = TensorToPil(image)
@@ -705,19 +740,62 @@ class AI102:
 
 
         if mode == "默认":
-            text = f"提示词反推，直接描述，无需引导句，输出{out_language}"
+            text = f"图中描绘的是什么景象?提示词反推，直接描述，无需引导句，输出{out_language}"
         else:
-            text = f"提示词反推，直接描述，无需引导句，描述尽量{mode}，输出{out_language}"
+            text = f"图中描绘的是什么景象?提示词反推，直接描述，无需引导句，描述尽量{mode}，输出{out_language}"
 
 
-        text = openaiVL(api_key, base_url, model, text, image)
+        text = openaiVL1(api_key, base_url, model, text, image, seed)
 
         # 删除图片
         DelFile(image)
 
         return (text,)
 
+#AI视频理解
+class AI1021:
 
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(s):
+
+        return {
+            "required": {
+                "video_url": ("STRING",{"multiline": False, "default": ""}),
+                "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
+                "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
+                "model": (["qwen-vl-plus", "qwen-vl-max-latest"],),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 2 ** 31 - 1}),
+                "mode": (["默认", "简短", "详细"],),
+                "out_language": (["英文", "中文"], {"tooltip": "输出语言"}),
+            },
+        }
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("text",)
+
+    FUNCTION = "action"
+
+    #OUTPUT_NODE = False
+
+    CATEGORY = "我的节点"
+
+
+    def action(self, api_key, base_url, model, mode, out_language, video_url, seed):
+
+        if mode == "默认":
+            text = f"这段视频描绘的是什么景象?提示词反推，直接描述，无需引导句，输出{out_language}"
+        else:
+            text = f"这段视频描绘的是什么景象?提示词反推，直接描述，无需引导句，描述尽量{mode}，输出{out_language}"
+
+
+        text = openaiVL2(api_key, base_url, model, text, video_url, seed)
+
+
+
+        return (text,)
 
 #AI图片处理
 class AI103:
@@ -878,7 +956,7 @@ class AI103:
 
 
 
-
+######################################            AI图片生成            #######################################
 #Flux助手高级
 class AI200:
 
@@ -894,12 +972,10 @@ class AI200:
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
                 "model": (["flux-schnell", "flux-dev", "flux-merged"],),
                 "seed":("INT", {"default": 0, "min": 0, "max": 4294967290}),
-                "steps":("INT", {"default": 50, "min": 0, "max": 100,"step": 1,"round": False, "display": "number", "tooltip": "图片生成的推理步数，如果不提供，则默认为30。 flux-schnell 模型官方默认 steps 为4，flux-dev 模型官方默认 steps 为50。", "lazy": False}),
-                "guidance":("FLOAT", {"default": 3.5, "min": 0, "max": 100, "step": 0.1,"round": False, "display": "number", "tooltip": "指导度量值，用于在图像生成过程中调整模型的创造性与文本指导的紧密度。较高的值会使得生成的图像更忠于文本提示，但可能减少多样性；较低的值则允许更多创造性，增加图像变化。默认值为3.5。", "lazy": False}),
+                "steps":("INT", {"default": 50, "min": 0, "max": 100,"step": 1,"round": False, "display": "number", "tooltip": "图片生成的推理步数，如果不提供，则默认为30。 flux-schnell 模型官方默认 steps 为4，flux-dev 模型官方默认 steps 为50。"}),
+                "guidance":("FLOAT", {"default": 3.5, "min": 0, "max": 100, "step": 0.1,"round": False, "display": "number", "tooltip": "指导度量值，用于在图像生成过程中调整模型的创造性与文本指导的紧密度。较高的值会使得生成的图像更忠于文本提示，但可能减少多样性；较低的值则允许更多创造性，增加图像变化。默认值为3.5。"}),
                 "size": (["1024*1024", "512*1024", "768*512", "768*1024", "1024*576", "576*1024"],),
-                "offload":(["False", "True"], {
-                    "default": "False",
-                    "tooltip": "一个布尔值，表示是否在采样过程中将部分计算密集型组件临时从GPU卸载到CPU，以减轻内存压力或提升效率。如果您的系统资源有限或希望加速采样过程，可以启用此选项，默认为False。", } ),
+                "offload":(["False", "True"], {"default": "False","tooltip": "一个布尔值，表示是否在采样过程中将部分计算密集型组件临时从GPU卸载到CPU，以减轻内存压力或提升效率。如果您的系统资源有限或希望加速采样过程，可以启用此选项，默认为False。", } ),
                 "prompt": ("STRING", {"multiline": True, "default": ""}),
             },
         }
@@ -916,8 +992,7 @@ class AI200:
 
 
     def action(self, api_key, model, seed, steps, guidance, size, offload, prompt):
-        if api_key is None:
-            api_key=os.getenv("DASHSCOPE_API_KEY")
+
         rsp = ImageSynthesis.call(api_key=api_key,
                                   model=model,
                                   seed=seed,
@@ -978,9 +1053,8 @@ class AI201:
     CATEGORY = "我的节点"
 
 
-    def action(selft, api_key, model, size, promp):
-        if api_key is None:
-            api_key=os.getenv("DASHSCOPE_API_KEY")
+    def action(selft, api_key, model, size, prompt):
+
         if model == "flux-schnell(快速)":
             model = "flux-schnell"
             steps = 4
@@ -1314,7 +1388,8 @@ class GetDataFromConfig:
 
 NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "General AI assistant": AI101,
-                       "AI Vision-Language": AI102,
+                       "AI Vision-Language-image": AI102,
+                       "AI Vision-Language-video": AI1021,
                        "AI image processing": AI103,
                        "Flux assistant(advanced)": AI200,
                        "Flux assistant(simple)": AI201,
@@ -1326,7 +1401,8 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        }
 NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
                               "General AI assistant": "通用AI助手",
-                              "AI Vision-Language": "AI图片理解",
+                              "AI Vision-Language-image": "AI图片理解",
+                              "AI Vision-Language-video": "AI视频理解",
                               "AI image processing": "AI图片处理",
                               "Flux assistant(advanced)": "Flux助手(高级)",
                               "Flux assistant(simple)": "Flux助手(简易)",
@@ -1349,7 +1425,8 @@ try:
 
     NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                            "General AI assistant": AI101,
-                           "AI Vision-Language": AI102,
+                           "AI Vision-Language-image": AI102,
+                           "AI Vision-Language-video": AI1021,
                            "AI image processing": AI103,
                            "Flux assistant(advanced)": AI200,
                            "Flux assistant(simple)": AI201,
@@ -1362,7 +1439,8 @@ try:
                            }
     NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
                                   "General AI assistant": "通用AI助手",
-                                  "AI Vision-Language": "AI图片理解",
+                                  "AI Vision-Language-image": "AI图片理解",
+                                  "AI Vision-Language-video": "AI视频理解",
                                   "AI image processing": "AI图片处理",
                                   "Flux assistant(advanced)": "Flux助手(高级)",
                                   "Flux assistant(simple)": "Flux助手(简易)",
