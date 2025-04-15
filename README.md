@@ -55,7 +55,7 @@ AI助手
 
 	_优化节点`Flux助手`API输入机制_
 
-	_增加`比较分流器`节点支持输入进行比较的类型，已测试`INT.FLOAT.BOOLEAN.STRING.IMAGE.MASK.AUDIO.LATENT`等大部分类型_
+	_`比较分流器`节点可以输入更多类型进行比较，已测试`INT.FLOAT.BOOLEAN.STRING.IMAGE.MASK.AUDIO.LATENT`等大部分类型_
   
 - **v1.1.2**
 
