@@ -2,7 +2,9 @@
 
 AI助手
 
-一个支持在Comfyui中使用阿里百炼模型库的插件`测试版`
+一个支持在Comfyui中使用阿里百炼模型库的插件
+
+Github为`测试版`
 
 稳定版可以在comfyui-manager管理器下载最新版本
 
