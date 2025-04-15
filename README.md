@@ -130,6 +130,7 @@ AI助手
 _(修改于v1.1.1)_
 
 - **列表**
+  
   <img src="IMG/list.png" width="800" alt="自定义宽度" />
 
 
