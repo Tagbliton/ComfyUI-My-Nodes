@@ -1104,10 +1104,10 @@ class comparator:
                 "mode": (["==", "!=", ">=", ">", "<=", "<",],),
             },
             "optional": {
-                "a": ("FLOAT",{"default": 0.0, "step": 0.1, "round": False, "display": "number","lazy": False}),
-                "b": ("FLOAT",{"default": 0.0, "step": 0.1, "round": False, "display": "number","lazy": False}),
-                "input1": (any_type, {}),
-                "input2": (any_type, {}),
+                "if_True": (any_type, {}),
+                "if_False": (any_type, {}),
+                "a": (any_type, {}),
+                "b": (any_type, {}),
             },
         }
 
@@ -1124,7 +1124,7 @@ class comparator:
 
     CATEGORY = "我的节点"
 
-    def action(self, mode, a, b, input1=None, input2=None):
+    def action(self, mode, a=None, b=None, if_True=None, if_False=None):
         comparators = {
             "==": lambda a, b: a == b,
             "!=": lambda a, b: a != b,
@@ -1137,14 +1137,28 @@ class comparator:
         if mode not in comparators:
             return (None, None, None)
 
-        boolean = comparators[mode](a, b)
+        #尝试比较张量
+        try:
+            boolean  = torch.equal(a, b)
+            if mode == "==":
+                boolean=boolean
+            if mode == "!=":
+                if boolean:
+                    boolean=False
+                else:
+                    boolean=True
+            else:
+                boolean = boolean
+                print("请注意，张量比较仅支持'=='和'!='，其余模式均默认为'=='")
+        except:
+            boolean = comparators[mode](a, b)
+
         if boolean:
-            output1, output2 = input1, input2
+            output1, output2 = if_True, if_False
         else:
-            output1, output2 = input2, input1
+            output1, output2 = if_False, if_True
 
         return (output1, output2, boolean, )
-
 #选择输出器
 class choice:
 
