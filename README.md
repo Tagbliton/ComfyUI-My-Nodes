@@ -81,23 +81,25 @@ AI助手
 
 ## 📠 图片转URL(OSS)（可选节点）
 
+- 使用阿里云OSS对象存储将图片转为URL
+
 - 如何加载该节点
   
   在comfyui命令行界面输入`pip install oss2`后重启即可成功加载节点
 
-  - 如何使用该节点
+- 如何使用该节点
   
-    创建对象存储OSS
+  创建对象存储OSS
   
-    创建Bucket官方教程
+  创建Bucket官方教程
   
-    ```https://developer.aliyun.com/adc/tutorial/612670```
+  ```https://developer.aliyun.com/adc/tutorial/612670```
 
-    Bucket权限设置
+  Bucket权限设置
   
-    关闭阻止公共访问，读写权限设置为公共读
+  关闭阻止公共访问，读写权限设置为公共读
   
-    随后在右上角个人-Accesskey获取节点所需的AccessKey ID及AccessKey Secret
+  随后在右上角个人-Accesskey获取节点所需的AccessKey ID及AccessKey Secret
 
 
 ## ❓ 相关问题
