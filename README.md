@@ -113,6 +113,8 @@ AI助手
   - 视频反推：如果提示`Exceeded limit on max bytes per data-uri item : 10485760`，可能因为视频比特率过高
  
   - 网络问题：如发生网络错误，可以尝试关闭梯子或者检查代理
+ 
+  - 配置错误: 如使用`从配置文件中获取数据`key显示为`[ERROR] Load config`，请检查config.json中文件格式，如标点符号需使用英文
 
 
 
