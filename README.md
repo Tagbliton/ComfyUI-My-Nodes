@@ -106,15 +106,15 @@ AI助手
 
 - 连接错误：提示`Connection error`，请检查网络连接或IP代理
 
-  - 图片反推：如果使用**多模态AI助手**提示`'NoneType' object has no attribute 'is_cuda'`，可以尝试使用**AI图片理解**节点
+- 图片反推：如果使用**多模态AI助手**提示`'NoneType' object has no attribute 'is_cuda'`，可以尝试使用**AI图片理解**节点
  
-  - 图片处理：提示格式错误`InvalidParameter:Value error, format of image is not valid : payload.input.mask_image_url`，将mask_url从控件转换为输入即可
+- 图片处理：提示格式错误`InvalidParameter:Value error, format of image is not valid : payload.input.mask_image_url`，将mask_url从控件转换为输入即可
 
-  - 视频反推：如果提示`Exceeded limit on max bytes per data-uri item : 10485760`，可能因为视频比特率过高
+- 视频反推：如果提示`Exceeded limit on max bytes per data-uri item : 10485760`，可能因为视频比特率过高
  
-  - 网络问题：如发生网络错误，可以尝试关闭梯子或者检查代理
+- 网络问题：如发生网络错误，可以尝试关闭梯子或者检查代理
  
-  - 配置错误: 如使用`从配置文件中获取数据`key显示为`[ERROR] Load config`，请检查config.json中文件格式，如标点符号需使用英文
+- 配置错误: 如使用**从配置文件中获取数据**中key显示为`[ERROR] Load config`，请检查config.json中文件格式，如标点符号需使用英文
 
 
 
