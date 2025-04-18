@@ -1436,36 +1436,10 @@ try:
     from .oss.oss import ImageToUrlOSS
 
     # 节点注册
+    NODE_CLASS_MAPPINGS["Image To Url(OSS)"] = ImageToUrlOSS
 
-    NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
-                           "General AI assistant": AI101,
-                           "AI Vision-Language-image": AI102,
-                           "AI Vision-Language-video": AI1021,
-                           "AI image processing": AI103,
-                           "Flux assistant(advanced)": AI200,
-                           "Flux assistant(simple)": AI201,
-                           "Image To Url(OSS)": ImageToUrlOSS,
-                           "Digital Comparator": comparator,
-                           "Output Selector": choice,
-                           "Aspect Ratio Preset": size,
-                           "Scan File Count Node": ScanFileCountNode,
-                           "Get Data From Config":GetDataFromConfig
-                           }
-    NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
-                                  "General AI assistant": "通用AI助手",
-                                  "AI Vision-Language-image": "AI图片理解",
-                                  "AI Vision-Language-video": "AI视频理解",
-                                  "AI image processing": "AI图片处理",
-                                  "Flux assistant(advanced)": "Flux助手(高级)",
-                                  "Flux assistant(simple)": "Flux助手(简易)",
-                                  "Image To Url(OSS)": "图片转URL(OSS)",
-                                  "Digital Comparator": "比较分流器",
-                                  "Output Selector": "选择输出器",
-                                  "Aspect Ratio Preset": "宽高比",
-                                  "Scan File Count Node": "文件计数器",
-                                  "Get Data From Config": "从配置文件获取数据"
-                                  }
-    print("\033[32;36m===============================comfyui-my-nodes已载入可选节点===============================\033[0m\n")
+    NODE_DISPLAY_NAME_MAPPINGS["Image To Url(OSS)"] = "图片转URL(OSS)"
+
+    print("\033[32;36m===============================comfyui-my-nodes已载入oss节点===============================\033[0m\n")
 except:
-    print("\033[33;36m===============================comfyui-my-nodes未载入可选节点===============================\033[0m\n")
     pass
