@@ -389,7 +389,7 @@ def Qwen44(api_key, base_url, model, role, video, text, audio_voice):
 #保存音频
 def save_audio(audio_data):
     # 设置默认保存路径
-    output_path = ("temp.wav")
+    output_path = (".temp/temp_audio.wav")
 
     # 处理音频数据维度
     waveform = audio_data["waveform"].squeeze(0)  # 去除batch维度
@@ -549,8 +549,8 @@ class AI100:
             image = TensorToPil(image)
 
             # 保存图片
-            image.save(".temp/temp.png")
-            image = ".temp/temp.png"
+            image.save(".temp/temp_image.png")
+            image = ".temp/temp_image.png"
 
             if out_audio:
                 completion = Qwen22(api_key, base_url, model, role, image, text, audio_voice)
@@ -566,8 +566,8 @@ class AI100:
             role = "You are a helpful assistant."
             text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
 
-            save_audio(".temp/temp.wav")
-            audio = ".temp/temp.wav"
+            save_audio(audio)
+            audio = ".temp/temp_audio.wav"
 
             if out_audio:
                 completion = Qwen33(api_key, base_url, model, role, audio, text, audio_voice)
@@ -735,8 +735,8 @@ class AI102:
 
 
         # 保存图片
-        image.save(".temp/temp.png")
-        image = ".temp/temp.png"
+        image.save(".temp/temp_image.png")
+        image = ".temp/temp_image.png"
 
 
         if mode == "默认":
