@@ -1,3 +1,5 @@
+from sys import exception
+
 import requests
 import base64
 import os
@@ -268,7 +270,7 @@ def Qwen11(api_key, base_url, model, role, text, audio_voice):
 
     completion = client.chat.completions.create(
         model=model,
-        messages=[{"role": "user", "content": f"{role}输入：'{text}'"},],
+        messages=[{"role": "user", "content": f"{role}输入：{text}"},],
         # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
         modalities=["text", "audio"],
         audio={"voice": audio_voice, "format": "wav"},
@@ -389,7 +391,7 @@ def Qwen44(api_key, base_url, model, role, video, text, audio_voice):
 #保存音频
 def save_audio(audio_data):
     # 设置默认保存路径
-    output_path = (".temp/temp_audio.wav")
+    output_path = "./temp/temp_audio.wav"
 
     # 处理音频数据维度
     waveform = audio_data["waveform"].squeeze(0)  # 去除batch维度
@@ -434,7 +436,7 @@ def StreamText(completion):
 
 
 #流式输出音频解码
-def StreamAudio1(completion):
+def StreamAudio(completion):
     # 方式1: 待生成结束后再进行解码
     audio_string = ""
     result = []
@@ -451,7 +453,7 @@ def StreamAudio1(completion):
 
     wav_bytes = base64.b64decode(audio_string)
     audio_np = np.frombuffer(wav_bytes, dtype=np.int16)
-    sf.write("./temp/out_temp.wav", audio_np, samplerate=24000)
+    sf.write("./temp/out_audio.wav", audio_np, samplerate=24000)
 
     return output
 
@@ -509,7 +511,7 @@ class AI100:
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),     #删除"lazy": True以保证优先加载api_key
                 "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1","lazy": True}),
                 "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-03-26", "qwen-omni-turbo-2025-01-19"],),
-                "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片反推", "音频反推", "视频反推", "自定义", "无"],),
+                "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片反推", "音频反推", "视频反推", "自定义", "文本转语音", "无"],),
                 "out_language":(["英文", "中文"], {"tooltip": "输出语言，如果模式为自定义则不会发生作用"}),
                 "out_audio":("BOOLEAN", {"default": False, "tooltip":"是否开启语音输出"}),
                 "audio_voice":(["Cherry", "Serena", "Ethan", "Chelsie"], {"tooltip": "语音输出音色选择"})
@@ -549,8 +551,8 @@ class AI100:
             image = TensorToPil(image)
 
             # 保存图片
-            image.save(".temp/temp_image.png")
-            image = ".temp/temp_image.png"
+            image.save("./temp/temp_image.png")
+            image = "./temp/temp_image.png"
 
             if out_audio:
                 completion = Qwen22(api_key, base_url, model, role, image, text, audio_voice)
@@ -567,7 +569,7 @@ class AI100:
             text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
 
             save_audio(audio)
-            audio = ".temp/temp_audio.wav"
+            audio = "./temp/temp_audio.wav"
 
             if out_audio:
                 completion = Qwen33(api_key, base_url, model, role, audio, text, audio_voice)
@@ -619,14 +621,24 @@ class AI100:
             else:
                 completion = Qwen1(api_key, base_url, model, role, text)
 
-        else:
-            completion = text
+        elif mode == "文本转语音":
+            role = f"将用户输入原封不动的转述一遍，保持原状，不要添加任何赘述，输出{out_language}。"
 
-        if mode == "无":
-            OutText = completion
+            out_audio=True
+            completion = Qwen11(api_key, base_url, model, role, text, audio_voice)
+
+
         else:
+            #模式为“无”，文本原封不动，音频输出为无
+            OutText = text
+            OutAudio = None
+
+
+
+        #如果启用音频输出
+        if mode != "无":
             if out_audio:
-                OutText = StreamAudio1(completion)
+                OutText = StreamAudio(completion)
 
                 audio_path = "./temp/out_audio.wav"
                 waveform, sample_rate = torchaudio.load(audio_path)
@@ -634,7 +646,7 @@ class AI100:
 
                 OutAudio = audio
             else:
-                OutText = StreamText(completion)
+                OutText =  StreamText(completion)
                 OutAudio = None
 
         return (OutText, OutAudio, )
@@ -735,8 +747,8 @@ class AI102:
 
 
         # 保存图片
-        image.save(".temp/temp_image.png")
-        image = ".temp/temp_image.png"
+        image.save("./temp/temp_image.png")
+        image = "./temp/temp_image.png"
 
 
         if mode == "默认":
