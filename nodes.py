@@ -511,7 +511,7 @@ class AI100:
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),     #删除"lazy": True以保证优先加载api_key
                 "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1","lazy": True}),
                 "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-03-26", "qwen-omni-turbo-2025-01-19"],),
-                "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片反推", "音频反推", "视频反推", "自定义", "文本转语音", "无"],),
+                "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片反推", "音频反推", "视频反推", "自定义", "文本转语音(测试)", "无"],),
                 "out_language":(["英文", "中文"], {"tooltip": "输出语言，如果模式为自定义则不会发生作用"}),
                 "out_audio":("BOOLEAN", {"default": False, "tooltip":"是否开启语音输出，开启后输出将可能变得不可控"}),
                 "audio_voice":(["Cherry", "Serena", "Ethan", "Chelsie"], {"tooltip": "语音输出音色选择"})
@@ -621,7 +621,7 @@ class AI100:
             else:
                 completion = Qwen1(api_key, base_url, model, role, text)
 
-        elif mode == "文本转语音":
+        elif mode == "文本转语音(测试)":
             role = f"将用户输入原封不动的转述一遍，保持原状，不要添加任何赘述，输出{out_language}。"
 
             out_audio=True
