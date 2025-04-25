@@ -8,6 +8,8 @@ import torchaudio
 import soundfile as sf
 import time
 import json
+import torch
+
 
 from openai import OpenAI
 from http import HTTPStatus
@@ -1449,7 +1451,6 @@ try:
 
     # 节点注册
     NODE_CLASS_MAPPINGS["Image To Url(OSS)"] = ImageToUrlOSS
-
     NODE_DISPLAY_NAME_MAPPINGS["Image To Url(OSS)"] = "图片转URL(OSS)"
 
     print("\033[32;36m===============================comfyui-my-nodes已载入oss节点===============================\033[0m\n")
