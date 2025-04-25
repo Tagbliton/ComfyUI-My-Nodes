@@ -549,8 +549,8 @@ class AI100:
             image = TensorToPil(image)
 
             # 保存图片
-            image.save("temp.png")
-            image = "temp.png"
+            image.save(".temp/temp.png")
+            image = ".temp/temp.png"
 
             if out_audio:
                 completion = Qwen22(api_key, base_url, model, role, image, text, audio_voice)
@@ -566,8 +566,8 @@ class AI100:
             role = "You are a helpful assistant."
             text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
 
-            save_audio(audio)
-            audio = "temp.wav"
+            save_audio(".temp/temp.wav")
+            audio = ".temp/temp.wav"
 
             if out_audio:
                 completion = Qwen33(api_key, base_url, model, role, audio, text, audio_voice)
@@ -628,7 +628,7 @@ class AI100:
             if out_audio:
                 OutText = StreamAudio1(completion)
 
-                audio_path = "./temp/out_temp.wav"
+                audio_path = "./temp/out_audio.wav"
                 waveform, sample_rate = torchaudio.load(audio_path)
                 audio = {"waveform": waveform.unsqueeze(0), "sample_rate": sample_rate}
 
@@ -735,8 +735,8 @@ class AI102:
 
 
         # 保存图片
-        image.save("temp.png")
-        image = "temp.png"
+        image.save(".temp/temp.png")
+        image = ".temp/temp.png"
 
 
         if mode == "默认":
