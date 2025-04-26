@@ -14,7 +14,7 @@ import torch
 from openai import OpenAI
 from http import HTTPStatus
 from dashscope import ImageSynthesis
-from .TensorAndPil import TensorToPil, PilToTensor
+from .TensorAndPil import read_png_info, TensorToPil, PilToTensor
 
 
 
@@ -1343,6 +1343,26 @@ class ScanFileCountNode:
 
 
 
+#读取png元数据
+class ReadPngInfo:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "path": ("STRING", {"default": ""})
+            }
+        }
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("parameters", "workflow")
+    FUNCTION = "action"
+    CATEGORY = "我的节点"
+
+    def action(self, path):
+        parameters, workflow = read_png_info(path)
+        return (parameters, workflow, )
 
 
 #从配置文件获取数据
@@ -1425,6 +1445,7 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "Output Selector": choice,
                        "Aspect Ratio Preset": size,
                        "Scan File Count Node": ScanFileCountNode,
+                       "Read Png Info": ReadPngInfo,
                        "Get Data From Config":GetDataFromConfig
                        }
 NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
@@ -1438,6 +1459,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
                               "Output Selector": "选择输出器",
                               "Aspect Ratio Preset": "宽高比",
                               "Scan File Count Node": "文件计数器",
+                              "Read Png Info": "读取PNG元数据",
                               "Get Data From Config": "从配置文件获取数据"
                               }
 
