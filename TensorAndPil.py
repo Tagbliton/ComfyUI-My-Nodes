@@ -2,8 +2,18 @@ import numpy as np
 import torch
 import io
 from PIL import Image
+from PIL.PngImagePlugin import PngInfo
 
 
+
+
+#读取图片元数据
+def read_png_info(image_path):
+    with Image.open(image_path) as img:
+        pnginfo = img.text
+        parameters = pnginfo.get("parameters", "")
+        workflow = pnginfo.get("workflow", "")
+    return parameters, workflow
 
 
 
