@@ -511,7 +511,7 @@ class AI100:
             "required": {
 
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),     #删除"lazy": True以保证优先加载api_key
-                "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1","lazy": True}),
+                "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
                 "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-03-26", "qwen-omni-turbo-2025-01-19"],),
                 "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片反推", "音频反推", "视频反推", "自定义", "文本转语音(测试)", "无"],),
                 "out_language":(["英文", "中文"], {"tooltip": "输出语言，如果模式为自定义则不会发生作用"}),
@@ -523,8 +523,8 @@ class AI100:
                 "image": ("IMAGE",),
                 "audio": ("AUDIO",),
                 "video": ("STRING", {"multiline": False, "tooltip": "输入视频地址"}),
-                "role": ("STRING", {"multiline": True, "default": "自定义AI", "tooltip": "输入自定义AI角色", "lazy": True}),
-                "text": ("STRING", {"multiline": True, "default": "", "lazy": True}),
+                "role": ("STRING", {"multiline": True, "default": "自定义AI", "tooltip": "输入自定义AI角色"}),
+                "text": ("STRING", {"multiline": True}),
             },
         }
 
@@ -541,7 +541,7 @@ class AI100:
 
 
 
-    def action(self, api_key, base_url, model, mode, out_language, out_audio, audio_voice, role, text ,image=None, audio=None, video=None):
+    def action(self, api_key, base_url, model, mode, out_language, out_audio, audio_voice, role, text="null" ,image=None, audio=None, video=None):
 
         # 判断输出类型
         if mode == "图片反推":
@@ -666,13 +666,13 @@ class AI101:
             "required": {
 
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
-                "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1","lazy": True}),
-                "model": ("STRING", {"multiline": False, "default": "deepseek-v3","lazy": True}),
-                "temperature": ("FLOAT", {"default": 1.3,"min": 0.0,"max": 2,"step": 0.1,"round": False, "display": "number", "tooltip": "较高的值将使输出更加随机，而较低的值将使其更加集中和确定性", "lazy": False}),
+                "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
+                "model": ("STRING", {"multiline": False, "default": "deepseek-v3"}),
+                "temperature": ("FLOAT", {"default": 1.3,"min": 0.0,"max": 2,"step": 0.1,"round": False, "display": "number", "tooltip": "较高的值将使输出更加随机，而较低的值将使其更加集中和确定性"}),
                 "mode": (["AI翻译", "AI翻译+润色", "自定义", "无"],),
                 "out_language": (["英文", "中文"], {"tooltip": "输出语言，如果模式为自定义则不会发生作用"}),
-                "role": ("STRING", {"multiline": True, "default": "自定义AI", "tooltip": "输入自定义AI角色", "lazy": True}),
-                "text": ("STRING", {"multiline": True, "default": "","lazy": True}),
+                "role": ("STRING", {"multiline": True, "tooltip": "输入自定义AI角色"}),
+                "text": ("STRING", {"multiline": True}),
             },
         }
 
@@ -1184,7 +1184,7 @@ class choice:
         return {
             "required": {},
             "optional": {
-                "bool": ("BOOLEAN", {"default": True, "lazy": True}),
+                "bool": ("BOOLEAN", {"default": True}),
                 "if_True": (any_type, {}),
                 "if_False": (any_type, {}),
             }
@@ -1237,7 +1237,7 @@ class size:
         return {
             "required": {
                 "mode": (presets, {"default": "自定义"}),
-                "size":("STRING", {"multiline": False, "default": "1024*1024", "tooltip": "输入格式：宽度*高度（例如：800*600）", "lazy": True}),
+                "size":("STRING", {"multiline": False, "default": "1024*1024", "tooltip": "输入格式：宽度*高度（例如：800*600）"}),
             },
         }
 
@@ -1421,7 +1421,6 @@ class GetDataFromConfig:
             value = f"[ERROR] {str(e)}"
 
         return (value,)
-
 
 
 
