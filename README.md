@@ -49,9 +49,11 @@ AI助手
 
   	注意：此版本 DashScope SDK 版本不低于 1.23.1，如安装过旧版使用以下命令升级，urllib3需保持为1.26.20版本，否则comfyui会发生报错。
 
-	```pip install -U dashscope
+	```
+ 	pip install -U dashscope
 	pip install urllib3==1.26.20
-	success```
+	success
+	```
 
 	_添加节点_ `AI语音合成`
 
