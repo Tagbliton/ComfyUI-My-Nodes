@@ -1453,7 +1453,8 @@ class ReadPngInfo:
 
     def action(self, path):
         parameters, workflow = read_png_info(path)
-        workflow = workflow.encode('latin-1').decode('unicode-escape')
+        # workflow = json.loads(workflow)
+        # workflow = workflow.encode('latin-1').decode('unicode-escape')
         return (parameters, workflow, )
 
 #写入png元数据
@@ -1465,23 +1466,30 @@ class WritePngInfo:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "json": ("STRING", ),
+                "json_data": ("STRING", ),
                 "path": ("STRING", {"default": "./user/default/workflows/"}),
                 "name": ("STRING", {"default": "name"})
             }
         }
-    RETURN_TYPES = ()
-    RETURN_NAMES = ()
+    RETURN_TYPES = ("BOOLEAN", )
+    RETURN_NAMES = ("boolean", )
     FUNCTION = "action"
     CATEGORY = "我的节点"
 
-    OUTPUT_NODE = False
-    def action(self, json, path, name):
+    # OUTPUT_NODE = False
+    def action(self, json_data, path, name):
+
         number=int(time.time())
         path=f"{path}{name}{number}.json"
-        with open(path, "w", encoding='utf-8') as f:
-            f.write(json)
-        return ()
+        try:
+            with open(path, "w", encoding='utf-8') as f:
+                f.write(json_data)
+            boolean = True
+
+        except:
+            boolean = False
+
+        return (boolean, )
 
 
 
