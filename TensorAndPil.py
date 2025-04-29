@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import io
+import requests
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 
@@ -37,7 +38,14 @@ def TensorToPil(tensor):
 
 #urlPIL图片转tensor张量
 def PilToTensor(url):
-    response = url
+    #检测
+    try:
+        # 发送HTTP GET请求获取图像数据
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()  # 检查HTTP错误
+    except Exception as e:
+        raise RuntimeError(f"无法从URL获取图像: {str(e)}")
+
     # 转换为PIL图像对象
     image = Image.open(io.BytesIO(response.content)).convert("RGB")  # 强制转为 RGB
 
