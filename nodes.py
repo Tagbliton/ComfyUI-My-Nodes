@@ -1,5 +1,6 @@
 from sys import exception
 
+import urllib.request
 import requests
 import base64
 import os
@@ -9,13 +10,36 @@ import soundfile as sf
 import time
 import json
 import torch
-
+import dashscope
 
 from openai import OpenAI
 from http import HTTPStatus
-from dashscope import ImageSynthesis
 from .TensorAndPil import read_png_info, TensorToPil, PilToTensor
 
+import urllib.request
+import os
+
+
+def DownloadUrlToFile(url, file_path):
+    try:
+        # 创建目录（如果不存在）
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+        # 下载文件并显示进度
+        def progress(count, block_size, total_size):
+            percent = int(count * block_size * 100 / total_size)
+
+
+        urllib.request.urlretrieve(
+            url,
+            filename=file_path,
+            reporthook=progress if os.isatty(1) else None  # 仅终端显示进度
+        )
+
+        return True
+    except Exception as e:
+        print(f"错误: {str(e)}")
+        return False
 
 
 # 默认填入API_KEY
@@ -390,6 +414,20 @@ def Qwen44(api_key, base_url, model, role, video, text, audio_voice):
     return completion
 
 
+
+
+#语音合成
+def TTS(api_key, model, voice, text):
+    response = dashscope.audio.qwen_tts.SpeechSynthesizer.call(
+        model=model,
+        api_key=api_key,
+        text=text,
+        voice=voice,
+    )
+    return response
+
+
+
 #保存音频
 def save_audio(audio_data):
     # 设置默认保存路径
@@ -513,7 +551,7 @@ class AI100:
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),     #删除"lazy": True以保证优先加载api_key
                 "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
                 "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-03-26", "qwen-omni-turbo-2025-01-19"],),
-                "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片反推", "音频反推", "视频反推", "自定义", "文本转语音(测试)", "无"],),
+                "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片反推", "音频反推", "视频反推", "自定义", "无"],),
                 "out_language":(["英文", "中文"], {"tooltip": "输出语言，如果模式为自定义则不会发生作用"}),
                 "out_audio":("BOOLEAN", {"default": False, "tooltip":"是否开启语音输出，开启后输出将可能变得不可控"}),
                 "audio_voice":(["Cherry", "Serena", "Ethan", "Chelsie"], {"tooltip": "语音输出音色选择"})
@@ -541,7 +579,7 @@ class AI100:
 
 
 
-    def action(self, api_key, base_url, model, mode, out_language, out_audio, audio_voice, role, text="null" ,image=None, audio=None, video=None):
+    def action(self, api_key, base_url, model, mode, out_language, out_audio, audio_voice, role, text ,image=None, audio=None, video=None):
 
         # 判断输出类型
         if mode == "图片反推":
@@ -622,12 +660,6 @@ class AI100:
                 completion = Qwen11(api_key, base_url, model, role, text, audio_voice)
             else:
                 completion = Qwen1(api_key, base_url, model, role, text)
-
-        elif mode == "文本转语音(测试)":
-            role = f"将用户输入原封不动的转述一遍，保持原状，不要添加任何赘述，输出{out_language}。"
-
-            out_audio=True
-            completion = Qwen11(api_key, base_url, model, role, text, audio_voice)
 
 
         else:
@@ -816,6 +848,7 @@ class AI103:
     MODE = {
         "全局风格化": "stylization_all",
         "局部风格化": "stylization_local",
+        "指令编辑": "description_edit",
         "局部重绘": "description_edit_with_mask",
         "去水印": "remove_watermark",
         "扩图": "expand",
@@ -863,6 +896,9 @@ class AI103:
             value=1.5
         else:
             value=None
+
+        if mode != "局部重绘":
+            mask_url = None
 
 
         url = "https://dashscope.aliyuncs.com/api/v1/services/aigc/image2image/image-synthesis"
@@ -969,6 +1005,53 @@ class AI103:
 
 
 
+#AI语音合成
+class AI104:
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(s):
+
+        return {
+            "required": {
+                "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
+                "model": (["qwen-tts"],),
+                "audio_voice":(["Cherry", "Serena", "Ethan", "Chelsie"], {"tooltip": "语音输出音色选择"}),
+                "text": ("STRING", {"multiline": True}),
+            },
+        }
+
+    RETURN_TYPES = ("AUDIO",)
+    RETURN_NAMES = ("audio",)
+
+    FUNCTION = "action"
+
+    #OUTPUT_NODE = False
+
+    CATEGORY = "我的节点"
+
+
+    def action(self, api_key, model, audio_voice, text):
+
+        response=TTS(api_key, model, audio_voice, text)
+
+        url=response["output"]["audio"]["url"]
+
+        audio_path = "./temp/out_audio.wav"
+
+        DownloadUrlToFile(url, audio_path)
+
+        waveform, sample_rate = torchaudio.load(audio_path)
+        audio = {"waveform": waveform.unsqueeze(0), "sample_rate": sample_rate}
+
+
+
+        return (audio,)
+
+
+
 
 ######################################            AI图片生成            #######################################
 #Flux助手高级
@@ -986,7 +1069,7 @@ class AI200:
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
                 "model": (["flux-schnell", "flux-dev", "flux-merged"],),
                 "seed":("INT", {"default": 0, "min": 0, "max": 4294967290}),
-                "steps":("INT", {"default": 50, "min": 0, "max": 100,"step": 1,"round": False, "display": "number", "tooltip": "图片生成的推理步数，如果不提供，则默认为30。 flux-schnell 模型官方默认 steps 为4，flux-dev 模型官方默认 steps 为50。"}),
+                "steps":("INT", {"default": 0, "min": 0, "max": 100,"step": 1,"round": False, "display": "number", "tooltip": "如果为0，自动配置。 flux-schnell 模型官方默认 steps 为4，flux-dev 模型官方默认 steps 为50，flux-merged 默认 steps 为30。"}),
                 "guidance":("FLOAT", {"default": 3.5, "min": 0, "max": 100, "step": 0.1,"round": False, "display": "number", "tooltip": "指导度量值，用于在图像生成过程中调整模型的创造性与文本指导的紧密度。较高的值会使得生成的图像更忠于文本提示，但可能减少多样性；较低的值则允许更多创造性，增加图像变化。默认值为3.5。"}),
                 "size": (["1024*1024", "512*1024", "768*512", "768*1024", "1024*576", "576*1024"],),
                 "offload":(["False", "True"], {"default": "False","tooltip": "一个布尔值，表示是否在采样过程中将部分计算密集型组件临时从GPU卸载到CPU，以减轻内存压力或提升效率。如果您的系统资源有限或希望加速采样过程，可以启用此选项，默认为False。", } ),
@@ -1007,7 +1090,18 @@ class AI200:
 
     def action(self, api_key, model, seed, steps, guidance, size, offload, prompt):
 
-        rsp = ImageSynthesis.call(api_key=api_key,
+        if steps == 0:
+            if model == "flux-schnell":
+                steps=4
+            elif model == "flux-dev":
+                steps=50
+            else:
+                steps=30
+        else:
+            pass
+
+
+        rsp = dashscope.ImageSynthesis.call(api_key=api_key,
                                   model=model,
                                   seed=seed,
                                   steps=steps,
@@ -1024,11 +1118,9 @@ class AI200:
             # 解析 JSON
             url = rsp["output"]["results"][0]["url"]
 
-            response = requests.get(url)
-            response.raise_for_status()  # 检查HTTP错误
 
             #url转tensor张量
-            tensor = PilToTensor(response)
+            tensor = PilToTensor(url)
 
 
         else:
@@ -1080,7 +1172,7 @@ class AI201:
             steps = 30
 
 
-        rsp = ImageSynthesis.call(api_key=api_key,
+        rsp = dashscope.ImageSynthesis.call(api_key=api_key,
                                   model=model,
                                   steps=steps,
                                   size=size,
@@ -1092,11 +1184,9 @@ class AI201:
             # 解析 JSON
             url = rsp["output"]["results"][0]["url"]
 
-            response = requests.get(url)
-            response.raise_for_status()  # 检查HTTP错误
 
             #url转tensor张量
-            tensor = PilToTensor(response)
+            tensor = PilToTensor(url)
 
 
         else:
@@ -1173,6 +1263,7 @@ class comparator:
             output1, output2 = if_False, if_True
 
         return (output1, output2, boolean, )
+
 #选择输出器
 class choice:
 
@@ -1362,7 +1453,37 @@ class ReadPngInfo:
 
     def action(self, path):
         parameters, workflow = read_png_info(path)
+        workflow = workflow.encode('latin-1').decode('unicode-escape')
         return (parameters, workflow, )
+
+#写入png元数据
+class WritePngInfo:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "json": ("STRING", ),
+                "path": ("STRING", {"default": "./user/default/workflows/"}),
+                "name": ("STRING", {"default": "name"})
+            }
+        }
+    RETURN_TYPES = ()
+    RETURN_NAMES = ()
+    FUNCTION = "action"
+    CATEGORY = "我的节点"
+
+    OUTPUT_NODE = False
+    def action(self, json, path, name):
+        number=int(time.time())
+        path=f"{path}{name}{number}.json"
+        with open(path, "w", encoding='utf-8') as f:
+            f.write(json)
+        return ()
+
+
 
 
 #从配置文件获取数据
@@ -1438,6 +1559,7 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "AI Vision-Language-image": AI102,
                        "AI Vision-Language-video": AI1021,
                        "AI image processing": AI103,
+                       "AI TTS": AI104,
                        "Flux assistant(advanced)": AI200,
                        "Flux assistant(simple)": AI201,
                        "Digital Comparator": comparator,
@@ -1445,6 +1567,7 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "Aspect Ratio Preset": size,
                        "Scan File Count Node": ScanFileCountNode,
                        "Read Png Info": ReadPngInfo,
+                       "Write Png Info": WritePngInfo,
                        "Get Data From Config":GetDataFromConfig
                        }
 NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
@@ -1452,6 +1575,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
                               "AI Vision-Language-image": "AI图片理解",
                               "AI Vision-Language-video": "AI视频理解",
                               "AI image processing": "AI图片处理",
+                              "AI TTS": "AI语音合成",
                               "Flux assistant(advanced)": "Flux助手(高级)",
                               "Flux assistant(simple)": "Flux助手(简易)",
                               "Digital Comparator": "比较分流器",
@@ -1459,6 +1583,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
                               "Aspect Ratio Preset": "宽高比",
                               "Scan File Count Node": "文件计数器",
                               "Read Png Info": "读取PNG元数据",
+                              "Write Png Info": "写入PNG元数据",
                               "Get Data From Config": "从配置文件获取数据"
                               }
 
