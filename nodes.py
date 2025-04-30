@@ -1,5 +1,5 @@
 from sys import exception
-
+import folder_paths
 import urllib.request
 import requests
 import base64
@@ -757,7 +757,7 @@ class AI102:
                 "image": ("IMAGE",),
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
                 "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
-                "model": (["qwen2-vl-7b-instruct", "qwen-vl-plus", "qwen-vl-max-latest", "qwen2-vl-72b-instruct", "qwen2.5-vl-7b-instruct", "qwen2.5-vl-72b-instruct", "qvq-max", "qvq-72b-preview"],),
+                "model": (["qwen-vl-max", "qwen-vl-max-latest", "qwen-vl-plus", "qwen-vl-plus-latest", "qwen2-vl-7b-instruct", "qwen2-vl-72b-instruct", "qwen2.5-vl-7b-instruct", "qwen2.5-vl-72b-instruct", "qvq-72b-preview"],),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 2 ** 31 - 1}),
                 "mode": (["默认", "简短", "详细"],),
                 "out_language": (["英文", "中文"], {"tooltip": "输出语言"}),
@@ -812,7 +812,7 @@ class AI1021:
                 "video_url": ("STRING",{"multiline": False, "default": ""}),
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
                 "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
-                "model": (["qwen-vl-plus", "qwen-vl-max-latest"],),
+                "model": (["qwen-vl-max", "qwen-vl-max-latest", "qwen-vl-plus"],),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 2 ** 31 - 1}),
                 "mode": (["默认", "简短", "详细"],),
                 "out_language": (["英文", "中文"], {"tooltip": "输出语言"}),
@@ -1226,7 +1226,7 @@ class comparator:
 
     # OUTPUT_NODE = False
 
-    CATEGORY = "我的节点"
+    CATEGORY = "我的节点/Tools"
 
     def action(self, mode, a=None, b=None, if_True=None, if_False=None):
         comparators = {
@@ -1289,7 +1289,7 @@ class choice:
 
     # OUTPUT_NODE = False
 
-    CATEGORY = "我的节点"
+    CATEGORY = "我的节点/Tools"
 
     def action(self, bool, if_True=None, if_False=None):
         if bool == True:
@@ -1341,7 +1341,7 @@ class size:
 
     # OUTPUT_NODE = False
 
-    CATEGORY = "我的节点"
+    CATEGORY = "我的节点/Tools"
 
     def action(self, mode, size):
         # 使用预设值或解析自定义尺寸
@@ -1399,7 +1399,7 @@ class ScanFileCountNode:
 
     # OUTPUT_NODE = False
 
-    CATEGORY = "我的节点"
+    CATEGORY = "我的节点/Tools"
     def action(self, folder_path, include_subfolders=False, file_extensions="*"):
         # 输入验证
         if not os.path.exists(folder_path):
@@ -1441,21 +1441,24 @@ class ReadPngInfo:
 
     @classmethod
     def INPUT_TYPES(cls):
+        input_dir = folder_paths.get_input_directory()
+        files = [f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f))]
+        files = folder_paths.filter_files_content_types(files, ["image"])
         return {
-            "required": {
-                "path": ("STRING", {"default": ""})
-            }
-        }
+            "required":{
+                "image": (sorted(files), {"image_upload": True})},
+                }
     RETURN_TYPES = ("STRING", "STRING")
-    RETURN_NAMES = ("parameters", "workflow")
+    RETURN_NAMES = ("parameters", "json_data")
     FUNCTION = "action"
-    CATEGORY = "我的节点"
+    CATEGORY = "我的节点/PngInfo"
 
-    def action(self, path):
-        parameters, workflow = read_png_info(path)
-        # workflow = json.loads(workflow)
-        # workflow = workflow.encode('latin-1').decode('unicode-escape')
-        return (parameters, workflow, )
+    def action(self, image):
+        path=folder_paths.get_annotated_filepath(image)
+        # 读取数据
+        parameters, json_data = read_png_info(path)
+
+        return (parameters, json_data, )
 
 #写入png元数据
 class WritePngInfo:
@@ -1466,30 +1469,30 @@ class WritePngInfo:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "json_data": ("STRING", ),
-                "path": ("STRING", {"default": "./user/default/workflows/"}),
-                "name": ("STRING", {"default": "name"})
+                "path": ("STRING", {"default": "./user/default/workflows", "tooltip": "保存路径"}),
+                "name": ("STRING", {"default": "name"}),
+                "json_data": ("STRING", {"multiline": True, "default": ""})
             }
         }
-    RETURN_TYPES = ("BOOLEAN", )
-    RETURN_NAMES = ("boolean", )
-    FUNCTION = "action"
-    CATEGORY = "我的节点"
+    RETURN_TYPES = ()
 
-    # OUTPUT_NODE = False
+    FUNCTION = "action"
+    CATEGORY = "我的节点/PngInfo"
+
+    OUTPUT_NODE = True
     def action(self, json_data, path, name):
 
         number=int(time.time())
-        path=f"{path}{name}{number}.json"
+        path=f"{path}/{name}{number}.json"
         try:
             with open(path, "w", encoding='utf-8') as f:
                 f.write(json_data)
-            boolean = True
+
 
         except:
-            boolean = False
+            pass
 
-        return (boolean, )
+        return ()
 
 
 
@@ -1526,7 +1529,7 @@ class GetDataFromConfig:
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("value",)
     FUNCTION = "action"
-    CATEGORY = "我的节点"
+    CATEGORY = "我的节点/Tools"
 
     def action(self, key):
         # 再次读取确保获取最新值
@@ -1578,8 +1581,8 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "Write Png Info": WritePngInfo,
                        "Get Data From Config":GetDataFromConfig
                        }
-NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "多模态AI助手",
-                              "General AI assistant": "通用AI助手",
+NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "AI多模态助手",
+                              "General AI assistant": "AI通用助手",
                               "AI Vision-Language-image": "AI图片理解",
                               "AI Vision-Language-video": "AI视频理解",
                               "AI image processing": "AI图片处理",
