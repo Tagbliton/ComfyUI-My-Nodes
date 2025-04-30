@@ -1,4 +1,3 @@
-from sys import exception
 import folder_paths
 import urllib.request
 import requests
