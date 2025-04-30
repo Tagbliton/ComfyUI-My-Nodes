@@ -19,6 +19,8 @@ import urllib.request
 import os
 
 
+#云端无法运行
+
 def DownloadUrlToFile(url, file_path):
     try:
         # 创建目录（如果不存在）
