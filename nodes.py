@@ -987,12 +987,8 @@ class AI103:
                 url = result['output']['results'][0]['url']
 
 
-                #通过url下载
-                response = requests.get(url)
-                response.raise_for_status()  # 检查HTTP错误
-
                 #PIL图片转terson张量
-                terson = PilToTensor(response)
+                terson = PilToTensor(url)
 
                 return (terson, url,)
             if task_status == 'FAILED':
