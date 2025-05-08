@@ -580,13 +580,14 @@ class AI100:
 
 
 
-    def action(self, api_key, base_url, model, mode, out_language, out_audio, audio_voice, role, text ,image=None, audio=None, video=None):
+    def action(self, api_key, base_url, model, mode, out_language, out_audio, audio_voice, role=None, text=None, image=None, audio=None, video=None):
 
         # 判断输出类型
         if mode == "图片反推":
 
             role = "You are a helpful assistant."
-            text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
+            if text == None:
+                text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
 
             #tensor张量转PIL图片
             image = TensorToPil(image)
@@ -607,7 +608,8 @@ class AI100:
         elif mode == "音频反推":
 
             role = "You are a helpful assistant."
-            text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
+            if text == None:
+                text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
 
             save_audio(audio)
             audio = "./temp/temp_audio.wav"
@@ -623,7 +625,8 @@ class AI100:
         elif mode == "视频反推":
 
             role = "You are a helpful assistant."
-            text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
+            if text == None:
+                text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
 
             if out_audio:
                 completion = Qwen44(api_key, base_url, model, role, video, text, audio_voice)
