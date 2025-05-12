@@ -552,8 +552,8 @@ class AI100:
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),     #删除"lazy": True以保证优先加载api_key
                 "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
                 "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-03-26", "qwen-omni-turbo-2025-01-19"],),
-                "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片反推", "音频反推", "视频反推", "自定义", "无"],),
-                "out_language":(["英文", "中文"], {"tooltip": "输出语言，如果模式为自定义则不会发生作用"}),
+                "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片理解", "视频理解", "音频理解", "自定义", "无"],),
+                "out_language":(["英文", "中文"], {"tooltip": "输出语言"}),
                 "out_audio":("BOOLEAN", {"default": False, "tooltip":"是否开启语音输出，开启后输出将可能变得不可控"}),
                 "audio_voice":(["Cherry", "Serena", "Ethan", "Chelsie"], {"tooltip": "语音输出音色选择"})
 
@@ -561,9 +561,9 @@ class AI100:
             "optional": {
                 "image": ("IMAGE",),
                 "audio": ("AUDIO",),
-                "video": ("STRING", {"multiline": False, "tooltip": "输入视频地址"}),
+                "video": ("STRING", {"multiline": False, "tooltip": "输入本地视频文件地址"}),
                 "role": ("STRING", {"multiline": True, "default": "自定义AI", "tooltip": "输入自定义AI角色"}),
-                "text": ("STRING", {"multiline": True}),
+                "text": ("STRING", {"multiline": True, "tooltip": "如模式为‘图片理解’，‘视频理解’，‘音频理解’时，提示词为空会默认进行提示词反推，同时也支持自定义提示词"}),
             },
         }
 
@@ -580,14 +580,17 @@ class AI100:
 
 
 
-    def action(self, api_key, base_url, model, mode, out_language, out_audio, audio_voice, role, text ,image=None, audio=None, video=None):
-
+    def action(self, api_key, base_url, model, mode, out_language, out_audio, audio_voice, role=None, text=None, image=None, audio=None, video=None):
+        
+        language=f",请输出{out_language}"
+        
         # 判断输出类型
-        if mode == "图片反推":
+        if mode == "图片理解":
 
             role = "You are a helpful assistant."
-            text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
-
+            if text == None:
+                text = f"提示词反推，直接描述，无需引导句"
+            text=f"{text}{language}"
             #tensor张量转PIL图片
             image = TensorToPil(image)
 
@@ -604,11 +607,25 @@ class AI100:
             DelFile(image)
 
 
-        elif mode == "音频反推":
+        elif mode == "视频理解":
 
             role = "You are a helpful assistant."
-            text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
+            if text == None:
+                text = f"提示词反推，直接描述，无需引导句"
+            text=f"{text}{language}"
+            if out_audio:
+                completion = Qwen44(api_key, base_url, model, role, video, text, audio_voice)
+            else:
+                completion = Qwen4(api_key, base_url, model, role, video, text)
 
+        
+
+        elif mode == "音频理解":
+
+            role = "You are a helpful assistant."
+            if text == None:
+                text = f"提示词反推，直接描述，无需引导句"
+            text=f"{text}{language}"
             save_audio(audio)
             audio = "./temp/temp_audio.wav"
 
@@ -619,16 +636,6 @@ class AI100:
 
             DelFile(audio)
 
-
-        elif mode == "视频反推":
-
-            role = "You are a helpful assistant."
-            text = f"提示词反推，直接描述，无需引导句，请输出{out_language}"
-
-            if out_audio:
-                completion = Qwen44(api_key, base_url, model, role, video, text, audio_voice)
-            else:
-                completion = Qwen4(api_key, base_url, model, role, video, text)
 
 
         elif mode == "AI翻译":
@@ -656,7 +663,7 @@ class AI100:
                 completion = Qwen1(api_key, base_url, model, role, text)
 
         elif mode == "自定义":
-
+            text=f"{text}{language}"
             if out_audio:
                 completion = Qwen11(api_key, base_url, model, role, text, audio_voice)
             else:
@@ -987,12 +994,8 @@ class AI103:
                 url = result['output']['results'][0]['url']
 
 
-                #通过url下载
-                response = requests.get(url)
-                response.raise_for_status()  # 检查HTTP错误
-
                 #PIL图片转terson张量
-                terson = PilToTensor(response)
+                terson = PilToTensor(url)
 
                 return (terson, url,)
             if task_status == 'FAILED':
