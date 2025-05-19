@@ -1563,12 +1563,119 @@ class GetDataFromConfig:
 
 
 
+# 提示词逐行读取
+class PromptLineReader:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "index": ("INT", {
+                    "default": 0,
+                    "min": 0,
+                    "max": 9999,
+                    "step": 1,
+                    "display": "number"
+                }),
+                "file_name": (folder_paths.get_filename_list("prompt"),),
+            },
+        }
+
+    RETURN_TYPES = ("STRING", "INT")
+    RETURN_NAMES = ("text", "lines")
+    FUNCTION = "action"
+    CATEGORY = "我的节点/Tools"
+
+    def action(self, index: int, file_name: str) -> tuple:
+        # 确定基础路径
+        base_path = folder_paths.get_folder_paths("prompt")[0]
+
+        # 构建完整文件路径
+        file_path = os.path.join(base_path, file_name)
+
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+
+                if index < 0 or index >= len(lines):
+                    raise ValueError(f"Index {index} out of range (0-{len(lines) - 1})")
+
+                return (lines[index].strip(), len(lines))
+
+        except Exception as e:
+            raise RuntimeError(f"Error reading file: {str(e)}")
 
 
 
+# 映射范围
+class MapRange:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "input": (any_type, ),
+            },
+            "optional": {
+                "from_min": ("FLOAT", {"default": 0, "min":-9999, "max": 9999, "step": 0.001, "display": "number"}),
+                "from_max": ("FLOAT", {"default": 1, "min":-9999, "max": 9999, "step": 0.001, "display": "number"}),
+                "to_min": ("FLOAT", {"default": 0, "min":-9999, "max": 9999, "step": 0.001, "display": "number"}),
+                "to_max": ("FLOAT", {"default": 1, "min":-9999, "max": 9999, "step": 0.001, "display": "number"}),
+                "clamp": ("BOOLEAN", {"default": True, "tooltips": "钳制：将输出限制在to_min和to_max之间"}),
+            }
+        }
+
+    RETURN_TYPES = (any_type, )
+    RETURN_NAMES = ("output", )
+    FUNCTION = "action"
+    CATEGORY = "我的节点/Tools"
+
+    def action(self, input, from_min, from_max, to_min, to_max, clamp):
+        # 处理除零情况
+        if (from_max - from_min) == 0:
+            output = torch.full_like(input, to_min)
+        else:
+            # 线性映射计算
+            normalized = (input - from_min) / (from_max - from_min)
+            output = normalized * (to_max - to_min) + to_min
+
+        # 钳制输出
+        if clamp:
+            output = torch.clamp(output, min(to_min, to_max), max(to_min, to_max))
+
+        return (output,)
+
+
+# 重置索引
+class ResetIndex:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "index": ("INT", ),
+            },
+            "optional": {
+                "max": ("INT", {"default": 1, "min": 1, "display": "number", "tooltips": "当index>=max时重置"}),
+            }
+        }
+
+    RETURN_TYPES = ("INT", )
+    RETURN_NAMES = ("index", )
+    FUNCTION = "action"
+    CATEGORY = "我的节点/Tools"
+
+    def action(self, index, max):
+        if index>=max:
+            index=index-max
+        return (index,)
+
+
+
+
+# 注册文件路径时自动创建目录
+prompt_root = os.path.join(folder_paths.base_path, "models", "prompt")
+os.makedirs(prompt_root, exist_ok=True)  # 关键自动创建语句
+folder_paths.add_model_folder_path("prompt", prompt_root)
 
 # 节点注册
-
 NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "General AI assistant": AI101,
                        "AI Vision-Language-image": AI102,
@@ -1583,7 +1690,10 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "Scan File Count Node": ScanFileCountNode,
                        "Read Png Info": ReadPngInfo,
                        "Write Png Info": WritePngInfo,
-                       "Get Data From Config":GetDataFromConfig
+                       "Get Data From Config": GetDataFromConfig,
+                       "Prompt Line Reader": PromptLineReader,
+                       "Map Range": MapRange,
+                       "Reset Index": ResetIndex
                        }
 NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "AI多模态助手",
                               "General AI assistant": "AI通用助手",
@@ -1599,14 +1709,16 @@ NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "AI多模态助手",
                               "Scan File Count Node": "文件计数器",
                               "Read Png Info": "读取PNG元数据",
                               "Write Png Info": "写入PNG元数据",
-                              "Get Data From Config": "从配置文件获取数据"
+                              "Get Data From Config": "从配置文件获取数据",
+                              "Prompt Line Reader": "提示词逐行读取",
+                              "Map Range": "映射范围",
+                              "Reset Index": "重置索引"
                               }
 
+print(
+    "\n\033[32;36m=============================comfyui-my-nodes基础节点已载入成功=============================\033[0m")
 
-print("\n\033[32;36m=============================comfyui-my-nodes基础节点已载入成功=============================\033[0m")
-
-
-#尝试导入可选节点，如未安装环境依赖则失败
+# 尝试导入可选节点，如未安装环境依赖则失败
 try:
     from .oss.oss import ImageToUrlOSS
 
@@ -1614,6 +1726,7 @@ try:
     NODE_CLASS_MAPPINGS["Image To Url(OSS)"] = ImageToUrlOSS
     NODE_DISPLAY_NAME_MAPPINGS["Image To Url(OSS)"] = "图片转URL(OSS)"
 
-    print("\033[32;36m===============================comfyui-my-nodes已载入oss节点===============================\033[0m\n")
+    print(
+        "\033[32;36m===============================comfyui-my-nodes已载入oss节点===============================\033[0m\n")
 except:
     pass
