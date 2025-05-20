@@ -1569,37 +1569,34 @@ class PromptLineReader:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "index": ("INT", {
-                    "default": 0,
-                    "min": 0,
-                    "max": 9999,
-                    "step": 1,
-                    "display": "number"
-                }),
                 "file_name": (folder_paths.get_filename_list("prompt"),),
+                "index": ("INT", {"default": 0, "min": 0, "max": 9999, "step": 1, "display": "number"}),
+                "repeat": ("INT", {"default": 1, "min": 1, "max": 9999, "step": 1, "display": "number"})
             },
         }
 
-    RETURN_TYPES = ("STRING", "INT")
-    RETURN_NAMES = ("text", "lines")
+    RETURN_TYPES = ("STRING", "INT", "INT")
+    RETURN_NAMES = ("text", "index", "lines")
     FUNCTION = "action"
     CATEGORY = "我的节点/Tools"
 
-    def action(self, index: int, file_name: str) -> tuple:
+    def action(self, file_name: str, index: int, repeat: int) -> tuple:
         # 确定基础路径
         base_path = folder_paths.get_folder_paths("prompt")[0]
 
         # 构建完整文件路径
         file_path = os.path.join(base_path, file_name)
 
+        line=index//repeat
+
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 lines = f.readlines()
 
                 if index < 0 or index >= len(lines):
-                    raise ValueError(f"Index {index} out of range (0-{len(lines) - 1})")
+                    raise ValueError(f"Index {line} out of range (0-{len(lines) - 1})")
 
-                return (lines[index].strip(), len(lines))
+                return (lines[line].strip(), line, len(lines))
 
         except Exception as e:
             raise RuntimeError(f"Error reading file: {str(e)}")
@@ -1639,7 +1636,13 @@ class MapRange:
 
         # 钳制输出
         if clamp:
-            output = torch.clamp(output, min(to_min, to_max), max(to_min, to_max))
+            try:
+                output = torch.clamp(output, min(to_min, to_max), max(to_min, to_max))
+            except:
+                if output < to_min:
+                    output=to_min
+                if output > to_max:
+                    output=to_max
 
         return (output,)
 
@@ -1653,7 +1656,8 @@ class ResetIndex:
                 "index": ("INT", ),
             },
             "optional": {
-                "max": ("INT", {"default": 1, "min": 1, "display": "number", "tooltips": "当index>=max时重置"}),
+                "add": ("INT", {"default": 0, "min": 0, "display": "number", "tooltips": "index从min起始"}),
+                "step": ("INT", {"default": 0, "min": 0, "display": "number", "tooltips": "当index=max-1时重置"}),
             }
         }
 
@@ -1662,10 +1666,14 @@ class ResetIndex:
     FUNCTION = "action"
     CATEGORY = "我的节点/Tools"
 
-    def action(self, index, max):
-        if index>=max:
-            index=index-max
-        return (index,)
+    def action(self, index, add, step):
+        a=index
+        b=add
+        c=step
+        if c != 0:
+            a=a-a//c*c
+        a=a+b
+        return (a,)
 
 
 
