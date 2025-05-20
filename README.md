@@ -116,6 +116,8 @@ AI助手
  
 - 配置错误：如使用**从配置文件中获取数据**中key显示为`[ERROR] Load config`，请检查config.json中文件格式，如标点符号需使用英文
 
+- 索引过长：使用Flux助手生图时选择schnell模型会提示`list index out of range`，目前暂未处理，可切换dev、merged模型使用
+
 
 
 
