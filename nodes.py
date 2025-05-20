@@ -1802,8 +1802,8 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "Prompt Line Reader": PromptLineReader,
                        "Map Range": MapRange,
                        "Reset Index": ResetIndex,
-                       "Separate Color": SeparateColor,
-                       "Combine Color": CombineColor,
+                       "Separate Color/Image To RGB": SeparateColor,
+                       "Combine Color/RGB To Image": CombineColor,
                        "String Length Counter": StringLengthCounter
                        }
 NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "AI多模态助手",
@@ -1824,8 +1824,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "AI多模态助手",
                               "Prompt Line Reader": "提示词逐行读取",
                               "Map Range": "映射范围",
                               "Reset Index": "重置索引",
-                              "Separate Color": "分离颜色",
-                              "Combine Color": "合并颜色",
+                              "Separate Color/Image To RGB": "分离颜色",
+                              "Combine Color/RGB To Image": "合并颜色",
                               "String Length Counter": "字符串计数"
                               }
 
