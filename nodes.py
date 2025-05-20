@@ -1675,7 +1675,107 @@ class ResetIndex:
         a=a+b
         return (a,)
 
+# 分离颜色
+class SeparateColor:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "image": ("IMAGE",),
+            },
+        }
 
+    RETURN_TYPES = ("IMAGE", "IMAGE", "IMAGE")
+    RETURN_NAMES = ("R", "G", "B")
+    FUNCTION = "action"
+    CATEGORY = "我的节点/Tools"
+    DESCRIPTION = "将RGB通道分离为独立的亮度灰度图像"
+
+    def action(self, image):
+        # 验证输入格式
+        if image.shape[3] != 3:
+            raise ValueError("输入必须是RGB三通道图像")
+
+        # 分离各通道亮度
+        r_lum = image[:, :, :, 0:1]  # 红色通道亮度
+        g_lum = image[:, :, :, 1:2]  # 绿色通道亮度
+        b_lum = image[:, :, :, 2:3]  # 蓝色通道亮度
+
+        # 将单通道亮度转换为三通道灰度图像
+        def to_grayscale(channel):
+            return channel.repeat(1, 1, 1, 3)
+
+        return (
+            to_grayscale(r_lum),
+            to_grayscale(g_lum),
+            to_grayscale(b_lum)
+        )
+
+
+# 合并颜色
+class CombineColor:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "R": ("IMAGE",),
+                "G": ("IMAGE",),
+                "B": ("IMAGE",),
+            },
+        }
+
+    RETURN_TYPES = ("IMAGE",)
+    RETURN_NAMES = ("image",)
+    FUNCTION = "action"
+    CATEGORY = "我的节点/Tools"
+
+    def action(self, R, G, B):
+        # 验证基础通道尺寸一致性
+        for channel in [G, B]:
+            if R.shape[:3] != channel.shape[:3]:
+                raise ValueError("所有颜色通道必须具有相同的尺寸（batch, height, width）")
+
+        # 提取各通道数据（自动处理多通道输入）
+        def extract_channel(img, name):
+            if img.shape[3] > 1:
+                pass
+            return img[:, :, :, 0:1]  # 保持维度
+
+        r_channel = extract_channel(R, "Red")
+        g_channel = extract_channel(G, "Green")
+        b_channel = extract_channel(B, "Blue")
+        a_channel = torch.ones_like(r_channel)
+
+        # 合并通道
+        merged = torch.cat([r_channel, g_channel, b_channel, a_channel], dim=-1)
+
+        return (merged,)
+
+
+# 计算字符串长度
+class StringLengthCounter:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "text": ("STRING", {
+                    "multiline": True,  # 支持多行输入
+                    "default": "请输入文本"
+                }),
+            },
+        }
+
+    RETURN_TYPES = ("INT", )
+    RETURN_NAMES = ("长度", )
+    FUNCTION = "action"
+    CATEGORY = "我的节点/Tools"
+    DESCRIPTION = "计算输入字符串的长度（包含空格和换行符）"
+
+    def action(self, text):
+        # 计算原始长度
+        length = len(text)
+
+        return (length, )
 
 
 # 注册文件路径时自动创建目录
@@ -1701,7 +1801,10 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "Get Data From Config": GetDataFromConfig,
                        "Prompt Line Reader": PromptLineReader,
                        "Map Range": MapRange,
-                       "Reset Index": ResetIndex
+                       "Reset Index": ResetIndex,
+                       "Separate Color": SeparateColor,
+                       "Combine Color": CombineColor,
+                       "String Length Counter": StringLengthCounter
                        }
 NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "AI多模态助手",
                               "General AI assistant": "AI通用助手",
@@ -1720,7 +1823,10 @@ NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "AI多模态助手",
                               "Get Data From Config": "从配置文件获取数据",
                               "Prompt Line Reader": "提示词逐行读取",
                               "Map Range": "映射范围",
-                              "Reset Index": "重置索引"
+                              "Reset Index": "重置索引",
+                              "Separate Color": "分离颜色",
+                              "Combine Color": "合并颜色",
+                              "String Length Counter": "字符串计数"
                               }
 
 print(
