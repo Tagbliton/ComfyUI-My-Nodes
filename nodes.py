@@ -12,9 +12,6 @@ import torch
 import dashscope
 import math
 
-
-
-
 from openai import OpenAI
 from http import HTTPStatus
 from .TensorAndPil import read_png_info, TensorToPil, PilToTensor
@@ -23,7 +20,7 @@ import urllib.request
 import os
 
 
-# 云端无法运行
+#云端无法运行
 
 def DownloadUrlToFile(url, file_path):
     try:
@@ -33,6 +30,7 @@ def DownloadUrlToFile(url, file_path):
         # 下载文件并显示进度
         def progress(count, block_size, total_size):
             percent = int(count * block_size * 100 / total_size)
+
 
         urllib.request.urlretrieve(
             url,
@@ -48,12 +46,14 @@ def DownloadUrlToFile(url, file_path):
 
 # 默认填入API_KEY
 try:
-    default_api_key = os.getenv("DASHSCOPE_API_KEY")
+    default_api_key=os.getenv("DASHSCOPE_API_KEY")
 except:
-    default_api_key = ""
+    default_api_key=""
 
 
-# 定义“*”类型
+
+
+#定义“*”类型
 class AlwaysEqualProxy(str):
     def __eq__(self, _):
         return True
@@ -61,8 +61,9 @@ class AlwaysEqualProxy(str):
     def __ne__(self, _):
         return False
 
-
 any_type = AlwaysEqualProxy("*")
+
+
 
 
 #  Base64 编码格式
@@ -71,8 +72,11 @@ def encode_file(file):
         return base64.b64encode(file.read()).decode("utf-8")
 
 
-# openai接口
+
+
+#openai接口
 def openai(api_key, base_url, model, temperature, role, text):
+
     client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
 
     response = client.chat.completions.create(
@@ -89,9 +93,10 @@ def openai(api_key, base_url, model, temperature, role, text):
     return result
 
 
-# 图片理解模型接口
+#图片理解模型接口
 def openaiVL1(api_key, base_url, model, text, image, seed):
-    # 输入 Base64 编码的本地文件
+
+    #输入 Base64 编码的本地文件
     base64_image = encode_file(image)
     client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
 
@@ -122,10 +127,10 @@ def openaiVL1(api_key, base_url, model, text, image, seed):
 
     return result
 
-
-# 视觉理解模型接口
+#视觉理解模型接口
 def openaiVL2(api_key, base_url, model, text, video_url, seed):
-    # 输入 Base64 编码的本地文件
+
+    #输入 Base64 编码的本地文件
     base64_video = encode_file(video_url)
     client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
 
@@ -154,18 +159,19 @@ def openaiVL2(api_key, base_url, model, text, video_url, seed):
     return result
 
 
-# Qwen多模态接口
+#Qwen多模态接口
 
-# 输出类型“文本”
+#输出类型“文本”
 
-# 文本
+#文本
 def Qwen1(api_key, base_url, model, role, text):
+
     client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
 
     completion = client.chat.completions.create(
         model=model,
         messages=[{"role": "system", "content": role},
-                  {"role": "user", "content": text}, ],
+                       {"role": "user", "content": text},],
         # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
         modalities=["text"],
 
@@ -177,9 +183,9 @@ def Qwen1(api_key, base_url, model, role, text):
     )
     return completion
 
-
-# 图片
+#图片
 def Qwen2(api_key, base_url, model, role, image, text):
+
     # 输入 Base64 编码的本地文件
     base64_image = encode_file(image)
 
@@ -188,18 +194,18 @@ def Qwen2(api_key, base_url, model, role, image, text):
     completion = client.chat.completions.create(
         model=model,
         messages=[
-            {
-                "role": "system",
-                "content": [{"type": "text", "text": role}],
-            },
-            {
-                "role": "user",
-                "content": [
-                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{base64_image}"}},
-                    {"type": "text", "text": text},
-                ],
-            },
-        ],
+                {
+                    "role": "system",
+                    "content": [{"type": "text", "text": role}],
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{base64_image}"}},
+                        {"type": "text", "text": text},
+                    ],
+                },
+            ],
         # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
         modalities=["text"],
 
@@ -212,9 +218,9 @@ def Qwen2(api_key, base_url, model, role, image, text):
 
     return completion
 
-
-# 音频
+#音频
 def Qwen3(api_key, base_url, model, role, audio, text):
+
     # 输入 Base64 编码的本地文件
     base64_audio = encode_file(audio)
 
@@ -223,18 +229,18 @@ def Qwen3(api_key, base_url, model, role, audio, text):
     completion = client.chat.completions.create(
         model=model,
         messages=[
-            {
-                "role": "system",
-                "content": [{"type": "text", "text": role}],
-            },
-            {
-                "role": "user",
-                "content": [
-                    {"type": "input_audio", "input_audio": {"data": f"data:;base64,{base64_audio}", "format": "wav", }},
-                    {"type": "text", "text": text},
-                ],
-            },
-        ],
+                {
+                    "role": "system",
+                    "content": [{"type": "text", "text": role}],
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "input_audio", "input_audio": {"data": f"data:;base64,{base64_audio}","format": "wav",}},
+                        {"type": "text", "text": text},
+                    ],
+                },
+            ],
         # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
         modalities=["text"],
 
@@ -247,9 +253,9 @@ def Qwen3(api_key, base_url, model, role, audio, text):
 
     return completion
 
-
-# 视频
+#视频
 def Qwen4(api_key, base_url, model, role, video, text):
+
     # 输入 Base64 编码的本地文件
     base64_video = encode_file(video)
 
@@ -258,18 +264,18 @@ def Qwen4(api_key, base_url, model, role, video, text):
     completion = client.chat.completions.create(
         model=model,
         messages=[
-            {
-                "role": "system",
-                "content": [{"type": "text", "text": role}],
-            },
-            {
-                "role": "user",
-                "content": [
-                    {"type": "video_url", "video_url": {"url": f"data:;base64,{base64_video}"}},
-                    {"type": "text", "text": text},
-                ],
-            },
-        ],
+                {
+                    "role": "system",
+                    "content": [{"type": "text", "text": role}],
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "video_url", "video_url": {"url": f"data:;base64,{base64_video}"}},
+                        {"type": "text", "text": text},
+                    ],
+                },
+            ],
         # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
         modalities=["text"],
 
@@ -283,15 +289,16 @@ def Qwen4(api_key, base_url, model, role, video, text):
     return completion
 
 
-# 输出类型“文本+音频”
+#输出类型“文本+音频”
 
-# 文本
+#文本
 def Qwen11(api_key, base_url, model, role, text, audio_voice):
+
     client = OpenAI(api_key=f"{api_key}", base_url=f"{base_url}")
 
     completion = client.chat.completions.create(
         model=model,
-        messages=[{"role": "user", "content": f"{role}输入：{text}"}, ],
+        messages=[{"role": "user", "content": f"{role}输入：{text}"},],
         # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
         modalities=["text", "audio"],
         audio={"voice": audio_voice, "format": "wav"},
@@ -303,9 +310,9 @@ def Qwen11(api_key, base_url, model, role, text, audio_voice):
     )
     return completion
 
-
-# 图片
+#图片
 def Qwen22(api_key, base_url, model, role, image, text, audio_voice):
+
     # 输入 Base64 编码的本地文件
     base64_image = encode_file(image)
 
@@ -314,18 +321,18 @@ def Qwen22(api_key, base_url, model, role, image, text, audio_voice):
     completion = client.chat.completions.create(
         model=model,
         messages=[
-            {
-                "role": "system",
-                "content": [{"type": "text", "text": role}],
-            },
-            {
-                "role": "user",
-                "content": [
-                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{base64_image}"}},
-                    {"type": "text", "text": text},
-                ],
-            },
-        ],
+                {
+                    "role": "system",
+                    "content": [{"type": "text", "text": role}],
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{base64_image}"}},
+                        {"type": "text", "text": text},
+                    ],
+                },
+            ],
         # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
         modalities=["text", "audio"],
         audio={"voice": audio_voice, "format": "wav"},
@@ -338,9 +345,9 @@ def Qwen22(api_key, base_url, model, role, image, text, audio_voice):
 
     return completion
 
-
-# 音频
+#音频
 def Qwen33(api_key, base_url, model, role, audio, text, audio_voice):
+
     # 输入 Base64 编码的本地文件
     base64_audio = encode_file(audio)
 
@@ -349,18 +356,18 @@ def Qwen33(api_key, base_url, model, role, audio, text, audio_voice):
     completion = client.chat.completions.create(
         model=model,
         messages=[
-            {
-                "role": "system",
-                "content": [{"type": "text", "text": role}],
-            },
-            {
-                "role": "user",
-                "content": [
-                    {"type": "input_audio", "input_audio": {"data": f"data:;base64,{base64_audio}", "format": "wav", }},
-                    {"type": "text", "text": text},
-                ],
-            },
-        ],
+                {
+                    "role": "system",
+                    "content": [{"type": "text", "text": role}],
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "input_audio", "input_audio": {"data": f"data:;base64,{base64_audio}","format": "wav",}},
+                        {"type": "text", "text": text},
+                    ],
+                },
+            ],
         # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
         modalities=["text", "audio"],
         audio={"voice": audio_voice, "format": "wav"},
@@ -373,9 +380,9 @@ def Qwen33(api_key, base_url, model, role, audio, text, audio_voice):
 
     return completion
 
-
-# 视频
+#视频
 def Qwen44(api_key, base_url, model, role, video, text, audio_voice):
+
     # 输入 Base64 编码的本地文件
     base64_video = encode_file(video)
 
@@ -384,18 +391,18 @@ def Qwen44(api_key, base_url, model, role, video, text, audio_voice):
     completion = client.chat.completions.create(
         model=model,
         messages=[
-            {
-                "role": "system",
-                "content": [{"type": "text", "text": role}],
-            },
-            {
-                "role": "user",
-                "content": [
-                    {"type": "video_url", "video_url": {"url": f"data:;base64,{base64_video}"}},
-                    {"type": "text", "text": text},
-                ],
-            },
-        ],
+                {
+                    "role": "system",
+                    "content": [{"type": "text", "text": role}],
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "video_url", "video_url": {"url": f"data:;base64,{base64_video}"}},
+                        {"type": "text", "text": text},
+                    ],
+                },
+            ],
         # 设置输出数据的模态，当前支持两种：["text","audio"]、["text"]
         modalities=["text", "audio"],
         audio={"voice": audio_voice, "format": "wav"},
@@ -409,7 +416,9 @@ def Qwen44(api_key, base_url, model, role, video, text, audio_voice):
     return completion
 
 
-# 语音合成
+
+
+#语音合成
 def TTS(api_key, model, voice, text):
     response = dashscope.audio.qwen_tts.SpeechSynthesizer.call(
         model=model,
@@ -420,7 +429,8 @@ def TTS(api_key, model, voice, text):
     return response
 
 
-# 保存音频
+
+#保存音频
 def save_audio(audio_data):
     # 设置默认保存路径
     output_path = "./temp/temp_audio.wav"
@@ -437,7 +447,7 @@ def save_audio(audio_data):
     )
 
 
-# 删除文件
+#删除文件
 def DelFile(file):
     # 先检查文件是否存在（避免 FileNotFoundError）
     if os.path.exists(file):
@@ -450,9 +460,9 @@ def DelFile(file):
         pass
 
 
-# 流式输出结果合并
+#流式输出结果合并
 def StreamText(completion):
-    # 流式输出结果合并
+    #流式输出结果合并
     result = []  # 初始化结果列表
 
     for chunk in completion:
@@ -467,7 +477,7 @@ def StreamText(completion):
     return output
 
 
-# 流式输出音频解码
+#流式输出音频解码
 def StreamAudio(completion):
     # 方式1: 待生成结束后再进行解码
     audio_string = ""
@@ -490,12 +500,14 @@ def StreamAudio(completion):
     return output
 
 
-# 提前定义AI角色
+
+
+
+
+#提前定义AI角色
 def role1(language):
     role1 = f"你是一个多国语言翻译专家，可以将用户输入的文本进行翻译。确保翻译结果符合目标语言习惯，并考虑到某些词语的文化内涵和地区差异。只回答{language}，不回答任何额外的解释。"
     return role1
-
-
 def role2(language):
     role2 = f'''你是一个精通多国语言的自然语言大师，可以将用户输入的文本进行翻译，并在保持原文句意不变的情况下，根据文生图提示词的规则对文本进行润色，只回答润色后的{language}结果，不回答任何额外的解释。
                 示例1：
@@ -507,18 +519,26 @@ def role2(language):
                 中文输出：在晴朗的蓝天下，开阔的田野上，一只敏捷的棕色狐狸优雅地跳过一只懒惰的狗。
                 英文输出：A swift brown fox, elegantly leaping over a lazy dog, in an open field, under a clear blue sky.'''
     return role2
-
-
 def role3(language):
     role3 = f"你是一个精通多国语言的自然语言提示词专家，可以根据用户输入的主题去描绘一个画面。只回答{language}，不回答任何额外的解释。"
     return role3
 
 
+
+
+
+
+
+
 #######################################            节点            #######################################
 
 
+
+
+
+
 #######################################            AI助手            #######################################
-# AI多模态模型
+#AI多模态模型
 class AI100:
 
     def __init__(self):
@@ -530,15 +550,13 @@ class AI100:
         return {
             "required": {
 
-                "api_key": ("STRING", {"multiline": False, "default": default_api_key}),  # 删除"lazy": True以保证优先加载api_key
-                "base_url": (
-                "STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
-                "model": (["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-03-26",
-                           "qwen-omni-turbo-2025-01-19"],),
-                "mode": (["AI翻译", "AI翻译+润色", "主题创意", "图片理解", "视频理解", "音频理解", "自定义", "无"],),
-                "out_language": (["英文", "中文"], {"tooltip": "输出语言"}),
-                "out_audio": ("BOOLEAN", {"default": False, "tooltip": "是否开启语音输出，开启后输出将可能变得不可控"}),
-                "audio_voice": (["Cherry", "Serena", "Ethan", "Chelsie"], {"tooltip": "语音输出音色选择"})
+                "api_key": ("STRING", {"multiline": False, "default": default_api_key}),     #删除"lazy": True以保证优先加载api_key
+                "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
+                "model":(["qwen-omni-turbo", "qwen-omni-turbo-latest", "qwen-omni-turbo-2025-03-26", "qwen-omni-turbo-2025-01-19"],),
+                "mode":(["AI翻译", "AI翻译+润色", "主题创意", "图片理解", "视频理解", "音频理解", "自定义", "无"],),
+                "out_language":(["英文", "中文"], {"tooltip": "输出语言"}),
+                "out_audio":("BOOLEAN", {"default": False, "tooltip":"是否开启语音输出，开启后输出将可能变得不可控"}),
+                "audio_voice":(["Cherry", "Serena", "Ethan", "Chelsie"], {"tooltip": "语音输出音色选择"})
 
             },
             "optional": {
@@ -546,8 +564,7 @@ class AI100:
                 "audio": ("AUDIO",),
                 "video": ("STRING", {"multiline": False, "tooltip": "输入本地视频文件地址"}),
                 "role": ("STRING", {"multiline": True, "default": "自定义AI", "tooltip": "输入自定义AI角色"}),
-                "text": ("STRING", {"multiline": True,
-                                    "tooltip": "如模式为‘图片理解’，‘视频理解’，‘音频理解’时，提示词为空会默认进行提示词反推，同时也支持自定义提示词"}),
+                "text": ("STRING", {"multiline": True, "tooltip": "如模式为‘图片理解’，‘视频理解’，‘音频理解’时，提示词为空会默认进行提示词反推，同时也支持自定义提示词"}),
             },
         }
 
@@ -560,19 +577,22 @@ class AI100:
 
     CATEGORY = "我的节点"
 
-    def action(self, api_key, base_url, model, mode, out_language, out_audio, audio_voice, role=None, text=None,
-               image=None, audio=None, video=None):
 
-        language = f",请输出{out_language}"
 
+
+
+    def action(self, api_key, base_url, model, mode, out_language, out_audio, audio_voice, role=None, text=None, image=None, audio=None, video=None):
+        
+        language=f",请输出{out_language}"
+        
         # 判断输出类型
         if mode == "图片理解":
 
             role = "You are a helpful assistant."
             if text == None:
                 text = f"提示词反推，直接描述，无需引导句"
-            text = f"{text}{language}"
-            # tensor张量转PIL图片
+            text=f"{text}{language}"
+            #tensor张量转PIL图片
             image = TensorToPil(image)
 
             # 保存图片
@@ -593,20 +613,20 @@ class AI100:
             role = "You are a helpful assistant."
             if text == None:
                 text = f"提示词反推，直接描述，无需引导句"
-            text = f"{text}{language}"
+            text=f"{text}{language}"
             if out_audio:
                 completion = Qwen44(api_key, base_url, model, role, video, text, audio_voice)
             else:
                 completion = Qwen4(api_key, base_url, model, role, video, text)
 
-
+        
 
         elif mode == "音频理解":
 
             role = "You are a helpful assistant."
             if text == None:
                 text = f"提示词反推，直接描述，无需引导句"
-            text = f"{text}{language}"
+            text=f"{text}{language}"
             save_audio(audio)
             audio = "./temp/temp_audio.wav"
 
@@ -644,7 +664,7 @@ class AI100:
                 completion = Qwen1(api_key, base_url, model, role, text)
 
         elif mode == "自定义":
-            text = f"{text}{language}"
+            text=f"{text}{language}"
             if out_audio:
                 completion = Qwen11(api_key, base_url, model, role, text, audio_voice)
             else:
@@ -652,11 +672,13 @@ class AI100:
 
 
         else:
-            # 模式为“无”，文本原封不动，音频输出为无
+            #模式为“无”，文本原封不动，音频输出为无
             OutText = text
             OutAudio = None
 
-        # 如果启用音频输出
+
+
+        #如果启用音频输出
         if mode != "无":
             if out_audio:
                 OutText = StreamAudio(completion)
@@ -667,13 +689,12 @@ class AI100:
 
                 OutAudio = audio
             else:
-                OutText = StreamText(completion)
+                OutText =  StreamText(completion)
                 OutAudio = None
 
-        return (OutText, OutAudio,)
+        return (OutText, OutAudio, )
 
-
-# 通用AI助手
+#通用AI助手
 class AI101:
 
     def __init__(self):
@@ -686,12 +707,9 @@ class AI101:
             "required": {
 
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
-                "base_url": (
-                "STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
+                "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
                 "model": ("STRING", {"multiline": False, "default": "deepseek-v3"}),
-                "temperature": ("FLOAT",
-                                {"default": 1.3, "min": 0.0, "max": 2, "step": 0.1, "round": False, "display": "number",
-                                 "tooltip": "较高的值将使输出更加随机，而较低的值将使其更加集中和确定性"}),
+                "temperature": ("FLOAT", {"default": 1.3,"min": 0.0,"max": 2,"step": 0.1,"round": False, "display": "number", "tooltip": "较高的值将使输出更加随机，而较低的值将使其更加集中和确定性"}),
                 "mode": (["AI翻译", "AI翻译+润色", "自定义", "无"],),
                 "out_language": (["英文", "中文"], {"tooltip": "输出语言，如果模式为自定义则不会发生作用"}),
                 "role": ("STRING", {"multiline": True, "tooltip": "输入自定义AI角色"}),
@@ -704,13 +722,14 @@ class AI101:
 
     FUNCTION = "action"
 
-    # OUTPUT_NODE = False
+    #OUTPUT_NODE = False
 
     CATEGORY = "我的节点"
 
+
     def action(self, api_key, base_url, model, temperature, mode, out_language, role, text):
 
-        # 判断模式
+        #判断模式
         if mode == "无":
             text = text
         else:
@@ -723,13 +742,17 @@ class AI101:
             else:
                 role = f"{role}"
 
+
             text = openai(api_key, base_url, model, temperature, role, text)
+
+
 
         return (text,)
 
 
+
 #######################################            AI视觉理解            #######################################
-# AI图片理解
+#AI图片理解
 class AI102:
 
     def __init__(self):
@@ -742,11 +765,8 @@ class AI102:
             "required": {
                 "image": ("IMAGE",),
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
-                "base_url": (
-                "STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
-                "model": (
-                ["qwen-vl-max", "qwen-vl-max-latest", "qwen-vl-plus", "qwen-vl-plus-latest", "qwen2-vl-7b-instruct",
-                 "qwen2-vl-72b-instruct", "qwen2.5-vl-7b-instruct", "qwen2.5-vl-72b-instruct", "qvq-72b-preview"],),
+                "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
+                "model": (["qwen-vl-max", "qwen-vl-max-latest", "qwen-vl-plus", "qwen-vl-plus-latest", "qwen2-vl-7b-instruct", "qwen2-vl-72b-instruct", "qwen2.5-vl-7b-instruct", "qwen2.5-vl-72b-instruct", "qvq-72b-preview"],),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 2 ** 31 - 1}),
                 "mode": (["默认", "简短", "详细"],),
                 "out_language": (["英文", "中文"], {"tooltip": "输出语言"}),
@@ -758,23 +778,27 @@ class AI102:
 
     FUNCTION = "action"
 
-    # OUTPUT_NODE = False
+    #OUTPUT_NODE = False
 
     CATEGORY = "我的节点"
 
+
     def action(self, api_key, base_url, model, mode, out_language, image, seed):
 
-        # tensor张量转PIL图片
+        #tensor张量转PIL图片
         image = TensorToPil(image)
+
 
         # 保存图片
         image.save("./temp/temp_image.png")
         image = "./temp/temp_image.png"
 
+
         if mode == "默认":
             text = f"图中描绘的是什么景象?提示词反推，直接描述，无需引导句，输出{out_language}"
         else:
             text = f"图中描绘的是什么景象?提示词反推，直接描述，无需引导句，描述尽量{mode}，输出{out_language}"
+
 
         text = openaiVL1(api_key, base_url, model, text, image, seed)
 
@@ -783,8 +807,7 @@ class AI102:
 
         return (text,)
 
-
-# AI视频理解
+#AI视频理解
 class AI1021:
 
     def __init__(self):
@@ -795,10 +818,9 @@ class AI1021:
 
         return {
             "required": {
-                "video_url": ("STRING", {"multiline": False, "default": ""}),
+                "video_url": ("STRING",{"multiline": False, "default": ""}),
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
-                "base_url": (
-                "STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
+                "base_url": ("STRING", {"multiline": False, "default": "https://dashscope.aliyuncs.com/compatible-mode/v1"}),
                 "model": (["qwen-vl-max", "qwen-vl-max-latest", "qwen-vl-plus"],),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 2 ** 31 - 1}),
                 "mode": (["默认", "简短", "详细"],),
@@ -811,9 +833,10 @@ class AI1021:
 
     FUNCTION = "action"
 
-    # OUTPUT_NODE = False
+    #OUTPUT_NODE = False
 
     CATEGORY = "我的节点"
+
 
     def action(self, api_key, base_url, model, mode, out_language, video_url, seed):
 
@@ -822,12 +845,14 @@ class AI1021:
         else:
             text = f"这段视频描绘的是什么景象?提示词反推，直接描述，无需引导句，描述尽量{mode}，输出{out_language}"
 
+
         text = openaiVL2(api_key, base_url, model, text, video_url, seed)
+
+
 
         return (text,)
 
-
-# AI图片处理
+#AI图片处理
 class AI103:
     MODE = {
         "全局风格化": "stylization_all",
@@ -842,16 +867,16 @@ class AI103:
         "垫图": "control_cartoon_feature"
     }
 
+
     def __init__(self):
         pass
-
     @classmethod
     def INPUT_TYPES(s):
 
         mode = list(s.MODE.keys())
         return {
             "required": {
-                "image_url": ("STRING",),
+                "image_url":("STRING",),
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
                 "mode": (mode,),
                 "text": ("STRING", {"multiline": True, "default": ""}),
@@ -861,26 +886,29 @@ class AI103:
             },
         }
 
-    RETURN_TYPES = ("IMAGE", "STRING",)
-    RETURN_NAMES = ("image", "url")
+    RETURN_TYPES = ("IMAGE", "STRING", )
+    RETURN_NAMES = ("image", "url" )
     FUNCTION = "action"
     CATEGORY = "我的节点"
 
     def action(self, api_key, mode, text, image_url, mask_url=None):
         function = self.MODE[mode]
 
+
         if mode == "图像超分":
-            upscale_factor = 2
+            upscale_factor=2
         else:
-            upscale_factor = None
+            upscale_factor=None
+
 
         if mode == "扩图":
-            value = 1.5
+            value=1.5
         else:
-            value = None
+            value=None
 
         if mode != "局部重绘":
             mask_url = None
+
 
         url = "https://dashscope.aliyuncs.com/api/v1/services/aigc/image2image/image-synthesis"
 
@@ -959,12 +987,15 @@ class AI103:
                 if task_status == 'FAILED':
                     break
 
+
+
                 time.sleep(2.5)
             if task_status == 'SUCCEEDED':
                 print("任务成功！")
                 url = result['output']['results'][0]['url']
 
-                # PIL图片转terson张量
+
+                #PIL图片转terson张量
                 terson = PilToTensor(url)
 
                 return (terson, url,)
@@ -978,7 +1009,8 @@ class AI103:
                 return ()
 
 
-# AI语音合成
+
+#AI语音合成
 class AI104:
 
     def __init__(self):
@@ -986,11 +1018,12 @@ class AI104:
 
     @classmethod
     def INPUT_TYPES(s):
+
         return {
             "required": {
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
                 "model": (["qwen-tts"],),
-                "audio_voice": (["Cherry", "Serena", "Ethan", "Chelsie"], {"tooltip": "语音输出音色选择"}),
+                "audio_voice":(["Cherry", "Serena", "Ethan", "Chelsie"], {"tooltip": "语音输出音色选择"}),
                 "text": ("STRING", {"multiline": True}),
             },
         }
@@ -1000,14 +1033,16 @@ class AI104:
 
     FUNCTION = "action"
 
-    # OUTPUT_NODE = False
+    #OUTPUT_NODE = False
 
     CATEGORY = "我的节点"
 
-    def action(self, api_key, model, audio_voice, text):
-        response = TTS(api_key, model, audio_voice, text)
 
-        url = response["output"]["audio"]["url"]
+    def action(self, api_key, model, audio_voice, text):
+
+        response=TTS(api_key, model, audio_voice, text)
+
+        url=response["output"]["audio"]["url"]
 
         audio_path = "./temp/out_audio.wav"
 
@@ -1016,11 +1051,15 @@ class AI104:
         waveform, sample_rate = torchaudio.load(audio_path)
         audio = {"waveform": waveform.unsqueeze(0), "sample_rate": sample_rate}
 
+
+
         return (audio,)
 
 
+
+
 ######################################            AI图片生成            #######################################
-# Flux助手高级
+#Flux助手高级
 class AI200:
 
     def __init__(self):
@@ -1034,15 +1073,11 @@ class AI200:
 
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
                 "model": (["flux-schnell", "flux-dev", "flux-merged"],),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 4294967290}),
-                "steps": ("INT", {"default": 0, "min": 0, "max": 100, "step": 1, "round": False, "display": "number",
-                                  "tooltip": "如果为0，自动配置。 flux-schnell 模型官方默认 steps 为4，flux-dev 模型官方默认 steps 为50，flux-merged 默认 steps 为30。"}),
-                "guidance": ("FLOAT",
-                             {"default": 3.5, "min": 0, "max": 100, "step": 0.1, "round": False, "display": "number",
-                              "tooltip": "指导度量值，用于在图像生成过程中调整模型的创造性与文本指导的紧密度。较高的值会使得生成的图像更忠于文本提示，但可能减少多样性；较低的值则允许更多创造性，增加图像变化。默认值为3.5。"}),
+                "seed":("INT", {"default": 0, "min": 0, "max": 4294967290}),
+                "steps":("INT", {"default": 0, "min": 0, "max": 100,"step": 1,"round": False, "display": "number", "tooltip": "如果为0，自动配置。 flux-schnell 模型官方默认 steps 为4，flux-dev 模型官方默认 steps 为50，flux-merged 默认 steps 为30。"}),
+                "guidance":("FLOAT", {"default": 3.5, "min": 0, "max": 100, "step": 0.1,"round": False, "display": "number", "tooltip": "指导度量值，用于在图像生成过程中调整模型的创造性与文本指导的紧密度。较高的值会使得生成的图像更忠于文本提示，但可能减少多样性；较低的值则允许更多创造性，增加图像变化。默认值为3.5。"}),
                 "size": (["1024*1024", "512*1024", "768*512", "768*1024", "1024*576", "576*1024"],),
-                "offload": (["False", "True"], {"default": "False",
-                                                "tooltip": "一个布尔值，表示是否在采样过程中将部分计算密集型组件临时从GPU卸载到CPU，以减轻内存压力或提升效率。如果您的系统资源有限或希望加速采样过程，可以启用此选项，默认为False。", }),
+                "offload":(["False", "True"], {"default": "False","tooltip": "一个布尔值，表示是否在采样过程中将部分计算密集型组件临时从GPU卸载到CPU，以减轻内存压力或提升效率。如果您的系统资源有限或希望加速采样过程，可以启用此选项，默认为False。", } ),
                 "prompt": ("STRING", {"multiline": True, "default": ""}),
             },
         }
@@ -1050,41 +1085,46 @@ class AI200:
     RETURN_TYPES = ("IMAGE",)
     RETURN_NAMES = ("image",)
 
+
     FUNCTION = "action"
 
-    # OUTPUT_NODE = False
+    #OUTPUT_NODE = False
 
     CATEGORY = "我的节点"
+
 
     def action(self, api_key, model, seed, steps, guidance, size, offload, prompt):
 
         if steps == 0:
             if model == "flux-schnell":
-                steps = 4
+                steps=4
             elif model == "flux-dev":
-                steps = 50
+                steps=50
             else:
-                steps = 30
+                steps=30
         else:
             pass
 
+
         rsp = dashscope.ImageSynthesis.call(api_key=api_key,
-                                            model=model,
-                                            seed=seed,
-                                            steps=steps,
-                                            guidance=guidance,
-                                            size=size,
-                                            offload=offload,
-                                            prompt=prompt,
-                                            )
+                                  model=model,
+                                  seed=seed,
+                                  steps=steps,
+                                  guidance=guidance,
+                                  size=size,
+                                  offload=offload,
+                                  prompt=prompt,
+                                  )
         if rsp.status_code == HTTPStatus.OK:
             print(rsp.output)
             print(rsp.usage)
 
+
             # 解析 JSON
             url = rsp["output"]["results"][0]["url"]
 
-            # url转tensor张量
+
+            #url转tensor张量
             tensor = PilToTensor(url)
 
 
@@ -1092,10 +1132,9 @@ class AI200:
             print('Failed, status_code: %s, code: %s, message: %s' %
                   (rsp.status_code, rsp.code, rsp.message))
 
-        return (tensor,)
+        return (tensor, )
 
-
-# Flux助手简易
+#Flux助手简易
 class AI201:
 
     def __init__(self):
@@ -1117,11 +1156,13 @@ class AI201:
     RETURN_TYPES = ("IMAGE",)
     RETURN_NAMES = ("image",)
 
+
     FUNCTION = "action"
 
-    # OUTPUT_NODE = False
+    #OUTPUT_NODE = False
 
     CATEGORY = "我的节点"
+
 
     def action(selft, api_key, model, size, prompt):
 
@@ -1135,11 +1176,12 @@ class AI201:
             model = "flux-merged"
             steps = 30
 
+
         rsp = dashscope.ImageSynthesis.call(api_key=api_key,
-                                            model=model,
-                                            steps=steps,
-                                            size=size,
-                                            prompt=prompt, )
+                                  model=model,
+                                  steps=steps,
+                                  size=size,
+                                  prompt=prompt,)
         if rsp.status_code == HTTPStatus.OK:
             print(rsp.output)
             print(rsp.usage)
@@ -1147,7 +1189,8 @@ class AI201:
             # 解析 JSON
             url = rsp["output"]["results"][0]["url"]
 
-            # url转tensor张量
+
+            #url转tensor张量
             tensor = PilToTensor(url)
 
 
@@ -1155,10 +1198,9 @@ class AI201:
             print('Failed, status_code: %s, code: %s, message: %s' %
                   (rsp.status_code, rsp.code, rsp.message))
 
-        return (tensor,)
+        return (tensor, )
 
-
-# 比较分流器
+#比较分流器
 class comparator:
 
     def __init__(self):
@@ -1168,7 +1210,7 @@ class comparator:
     def INPUT_TYPES(s):
         return {
             "required": {
-                "mode": (["==", "!=", ">=", ">", "<=", "<", ],),
+                "mode": (["==", "!=", ">=", ">", "<=", "<",],),
             },
             "optional": {
                 "if_True": (any_type, {}),
@@ -1204,16 +1246,16 @@ class comparator:
         if mode not in comparators:
             return (None, None, None)
 
-        # 尝试比较张量
+        #尝试比较张量
         try:
-            boolean = torch.equal(a, b)
+            boolean  = torch.equal(a, b)
             if mode == "==":
-                boolean = boolean
+                boolean=boolean
             if mode == "!=":
                 if boolean:
-                    boolean = False
+                    boolean=False
                 else:
-                    boolean = True
+                    boolean=True
             else:
                 boolean = boolean
                 print("请注意，张量比较仅支持'=='和'!='，其余模式均默认为'=='")
@@ -1225,10 +1267,9 @@ class comparator:
         else:
             output1, output2 = if_False, if_True
 
-        return (output1, output2, boolean,)
+        return (output1, output2, boolean, )
 
-
-# 选择输出器
+#选择输出器
 class choice:
 
     def __init__(self):
@@ -1244,6 +1285,7 @@ class choice:
                 "if_False": (any_type, {}),
             }
         }
+
 
     RETURN_TYPES = (any_type,)
     RETURN_NAMES = ("anything",)
@@ -1265,8 +1307,9 @@ class choice:
         return (anything,)
 
 
-# 宽高比预设
+#宽高比预设
 class size:
+
     PRESETS = {
         "16:9": (1280, 720),
         "9:16": (720, 1280),
@@ -1276,6 +1319,8 @@ class size:
         "1:2": (500, 1000),
         "自定义": (1024, 1024)  # 默认值
     }
+
+
 
     def __init__(self):
         pass
@@ -1288,8 +1333,7 @@ class size:
         return {
             "required": {
                 "mode": (presets, {"default": "自定义"}),
-                "size": (
-                "STRING", {"multiline": False, "default": "1024*1024", "tooltip": "输入格式：宽度*高度（例如：800*600）"}),
+                "size":("STRING", {"multiline": False, "default": "1024*1024", "tooltip": "输入格式：宽度*高度（例如：800*600）"}),
             },
         }
 
@@ -1322,16 +1366,18 @@ class size:
             print(f"⚠️ 无效尺寸输入，已使用默认值 1024x1024。错误详情：{str(e)}")
             width, height = self.PRESETS["自定义"]
 
-        return (width, height,)
+
+        return (width, height, )
 
 
-# 文件计数器
+
+
+#文件计数器
 class ScanFileCountNode:
     """
     自定义节点：文件夹文件计数器
     功能：统计指定路径下所有文件数量（默认过滤子目录）
     """
-
     def __init__(self):
         pass
 
@@ -1351,7 +1397,6 @@ class ScanFileCountNode:
                 "file_extensions": ("STRING", {"default": "*", "tooltip": "计数文件格式，如png、jpg、txt，*表示所有文件"})
             }
         }
-
     RETURN_TYPES = ("INT", "STRING")  # 输出类型
     RETURN_NAMES = ("文件数量", "统计信息")  # 输出名称
 
@@ -1360,7 +1405,6 @@ class ScanFileCountNode:
     # OUTPUT_NODE = False
 
     CATEGORY = "我的节点/Tools"
-
     def action(self, folder_path, include_subfolders=False, file_extensions="*"):
         # 输入验证
         if not os.path.exists(folder_path):
@@ -1391,10 +1435,11 @@ class ScanFileCountNode:
         scan_mode = "包含子目录" if include_subfolders else "仅当前目录"
         stats = f"扫描完成 | 路径: {folder_path}\n模式: {scan_mode}\n类型: {ext_info}\n总任务数: {total_count}"
 
-        return (total_count, stats,)
+        return (total_count, stats, )
 
 
-# 读取png元数据
+
+#读取png元数据
 class ReadPngInfo:
     def __init__(self):
         pass
@@ -1405,24 +1450,22 @@ class ReadPngInfo:
         files = [f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f))]
         files = folder_paths.filter_files_content_types(files, ["image"])
         return {
-            "required": {
+            "required":{
                 "image": (sorted(files), {"image_upload": True})},
-        }
-
+                }
     RETURN_TYPES = ("STRING", "STRING")
     RETURN_NAMES = ("parameters", "json_data")
     FUNCTION = "action"
     CATEGORY = "我的节点/PngInfo"
 
     def action(self, image):
-        path = folder_paths.get_annotated_filepath(image)
+        path=folder_paths.get_annotated_filepath(image)
         # 读取数据
         parameters, json_data = read_png_info(path)
 
-        return (parameters, json_data,)
+        return (parameters, json_data, )
 
-
-# 写入png元数据
+#写入png元数据
 class WritePngInfo:
     def __init__(self):
         pass
@@ -1436,18 +1479,16 @@ class WritePngInfo:
                 "json_data": ("STRING", {"multiline": True, "default": ""})
             }
         }
-
     RETURN_TYPES = ()
 
     FUNCTION = "action"
     CATEGORY = "我的节点/PngInfo"
 
     OUTPUT_NODE = True
-
     def action(self, json_data, path, name):
 
-        number = int(time.time())
-        path = f"{path}/{name}{number}.json"
+        number=int(time.time())
+        path=f"{path}/{name}{number}.json"
         try:
             with open(path, "w", encoding='utf-8') as f:
                 f.write(json_data)
@@ -1459,7 +1500,9 @@ class WritePngInfo:
         return ()
 
 
-# 从配置文件获取数据
+
+
+#从配置文件获取数据
 class GetDataFromConfig:
 
     def __init__(self):
@@ -1517,6 +1560,10 @@ class GetDataFromConfig:
         return (value,)
 
 
+
+
+
+
 # 提示词逐行读取
 class PromptLineReader:
     @classmethod
@@ -1541,7 +1588,7 @@ class PromptLineReader:
         # 构建完整文件路径
         file_path = os.path.join(base_path, file_name)
 
-        line = index // repeat
+        line=index//repeat
 
         try:
             with open(file_path, "r", encoding="utf-8") as f:
@@ -1556,25 +1603,26 @@ class PromptLineReader:
             raise RuntimeError(f"Error reading file: {str(e)}")
 
 
+
 # 映射范围
 class MapRange:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "input": (any_type,),
+                "input": (any_type, ),
             },
             "optional": {
-                "from_min": ("FLOAT", {"default": 0, "min": -9999, "max": 9999, "step": 0.001, "display": "number"}),
-                "from_max": ("FLOAT", {"default": 1, "min": -9999, "max": 9999, "step": 0.001, "display": "number"}),
-                "to_min": ("FLOAT", {"default": 0, "min": -9999, "max": 9999, "step": 0.001, "display": "number"}),
-                "to_max": ("FLOAT", {"default": 1, "min": -9999, "max": 9999, "step": 0.001, "display": "number"}),
+                "from_min": ("FLOAT", {"default": 0, "min":-9999, "max": 9999, "step": 0.001, "display": "number"}),
+                "from_max": ("FLOAT", {"default": 1, "min":-9999, "max": 9999, "step": 0.001, "display": "number"}),
+                "to_min": ("FLOAT", {"default": 0, "min":-9999, "max": 9999, "step": 0.001, "display": "number"}),
+                "to_max": ("FLOAT", {"default": 1, "min":-9999, "max": 9999, "step": 0.001, "display": "number"}),
                 "clamp": ("BOOLEAN", {"default": True, "tooltips": "钳制：将输出限制在to_min和to_max之间"}),
             }
         }
 
-    RETURN_TYPES = (any_type,)
-    RETURN_NAMES = ("output",)
+    RETURN_TYPES = (any_type, )
+    RETURN_NAMES = ("output", )
     FUNCTION = "action"
     CATEGORY = "我的节点/Tools"
 
@@ -1593,9 +1641,9 @@ class MapRange:
                 output = torch.clamp(output, min(to_min, to_max), max(to_min, to_max))
             except:
                 if output < to_min:
-                    output = to_min
+                    output=to_min
                 if output > to_max:
-                    output = to_max
+                    output=to_max
 
         return (output,)
 
@@ -1606,7 +1654,7 @@ class ResetIndex:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "index": ("INT",),
+                "index": ("INT", ),
             },
             "optional": {
                 "add": ("INT", {"default": 0, "min": 0, "display": "number", "tooltips": "index从min起始"}),
@@ -1614,20 +1662,19 @@ class ResetIndex:
             }
         }
 
-    RETURN_TYPES = ("INT",)
-    RETURN_NAMES = ("index",)
+    RETURN_TYPES = ("INT", )
+    RETURN_NAMES = ("index", )
     FUNCTION = "action"
     CATEGORY = "我的节点/Tools"
 
     def action(self, index, add, step):
-        a = index
-        b = add
-        c = step
+        a=index
+        b=add
+        c=step
         if c != 0:
-            a = a - a // c * c
-        a = a + b
+            a=a-a//c*c
+        a=a+b
         return (a,)
-
 
 # 分离颜色
 class SeparateColor:
