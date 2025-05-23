@@ -1846,6 +1846,8 @@ class FloatToInt:
 
 
 # 注册文件路径时自动创建目录
+temp_root = os.path.join(folder_paths.base_path, "temp")
+os.makedirs(temp_root, exist_ok=True)
 prompt_root = os.path.join(folder_paths.base_path, "models", "prompt")
 os.makedirs(prompt_root, exist_ok=True)  # 关键自动创建语句
 folder_paths.add_model_folder_path("prompt", prompt_root)
