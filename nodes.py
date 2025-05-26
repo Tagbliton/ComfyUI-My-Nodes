@@ -1676,9 +1676,9 @@ class ResetIndex:
                 a=a-a//c*c
             a=a+b
         else:
-            a=a+b
             if c != 0:
                 a=a//c
+            a=a+b
         return (a,)
 
 # 分离颜色
