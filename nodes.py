@@ -826,6 +826,7 @@ class AI1021:
                 "seed": ("INT", {"default": 0, "min": 0, "max": 2 ** 31 - 1}),
                 "mode": (["默认", "简短", "详细"],),
                 "out_language": (["英文", "中文"], {"tooltip": "输出语言"}),
+                "text": ("STRING", {"multiline": True, "default": "这段视频描绘的是什么景象?提示词反推，直接描述，无需引导句"})
             },
         }
 
@@ -839,12 +840,12 @@ class AI1021:
     CATEGORY = "我的节点"
 
 
-    def action(self, api_key, base_url, model, mode, out_language, video_url, seed):
+    def action(self, api_key, base_url, model, mode, out_language, video_url, seed, text):
 
         if mode == "默认":
-            text = f"这段视频描绘的是什么景象?提示词反推，直接描述，无需引导句，输出{out_language}"
+            text = f"{text}。输出{out_language}"
         else:
-            text = f"这段视频描绘的是什么景象?提示词反推，直接描述，无需引导句，描述尽量{mode}，输出{out_language}"
+            text = f"{text}。描述尽量{mode}，输出{out_language}"
 
 
         text = openaiVL2(api_key, base_url, model, text, video_url, seed)
