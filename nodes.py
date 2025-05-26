@@ -10,6 +10,7 @@ import time
 import json
 import torch
 import dashscope
+import math
 
 from openai import OpenAI
 from http import HTTPStatus
@@ -769,6 +770,7 @@ class AI102:
                 "seed": ("INT", {"default": 0, "min": 0, "max": 2 ** 31 - 1}),
                 "mode": (["默认", "简短", "详细"],),
                 "out_language": (["英文", "中文"], {"tooltip": "输出语言"}),
+                "text": ("STRING", {"multiline": True, "default": "图中描绘的是什么景象?提示词反推，直接描述，无需引导句"})
             },
         }
 
@@ -794,9 +796,9 @@ class AI102:
 
 
         if mode == "默认":
-            text = f"图中描绘的是什么景象?提示词反推，直接描述，无需引导句，输出{out_language}"
+            text = f"{text}。输出{out_language}"
         else:
-            text = f"图中描绘的是什么景象?提示词反推，直接描述，无需引导句，描述尽量{mode}，输出{out_language}"
+            text = f"{text}。描述尽量{mode}，输出{out_language}"
 
 
         text = openaiVL1(api_key, base_url, model, text, image, seed)
@@ -824,6 +826,7 @@ class AI1021:
                 "seed": ("INT", {"default": 0, "min": 0, "max": 2 ** 31 - 1}),
                 "mode": (["默认", "简短", "详细"],),
                 "out_language": (["英文", "中文"], {"tooltip": "输出语言"}),
+                "text": ("STRING", {"multiline": True, "default": "这段视频描绘的是什么景象?提示词反推，直接描述，无需引导句"})
             },
         }
 
@@ -837,12 +840,12 @@ class AI1021:
     CATEGORY = "我的节点"
 
 
-    def action(self, api_key, base_url, model, mode, out_language, video_url, seed):
+    def action(self, api_key, base_url, model, mode, out_language, video_url, seed, text):
 
         if mode == "默认":
-            text = f"这段视频描绘的是什么景象?提示词反推，直接描述，无需引导句，输出{out_language}"
+            text = f"{text}。输出{out_language}"
         else:
-            text = f"这段视频描绘的是什么景象?提示词反推，直接描述，无需引导句，描述尽量{mode}，输出{out_language}"
+            text = f"{text}。描述尽量{mode}，输出{out_language}"
 
 
         text = openaiVL2(api_key, base_url, model, text, video_url, seed)
@@ -875,13 +878,13 @@ class AI103:
         mode = list(s.MODE.keys())
         return {
             "required": {
-                "image_url":("STRING",),
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
                 "mode": (mode,),
-                "text": ("STRING", {"multiline": True, "default": ""}),
+                "image_url":("STRING",),
             },
             "optional": {
                 "mask_url": ("STRING",),
+                "text": ("STRING", {"multiline": True, "default": ""}),
             },
         }
 
@@ -890,7 +893,7 @@ class AI103:
     FUNCTION = "action"
     CATEGORY = "我的节点"
 
-    def action(self, api_key, mode, text, image_url, mask_url=None):
+    def action(self, api_key, mode, image_url, text, mask_url=None):
         function = self.MODE[mode]
 
 
@@ -1533,7 +1536,7 @@ class GetDataFromConfig:
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("value",)
     FUNCTION = "action"
-    CATEGORY = "我的节点/Tools"
+    CATEGORY = "我的节点"
 
     def action(self, key):
         # 再次读取确保获取最新值
@@ -1563,12 +1566,301 @@ class GetDataFromConfig:
 
 
 
+# 提示词逐行读取
+class PromptLineReader:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "file_name": (folder_paths.get_filename_list("prompt"),),
+                "index": ("INT", {"default": 0, "min": 0, "max": 9999, "step": 1, "display": "number"}),
+            },
+        }
+
+    RETURN_TYPES = ("STRING", "INT", "INT")
+    RETURN_NAMES = ("text", "index", "lines")
+    FUNCTION = "action"
+    CATEGORY = "我的节点/Tools"
+
+    def action(self, file_name: str, index: int) -> tuple:
+        # 确定基础路径
+        base_path = folder_paths.get_folder_paths("prompt")[0]
+
+        # 构建完整文件路径
+        file_path = os.path.join(base_path, file_name)
+
+        line=index
+
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+
+                if index < 0 or index >= len(lines):
+                    raise ValueError(f"Index {line} out of range (0-{len(lines) - 1})")
+
+                return (lines[line].strip(), line, len(lines))
+
+        except Exception as e:
+            raise RuntimeError(f"Error reading file: {str(e)}")
 
 
 
+# 映射范围
+class MapRange:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "input": (any_type, ),
+            },
+            "optional": {
+                "from_min": ("FLOAT", {"default": 0, "min":-9999, "max": 9999, "step": 0.001, "display": "number"}),
+                "from_max": ("FLOAT", {"default": 1, "min":-9999, "max": 9999, "step": 0.001, "display": "number"}),
+                "to_min": ("FLOAT", {"default": 0, "min":-9999, "max": 9999, "step": 0.001, "display": "number"}),
+                "to_max": ("FLOAT", {"default": 1, "min":-9999, "max": 9999, "step": 0.001, "display": "number"}),
+                "clamp": ("BOOLEAN", {"default": True, "tooltip": "钳制：将输出限制在to_min和to_max之间"}),
+            }
+        }
+
+    RETURN_TYPES = (any_type, )
+    RETURN_NAMES = ("output", )
+    FUNCTION = "action"
+    CATEGORY = "我的节点/Tools"
+
+    def action(self, input, from_min, from_max, to_min, to_max, clamp):
+        # 处理除零情况
+        if (from_max - from_min) == 0:
+            output = torch.full_like(input, to_min)
+        else:
+            # 线性映射计算
+            normalized = (input - from_min) / (from_max - from_min)
+            output = normalized * (to_max - to_min) + to_min
+
+        # 钳制输出
+        if clamp:
+            try:
+                output = torch.clamp(output, min(to_min, to_max), max(to_min, to_max))
+            except:
+                if output < to_min:
+                    output=to_min
+                if output > to_max:
+                    output=to_max
+
+        return (output,)
+
+
+# 重置索引
+class ResetIndex:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "index": ("INT", ),
+            },
+            "optional": {
+                "start": ("INT", {"default": 0, "min": 0, "display": "number", "tooltip": "index从start起始，0表示不启用"}),
+                "step": ("INT", {"default": 0, "min": 0, "display": "number", "tooltip": "当index迭代次数等于step时重置/index重复次数等于step，0表示不启用"}),
+                "mode": (["reset", "repeat"],)
+            }
+        }
+
+    RETURN_TYPES = ("INT", )
+    RETURN_NAMES = ("index", )
+    FUNCTION = "action"
+    CATEGORY = "我的节点/Tools"
+
+    def action(self, index, start=0, step=0, mode="reset"):
+        a=index
+        b=start
+        c=step
+        if mode == "reset":
+            if c != 0:
+                a=a-a//c*c
+            a=a+b
+        else:
+            if c != 0:
+                a=a//c
+            a=a+b
+        return (a,)
+
+# 分离颜色
+class SeparateColor:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "image": ("IMAGE",),
+            },
+        }
+
+    RETURN_TYPES = ("IMAGE", "IMAGE", "IMAGE")
+    RETURN_NAMES = ("R", "G", "B")
+    FUNCTION = "action"
+    CATEGORY = "我的节点/Tools"
+    DESCRIPTION = "将RGB通道分离为独立的亮度灰度图像"
+
+    def action(self, image):
+        # 验证输入格式
+        if image.shape[3] != 3:
+            raise ValueError("输入必须是RGB三通道图像")
+
+        # 分离各通道亮度
+        r_lum = image[:, :, :, 0:1]  # 红色通道亮度
+        g_lum = image[:, :, :, 1:2]  # 绿色通道亮度
+        b_lum = image[:, :, :, 2:3]  # 蓝色通道亮度
+
+        # 将单通道亮度转换为三通道灰度图像
+        def to_grayscale(channel):
+            return channel.repeat(1, 1, 1, 3)
+
+        return (
+            to_grayscale(r_lum),
+            to_grayscale(g_lum),
+            to_grayscale(b_lum)
+        )
+
+
+# 合并颜色
+class CombineColor:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "R": ("IMAGE",),
+                "G": ("IMAGE",),
+                "B": ("IMAGE",),
+            },
+        }
+
+    RETURN_TYPES = ("IMAGE",)
+    RETURN_NAMES = ("image",)
+    FUNCTION = "action"
+    CATEGORY = "我的节点/Tools"
+    DESCRIPTION = "将RGB通道亮度灰度图合并为独立的图像"
+
+    def action(self, R, G, B):
+        # 验证基础通道尺寸一致性
+        for channel in [G, B]:
+            if R.shape[:3] != channel.shape[:3]:
+                raise ValueError("所有颜色通道必须具有相同的尺寸（batch, height, width）")
+
+        # 提取各通道数据（自动处理多通道输入）
+        def extract_channel(img, name):
+            if img.shape[3] > 1:
+                pass
+            return img[:, :, :, 0:1]  # 保持维度
+
+        r_channel = extract_channel(R, "Red")
+        g_channel = extract_channel(G, "Green")
+        b_channel = extract_channel(B, "Blue")
+        a_channel = torch.ones_like(r_channel)
+
+        # 合并通道
+        merged = torch.cat([r_channel, g_channel, b_channel, a_channel], dim=-1)
+
+        return (merged,)
+
+
+# 计算字符串长度
+class StringLengthCounter:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "text": ("STRING", {"multiline": True}),
+            },
+        }
+
+    RETURN_TYPES = ("STRING","INT",)
+    RETURN_NAMES = ("text", "length",)
+    FUNCTION = "action"
+    CATEGORY = "我的节点/Tools"
+    DESCRIPTION = "计算输入字符串的长度（包含空格和换行符）"
+
+    def action(self, text):
+        # 计算原始长度
+        length = len(text)
+        return (text, length,)
+
+
+
+
+# 浮点转整数
+class FloatToInt:
+    """
+    将浮点数值转换为整数，支持四种舍入模式
+    模式：
+    - 四舍五入（Round）
+    - 向下取整（Floor）
+    - 向上取整（Ceil）
+    - 截断（Truncate）
+    """
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "optional": {
+                "image": (any_type, ),
+                "float": ("FLOAT", {"default": 0.00, "min": -9999, "max": 9999, "step": 0.01}),
+                "mode": (["Round", "Floor", "Ceil", "Truncate"],)
+            }
+        }
+
+    RETURN_TYPES = (any_type, "INT")
+    RETURN_NAMES = ("image", "int")
+    FUNCTION = "action"
+    CATEGORY = "我的节点/Tools"
+
+    def action(self, image=None, float=None, mode="Round"):
+        if image is not None:
+            # 确保输入是Tensor类型
+            if not isinstance(image, torch.Tensor):
+                image = torch.tensor(float)
+
+            # 应用不同的舍入模式
+            if mode == "Round":
+                result = torch.round(image)
+            elif mode == "Floor":
+                result = torch.floor(image)
+            elif mode == "Ceil":
+                result = torch.ceil(image)
+            elif mode == "Truncate":
+                result = torch.trunc(image)
+            else:
+                raise ValueError(f"未知的模式: {mode}")
+            image=result.to(torch.int64)
+        else:
+            image=torch.tensor([[[[0,0,0,0]]]])
+
+        if float:
+            # 应用不同的舍入模式
+            if mode == "Round":
+                result = round(float)
+            elif mode == "Floor":
+                result = math.floor(float)
+            elif mode == "Ceil":
+                result = math.ceil(float)
+            elif mode == "Truncate":
+                result = math.trunc(float)
+            else:
+                raise ValueError(f"未知的模式: {mode}")
+            int=result
+        else:
+            int=None
+
+
+        # 转换为整数类型
+        return (image, int,)
+
+
+# 注册文件路径时自动创建目录
+temp_root = os.path.join(folder_paths.base_path, "temp")
+os.makedirs(temp_root, exist_ok=True)
+prompt_root = os.path.join(folder_paths.base_path, "models", "prompt")
+os.makedirs(prompt_root, exist_ok=True)  # 关键自动创建语句
+folder_paths.add_model_folder_path("prompt", prompt_root)
 
 # 节点注册
-
 NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "General AI assistant": AI101,
                        "AI Vision-Language-image": AI102,
@@ -1583,7 +1875,14 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "Scan File Count Node": ScanFileCountNode,
                        "Read Png Info": ReadPngInfo,
                        "Write Png Info": WritePngInfo,
-                       "Get Data From Config":GetDataFromConfig
+                       "Get Data From Config": GetDataFromConfig,
+                       "Prompt Line Reader": PromptLineReader,
+                       "Map Range": MapRange,
+                       "Reset/Repeat Index": ResetIndex,
+                       "Separate Color/Image To RGB": SeparateColor,
+                       "Combine Color/RGB To Image": CombineColor,
+                       "String Length Counter/Text Box": StringLengthCounter,
+                       "Float/Terson To Int(Advanced)": FloatToInt
                        }
 NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "AI多模态助手",
                               "General AI assistant": "AI通用助手",
@@ -1599,14 +1898,20 @@ NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "AI多模态助手",
                               "Scan File Count Node": "文件计数器",
                               "Read Png Info": "读取PNG元数据",
                               "Write Png Info": "写入PNG元数据",
-                              "Get Data From Config": "从配置文件获取数据"
+                              "Get Data From Config": "从配置文件获取数据",
+                              "Prompt Line Reader": "提示词逐行读取",
+                              "Map Range": "映射范围",
+                              "Reset/Repeat Index": "重置/重复索引",
+                              "Separate Color/Image To RGB": "分离颜色",
+                              "Combine Color/RGB To Image": "合并颜色",
+                              "String Length Counter/Text Box": "字符串计数/文本框",
+                              "Float/Terson To Int(Advanced)": "浮点/张量转整数"
                               }
 
+print(
+    "\n\033[32;36m=============================comfyui-my-nodes基础节点已载入成功=============================\033[0m")
 
-print("\n\033[32;36m=============================comfyui-my-nodes基础节点已载入成功=============================\033[0m")
-
-
-#尝试导入可选节点，如未安装环境依赖则失败
+# 尝试导入可选节点，如未安装环境依赖则失败
 try:
     from .oss.oss import ImageToUrlOSS
 
@@ -1614,6 +1919,7 @@ try:
     NODE_CLASS_MAPPINGS["Image To Url(OSS)"] = ImageToUrlOSS
     NODE_DISPLAY_NAME_MAPPINGS["Image To Url(OSS)"] = "图片转URL(OSS)"
 
-    print("\033[32;36m===============================comfyui-my-nodes已载入oss节点===============================\033[0m\n")
+    print(
+        "\033[32;36m===============================comfyui-my-nodes已载入oss节点===============================\033[0m\n")
 except:
     pass
