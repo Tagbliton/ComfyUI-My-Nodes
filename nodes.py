@@ -1616,7 +1616,7 @@ class MapRange:
                 "from_max": ("FLOAT", {"default": 1, "min":-9999, "max": 9999, "step": 0.001, "display": "number"}),
                 "to_min": ("FLOAT", {"default": 0, "min":-9999, "max": 9999, "step": 0.001, "display": "number"}),
                 "to_max": ("FLOAT", {"default": 1, "min":-9999, "max": 9999, "step": 0.001, "display": "number"}),
-                "clamp": ("BOOLEAN", {"default": True, "tooltips": "钳制：将输出限制在to_min和to_max之间"}),
+                "clamp": ("BOOLEAN", {"default": True, "tooltip": "钳制：将输出限制在to_min和to_max之间"}),
             }
         }
 
@@ -1656,8 +1656,8 @@ class ResetIndex:
                 "index": ("INT", ),
             },
             "optional": {
-                "start": ("INT", {"default": 0, "min": 0, "display": "number", "tooltips": "index从start起始，0表示不启用"}),
-                "step": ("INT", {"default": 0, "min": 0, "display": "number", "tooltips": "当index迭代次数等于step时重置，0表示不启用"}),
+                "start": ("INT", {"default": 0, "min": 0, "display": "number", "tooltip": "index从start起始，0表示不启用"}),
+                "step": ("INT", {"default": 0, "min": 0, "display": "number", "tooltip": "当index迭代次数等于step时重置，0表示不启用"}),
                 "mode": (["reset", "repeat"],)
             }
         }
@@ -1734,6 +1734,7 @@ class CombineColor:
     RETURN_NAMES = ("image",)
     FUNCTION = "action"
     CATEGORY = "我的节点/Tools"
+    DESCRIPTION = "将RGB通道亮度灰度图合并为独立的图像"
 
     def action(self, R, G, B):
         # 验证基础通道尺寸一致性
