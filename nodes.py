@@ -877,13 +877,13 @@ class AI103:
         mode = list(s.MODE.keys())
         return {
             "required": {
-                "image_url":("STRING",),
                 "api_key": ("STRING", {"multiline": False, "default": default_api_key}),
                 "mode": (mode,),
-                "text": ("STRING", {"multiline": True, "default": ""}),
+                "image_url":("STRING",),
             },
             "optional": {
                 "mask_url": ("STRING",),
+                "text": ("STRING", {"multiline": True, "default": ""}),
             },
         }
 
@@ -892,7 +892,7 @@ class AI103:
     FUNCTION = "action"
     CATEGORY = "我的节点"
 
-    def action(self, api_key, mode, text, image_url, mask_url=None):
+    def action(self, api_key, mode, image_url, mask_url=None, text=""):
         function = self.MODE[mode]
 
 
