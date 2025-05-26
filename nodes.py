@@ -1675,7 +1675,7 @@ class ResetIndex:
             if c != 0:
                 a=a-a//c*c
             a=a+b
-        else mode == "repeat":
+        else:
             a=a+b
             a=a//c
         return (a,)
