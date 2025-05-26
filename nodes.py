@@ -1580,7 +1580,7 @@ class PromptLineReader:
     FUNCTION = "action"
     CATEGORY = "我的节点/Tools"
 
-    def action(self, file_name: str, index: int, repeat: int) -> tuple:
+    def action(self, file_name: str, index: int) -> tuple:
         # 确定基础路径
         base_path = folder_paths.get_folder_paths("prompt")[0]
 
