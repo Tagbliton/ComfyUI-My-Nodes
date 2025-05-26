@@ -770,6 +770,7 @@ class AI102:
                 "seed": ("INT", {"default": 0, "min": 0, "max": 2 ** 31 - 1}),
                 "mode": (["默认", "简短", "详细"],),
                 "out_language": (["英文", "中文"], {"tooltip": "输出语言"}),
+                "text": ("STRING", {"multiline": True, "default": "图中描绘的是什么景象?提示词反推，直接描述，无需引导句"})
             },
         }
 
@@ -795,9 +796,9 @@ class AI102:
 
 
         if mode == "默认":
-            text = f"图中描绘的是什么景象?提示词反推，直接描述，无需引导句，输出{out_language}"
+            text = f"{text}。输出{out_language}"
         else:
-            text = f"图中描绘的是什么景象?提示词反推，直接描述，无需引导句，描述尽量{mode}，输出{out_language}"
+            text = f"{text}。描述尽量{mode}，输出{out_language}"
 
 
         text = openaiVL1(api_key, base_url, model, text, image, seed)
