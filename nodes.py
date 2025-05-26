@@ -1657,7 +1657,7 @@ class ResetIndex:
             },
             "optional": {
                 "start": ("INT", {"default": 0, "min": 0, "display": "number", "tooltip": "index从start起始，0表示不启用"}),
-                "step": ("INT", {"default": 0, "min": 0, "display": "number", "tooltip": "当index迭代次数等于step时重置，0表示不启用"}),
+                "step": ("INT", {"default": 0, "min": 0, "display": "number", "tooltip": "当index迭代次数等于step时重置/index重复次数等于step，0表示不启用"}),
                 "mode": (["reset", "repeat"],)
             }
         }
