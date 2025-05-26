@@ -1,9 +1,54 @@
 {
   "id": "c57d81bb-3257-4dff-ad79-7557cdaba4d0",
   "revision": 0,
-  "last_node_id": 330,
-  "last_link_id": 385,
+  "last_node_id": 336,
+  "last_link_id": 389,
   "nodes": [
+    {
+      "id": 176,
+      "type": "Scan File Count Node",
+      "pos": [
+        1130,
+        3540
+      ],
+      "size": [
+        315,
+        126
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "文件数量",
+          "type": "INT",
+          "slot_index": 0,
+          "links": [
+            213
+          ]
+        },
+        {
+          "name": "统计信息",
+          "type": "STRING",
+          "slot_index": 1,
+          "links": [
+            380
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.0.1",
+        "Node name for S&R": "Scan File Count Node",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        ".\\outbatch",
+        false,
+        "*"
+      ]
+    },
     {
       "id": 177,
       "type": "easy forLoopStart",
@@ -16,7 +61,7 @@
         98
       ],
       "flags": {},
-      "order": 11,
+      "order": 13,
       "mode": 4,
       "inputs": [
         {
@@ -47,7 +92,9 @@
         {
           "name": "index",
           "type": "INT",
-          "links": null
+          "links": [
+            387
+          ]
         },
         {
           "name": "value1",
@@ -58,7 +105,10 @@
       "properties": {
         "cnr_id": "comfyui-easy-use",
         "ver": "3e84b8cd77719341adc71b08b5789bdb07b1a543",
-        "Node name for S&R": "easy forLoopStart"
+        "Node name for S&R": "easy forLoopStart",
+        "widget_ue_connectable": {
+          "total": true
+        }
       },
       "widgets_values": [
         1
@@ -67,916 +117,63 @@
       "bgcolor": "rgba(24,24,27,.9)"
     },
     {
-      "id": 286,
-      "type": "Get Data From Config",
+      "id": 178,
+      "type": "easy forLoopEnd",
       "pos": [
-        3090,
-        1870
+        2120,
+        3430
       ],
       "size": [
-        315,
-        58
-      ],
-      "flags": {},
-      "order": 0,
-      "mode": 4,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "value",
-          "type": "STRING",
-          "links": [
-            305
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-my-nodes",
-        "ver": "1.1.3",
-        "Node name for S&R": "Get Data From Config"
-      },
-      "widgets_values": [
-        "api_key"
-      ]
-    },
-    {
-      "id": 287,
-      "type": "Get Data From Config",
-      "pos": [
-        3090,
-        1980
-      ],
-      "size": [
-        315,
-        58
-      ],
-      "flags": {},
-      "order": 1,
-      "mode": 4,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "value",
-          "type": "STRING",
-          "links": [
-            308
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-my-nodes",
-        "ver": "1.1.3",
-        "Node name for S&R": "Get Data From Config"
-      },
-      "widgets_values": [
-        "bucket"
-      ]
-    },
-    {
-      "id": 288,
-      "type": "Get Data From Config",
-      "pos": [
-        3090,
-        2090
-      ],
-      "size": [
-        315,
-        58
-      ],
-      "flags": {},
-      "order": 2,
-      "mode": 4,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "value",
-          "type": "STRING",
-          "links": [
-            307
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-my-nodes",
-        "ver": "1.1.3",
-        "Node name for S&R": "Get Data From Config"
-      },
-      "widgets_values": [
-        "OSS_ACCESS_KEY"
-      ]
-    },
-    {
-      "id": 297,
-      "type": "LoadAudio",
-      "pos": [
-        1370,
-        1050
-      ],
-      "size": [
-        315,
-        136
-      ],
-      "flags": {},
-      "order": 3,
-      "mode": 4,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "AUDIO",
-          "type": "AUDIO",
-          "links": [
-            315
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.3.29",
-        "Node name for S&R": "LoadAudio"
-      },
-      "widgets_values": [
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "id": 299,
-      "type": "AI Vision-Language-image",
-      "pos": [
-        1840,
-        1090
-      ],
-      "size": [
-        315,
-        202
-      ],
-      "flags": {},
-      "order": 4,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "text",
-          "type": "STRING",
-          "links": null
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-my-nodes",
-        "ver": "1.1.3",
-        "Node name for S&R": "AI Vision-Language-image"
-      },
-      "widgets_values": [
-        "",
-        "https://dashscope.aliyuncs.com/compatible-mode/v1",
-        "qwen2-vl-7b-instruct",
-        866661638,
-        "randomize",
-        "默认",
-        "英文"
-      ]
-    },
-    {
-      "id": 292,
-      "type": "Get Data From Config",
-      "pos": [
-        1370,
-        1240
-      ],
-      "size": [
-        315,
-        58
-      ],
-      "flags": {},
-      "order": 5,
-      "mode": 4,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "value",
-          "type": "STRING",
-          "links": [
-            310,
-            312
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-my-nodes",
-        "ver": "1.1.3",
-        "Node name for S&R": "Get Data From Config"
-      },
-      "widgets_values": [
-        "api_key"
-      ]
-    },
-    {
-      "id": 273,
-      "type": "PreviewImage",
-      "pos": [
-        4620,
-        2160
-      ],
-      "size": [
-        399.8978576660156,
-        377.97381591796875
-      ],
-      "flags": {},
-      "order": 31,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 294
-        }
-      ],
-      "outputs": [],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.3.27",
-        "Node name for S&R": "PreviewImage"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 306,
-      "type": "easy showAnything",
-      "pos": [
-        4620,
-        2590
-      ],
-      "size": [
-        210,
-        26
-      ],
-      "flags": {},
-      "order": 32,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "anything",
-          "shape": 7,
-          "type": "*",
-          "link": 324
-        }
-      ],
-      "outputs": [
-        {
-          "name": "output",
-          "type": "*",
-          "links": null
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-easy-use",
-        "ver": "69aac075e8ba2c11d4dd3531a03eb6c7103fd1d8",
-        "Node name for S&R": "easy showAnything"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 289,
-      "type": "Get Data From Config",
-      "pos": [
-        3090,
-        2210
-      ],
-      "size": [
-        315,
-        58
-      ],
-      "flags": {},
-      "order": 6,
-      "mode": 4,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "value",
-          "type": "STRING",
-          "links": [
-            306
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-my-nodes",
-        "ver": "1.1.3",
-        "Node name for S&R": "Get Data From Config"
-      },
-      "widgets_values": [
-        "OSS_SECRET_KEY"
-      ]
-    },
-    {
-      "id": 318,
-      "type": "easy showAnything",
-      "pos": [
-        2730,
-        2600
-      ],
-      "size": [
-        210,
-        88
-      ],
-      "flags": {},
-      "order": 25,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "anything",
-          "shape": 7,
-          "type": "*",
-          "link": 355
-        }
-      ],
-      "outputs": [
-        {
-          "name": "output",
-          "type": "*",
-          "links": null
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-easy-use",
-        "ver": "69aac075e8ba2c11d4dd3531a03eb6c7103fd1d8",
-        "Node name for S&R": "easy showAnything"
-      },
-      "widgets_values": [
-        "null"
-      ]
-    },
-    {
-      "id": 313,
-      "type": "easy showAnything",
-      "pos": [
-        2730,
-        2740
-      ],
-      "size": [
-        210,
-        88
-      ],
-      "flags": {},
-      "order": 26,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "anything",
-          "shape": 7,
-          "type": "*",
-          "link": 342
-        }
-      ],
-      "outputs": [
-        {
-          "name": "output",
-          "type": "*",
-          "links": []
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-easy-use",
-        "ver": "69aac075e8ba2c11d4dd3531a03eb6c7103fd1d8",
-        "Node name for S&R": "easy showAnything"
-      },
-      "widgets_values": [
-        "tensor([[[0., 0., 0.,  ..., 0., 0., 0.],\n         [0., 0., 0.,  ..., 0., 0., 0.],\n         [0., 0., 0.,  ..., 0., 0., 0.],\n         ...,\n         [0., 0., 0.,  ..., 0., 0., 0.],\n         [0., 0., 0.,  ..., 0., 0., 0.],\n         [0., 0., 0.,  ..., 0., 0., 0.]]])"
-      ]
-    },
-    {
-      "id": 316,
-      "type": "easy showAnything",
-      "pos": [
-        2730,
-        2880
-      ],
-      "size": [
-        210,
-        88
-      ],
-      "flags": {},
-      "order": 29,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "anything",
-          "shape": 7,
-          "type": "*",
-          "link": 348
-        }
-      ],
-      "outputs": [
-        {
-          "name": "output",
-          "type": "*",
-          "links": null
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-easy-use",
-        "ver": "69aac075e8ba2c11d4dd3531a03eb6c7103fd1d8",
-        "Node name for S&R": "easy showAnything"
-      },
-      "widgets_values": [
-        "false"
-      ]
-    },
-    {
-      "id": 309,
-      "type": "GetImageSizeAndCount",
-      "pos": [
-        1470,
-        2550
-      ],
-      "size": [
-        277.20001220703125,
-        86
-      ],
-      "flags": {},
-      "order": 13,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 358
-        }
-      ],
-      "outputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "links": [
-            326
-          ]
-        },
-        {
-          "label": "width",
-          "name": "width",
-          "type": "INT",
-          "links": [
-            327
-          ]
-        },
-        {
-          "label": "height",
-          "name": "height",
-          "type": "INT",
-          "links": [
-            328
-          ]
-        },
-        {
-          "label": "count",
-          "name": "count",
-          "type": "INT",
-          "links": null
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-kjnodes",
-        "ver": "1.0.8",
-        "Node name for S&R": "GetImageSizeAndCount"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 308,
-      "type": "EmptyImage",
-      "pos": [
-        1480,
-        2720
-      ],
-      "size": [
-        315,
-        130
-      ],
-      "flags": {},
-      "order": 17,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "width",
-          "type": "INT",
-          "widget": {
-            "name": "width"
-          },
-          "link": 327
-        },
-        {
-          "name": "height",
-          "type": "INT",
-          "widget": {
-            "name": "height"
-          },
-          "link": 328
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            329
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.3.29",
-        "Node name for S&R": "EmptyImage"
-      },
-      "widgets_values": [
-        512,
-        512,
-        1,
-        0
-      ]
-    },
-    {
-      "id": 307,
-      "type": "ImageToMask",
-      "pos": [
-        1840,
-        2790
-      ],
-      "size": [
-        315,
-        58
-      ],
-      "flags": {},
-      "order": 21,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 329
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MASK",
-          "type": "MASK",
-          "links": [
-            332
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.3.29",
-        "Node name for S&R": "ImageToMask"
-      },
-      "widgets_values": [
-        "red"
-      ]
-    },
-    {
-      "id": 310,
-      "type": "Digital Comparator",
-      "pos": [
-        2250,
-        2600
-      ],
-      "size": [
-        315,
-        118
-      ],
-      "flags": {},
-      "order": 23,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "if_True",
-          "shape": 7,
-          "type": "*",
-          "link": 361
-        },
-        {
-          "name": "if_False",
-          "shape": 7,
-          "type": "*",
-          "link": null
-        },
-        {
-          "name": "a",
-          "shape": 7,
-          "type": "*",
-          "link": 360
-        },
-        {
-          "name": "b",
-          "shape": 7,
-          "type": "*",
-          "link": 332
-        }
-      ],
-      "outputs": [
-        {
-          "name": "output1",
-          "type": "*",
-          "links": [
-            355
-          ]
-        },
-        {
-          "name": "output2",
-          "type": "*",
-          "links": [
-            342,
-            353,
-            357
-          ]
-        },
-        {
-          "name": "boolean",
-          "type": "BOOLEAN",
-          "links": [
-            348
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-my-nodes",
-        "ver": "1.1.3",
-        "Node name for S&R": "Digital Comparator"
-      },
-      "widgets_values": [
-        "=="
-      ]
-    },
-    {
-      "id": 315,
-      "type": "MaskPreview+",
-      "pos": [
-        3020,
-        2670
-      ],
-      "size": [
-        210,
-        246
-      ],
-      "flags": {},
-      "order": 28,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "mask",
-          "type": "MASK",
-          "link": 357
-        }
-      ],
-      "outputs": [],
-      "properties": {
-        "cnr_id": "comfyui_essentials",
-        "ver": "1.1.0",
-        "Node name for S&R": "MaskPreview+"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 325,
-      "type": "Output Selector",
-      "pos": [
-        1490,
-        1950
-      ],
-      "size": [
-        315,
-        78
-      ],
-      "flags": {},
-      "order": 14,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "if_True",
-          "shape": 7,
-          "type": "*",
-          "link": 383
-        },
-        {
-          "name": "if_False",
-          "shape": 7,
-          "type": "*",
-          "link": 384
-        }
-      ],
-      "outputs": [
-        {
-          "name": "anything",
-          "type": "*",
-          "links": [
-            375
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-my-nodes",
-        "ver": "1.1.3",
-        "Node name for S&R": "Output Selector"
-      },
-      "widgets_values": [
-        true
-      ]
-    },
-    {
-      "id": 324,
-      "type": "easy showAnything",
-      "pos": [
-        1500,
-        2120
-      ],
-      "size": [
-        210,
-        88
+        267,
+        46
       ],
       "flags": {},
       "order": 18,
       "mode": 4,
       "inputs": [
         {
-          "name": "anything",
+          "name": "flow",
+          "shape": 5,
+          "type": "FLOW_CONTROL",
+          "link": 212
+        },
+        {
+          "name": "initial_value1",
           "shape": 7,
           "type": "*",
-          "link": 375
+          "link": null
         }
       ],
       "outputs": [
         {
-          "name": "output",
+          "name": "value1",
           "type": "*",
           "links": null
         }
       ],
       "properties": {
         "cnr_id": "comfyui-easy-use",
-        "ver": "69aac075e8ba2c11d4dd3531a03eb6c7103fd1d8",
-        "Node name for S&R": "easy showAnything"
+        "ver": "3e84b8cd77719341adc71b08b5789bdb07b1a543",
+        "Node name for S&R": "easy forLoopEnd",
+        "widget_ue_connectable": {}
       },
-      "widgets_values": [
-        "null"
-      ]
+      "widgets_values": [],
+      "color": "#1f1f48",
+      "bgcolor": "rgba(24,24,27,.9)"
     },
     {
-      "id": 291,
-      "type": "Multimodal AI assistant",
+      "id": 263,
+      "type": "AI image processing",
       "pos": [
-        1820,
-        670
+        4180,
+        2260
       ],
       "size": [
-        400,
-        354
+        351.2396545410156,
+        204
       ],
       "flags": {},
-      "order": 15,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "image",
-          "shape": 7,
-          "type": "IMAGE",
-          "link": 385
-        },
-        {
-          "name": "audio",
-          "shape": 7,
-          "type": "AUDIO",
-          "link": 315
-        },
-        {
-          "name": "api_key",
-          "type": "STRING",
-          "widget": {
-            "name": "api_key"
-          },
-          "link": 310
-        }
-      ],
-      "outputs": [
-        {
-          "name": "OutText",
-          "type": "STRING",
-          "links": [
-            376
-          ]
-        },
-        {
-          "name": "OutAudio",
-          "type": "AUDIO",
-          "links": [
-            316
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-my-nodes",
-        "ver": "1.1.3",
-        "Node name for S&R": "Multimodal AI assistant"
-      },
-      "widgets_values": [
-        "",
-        "https://dashscope.aliyuncs.com/compatible-mode/v1",
-        "qwen-omni-turbo",
-        "AI翻译+润色",
-        "英文",
-        false,
-        "Cherry",
-        "",
-        "自定义AI",
-        "IP形象设计：一个blender渲染风格的IP形象"
-      ]
-    },
-    {
-      "id": 298,
-      "type": "PreviewAudio",
-      "pos": [
-        2330,
-        1080
-      ],
-      "size": [
-        315,
-        88
-      ],
-      "flags": {},
-      "order": 20,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "audio",
-          "type": "AUDIO",
-          "link": 316
-        }
-      ],
-      "outputs": [],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.3.29",
-        "Node name for S&R": "PreviewAudio"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 326,
-      "type": "easy showAnything",
-      "pos": [
-        2330,
-        720
-      ],
-      "size": [
-        320,
-        230
-      ],
-      "flags": {},
-      "order": 19,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "anything",
-          "shape": 7,
-          "type": "*",
-          "link": 376
-        }
-      ],
-      "outputs": [
-        {
-          "name": "output",
-          "type": "*",
-          "links": [
-            377
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-easy-use",
-        "ver": "69aac075e8ba2c11d4dd3531a03eb6c7103fd1d8",
-        "Node name for S&R": "easy showAnything"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 293,
-      "type": "Flux assistant(advanced)",
-      "pos": [
-        3300,
-        730
-      ],
-      "size": [
-        400,
-        280
-      ],
-      "flags": {},
-      "order": 22,
+      "order": 34,
       "mode": 4,
       "inputs": [
         {
@@ -985,15 +182,24 @@
           "widget": {
             "name": "api_key"
           },
-          "link": 312
+          "link": 305
         },
         {
-          "name": "prompt",
+          "name": "image_url",
           "type": "STRING",
           "widget": {
-            "name": "prompt"
+            "name": "image_url"
           },
-          "link": 377
+          "link": 285
+        },
+        {
+          "name": "mask_url",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "mask_url"
+          },
+          "link": 286
         }
       ],
       "outputs": [
@@ -1001,55 +207,34 @@
           "name": "image",
           "type": "IMAGE",
           "links": [
-            313
+            294
+          ]
+        },
+        {
+          "name": "url",
+          "type": "STRING",
+          "links": [
+            324
           ]
         }
       ],
       "properties": {
         "cnr_id": "comfyui-my-nodes",
         "ver": "1.1.3",
-        "Node name for S&R": "Flux assistant(advanced)"
+        "Node name for S&R": "AI image processing",
+        "widget_ue_connectable": {
+          "image_url": true,
+          "api_key": true,
+          "mask_url": true
+        }
       },
       "widgets_values": [
         "",
-        "flux-dev",
-        4015368349,
-        "randomize",
-        50,
-        3.5,
-        "1024*1024",
-        "False",
+        "",
+        "全局风格化",
+        "转换为法国绘本风",
         ""
       ]
-    },
-    {
-      "id": 295,
-      "type": "PreviewImage",
-      "pos": [
-        3730,
-        730
-      ],
-      "size": [
-        369.0790100097656,
-        283.09222412109375
-      ],
-      "flags": {},
-      "order": 24,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 313
-        }
-      ],
-      "outputs": [],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.3.27",
-        "Node name for S&R": "PreviewImage"
-      },
-      "widgets_values": []
     },
     {
       "id": 265,
@@ -1134,200 +319,6 @@
       ]
     },
     {
-      "id": 263,
-      "type": "AI image processing",
-      "pos": [
-        4180,
-        2260
-      ],
-      "size": [
-        351.2396545410156,
-        204
-      ],
-      "flags": {},
-      "order": 30,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "image_url",
-          "type": "STRING",
-          "widget": {
-            "name": "image_url"
-          },
-          "link": 285
-        },
-        {
-          "name": "api_key",
-          "type": "STRING",
-          "widget": {
-            "name": "api_key"
-          },
-          "link": 305
-        },
-        {
-          "name": "mask_url",
-          "shape": 7,
-          "type": "STRING",
-          "widget": {
-            "name": "mask_url"
-          },
-          "link": 286
-        }
-      ],
-      "outputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "links": [
-            294
-          ]
-        },
-        {
-          "name": "url",
-          "type": "STRING",
-          "links": [
-            324
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-my-nodes",
-        "ver": "1.1.3",
-        "Node name for S&R": "AI image processing"
-      },
-      "widgets_values": [
-        "",
-        "",
-        "全局风格化",
-        "转换为法国绘本风",
-        ""
-      ]
-    },
-    {
-      "id": 328,
-      "type": "easy showAnything",
-      "pos": [
-        1550,
-        3580
-      ],
-      "size": [
-        320,
-        140
-      ],
-      "flags": {},
-      "order": 12,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "anything",
-          "shape": 7,
-          "type": "*",
-          "link": 380
-        }
-      ],
-      "outputs": [
-        {
-          "name": "output",
-          "type": "*",
-          "links": null
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-easy-use",
-        "ver": "69aac075e8ba2c11d4dd3531a03eb6c7103fd1d8",
-        "Node name for S&R": "easy showAnything"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 178,
-      "type": "easy forLoopEnd",
-      "pos": [
-        2120,
-        3430
-      ],
-      "size": [
-        267,
-        46
-      ],
-      "flags": {},
-      "order": 16,
-      "mode": 4,
-      "inputs": [
-        {
-          "name": "flow",
-          "shape": 5,
-          "type": "FLOW_CONTROL",
-          "link": 212
-        },
-        {
-          "name": "initial_value1",
-          "shape": 7,
-          "type": "*",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "value1",
-          "type": "*",
-          "links": null
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-easy-use",
-        "ver": "3e84b8cd77719341adc71b08b5789bdb07b1a543",
-        "Node name for S&R": "easy forLoopEnd"
-      },
-      "widgets_values": [],
-      "color": "#1f1f48",
-      "bgcolor": "rgba(24,24,27,.9)"
-    },
-    {
-      "id": 176,
-      "type": "Scan File Count Node",
-      "pos": [
-        1130,
-        3540
-      ],
-      "size": [
-        315,
-        126
-      ],
-      "flags": {},
-      "order": 7,
-      "mode": 4,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "文件数量",
-          "type": "INT",
-          "slot_index": 0,
-          "links": [
-            213
-          ]
-        },
-        {
-          "name": "统计信息",
-          "type": "STRING",
-          "slot_index": 1,
-          "links": [
-            380
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-my-nodes",
-        "ver": "1.0.1",
-        "Node name for S&R": "Scan File Count Node"
-      },
-      "widgets_values": [
-        ".\\outbatch",
-        false,
-        "*"
-      ]
-    },
-    {
       "id": 266,
       "type": "LoadImage",
       "pos": [
@@ -1339,7 +330,7 @@
         314
       ],
       "flags": {},
-      "order": 8,
+      "order": 7,
       "mode": 4,
       "inputs": [],
       "outputs": [
@@ -1364,12 +355,1068 @@
       "properties": {
         "cnr_id": "comfy-core",
         "ver": "0.3.27",
-        "Node name for S&R": "LoadImage"
+        "Node name for S&R": "LoadImage",
+        "widget_ue_connectable": {}
       },
       "widgets_values": [
         "ComfyUI_temp_ofpkl_00001_.png",
         "image"
       ]
+    },
+    {
+      "id": 273,
+      "type": "PreviewImage",
+      "pos": [
+        4620,
+        2160
+      ],
+      "size": [
+        399.8978576660156,
+        377.97381591796875
+      ],
+      "flags": {},
+      "order": 35,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 294
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.27",
+        "Node name for S&R": "PreviewImage",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 286,
+      "type": "Get Data From Config",
+      "pos": [
+        3090,
+        1870
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "links": [
+            305
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.1.3",
+        "Node name for S&R": "Get Data From Config",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "api_key"
+      ]
+    },
+    {
+      "id": 287,
+      "type": "Get Data From Config",
+      "pos": [
+        3090,
+        1980
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "links": [
+            308
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.1.3",
+        "Node name for S&R": "Get Data From Config",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "bucket"
+      ]
+    },
+    {
+      "id": 288,
+      "type": "Get Data From Config",
+      "pos": [
+        3090,
+        2090
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "links": [
+            307
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.1.3",
+        "Node name for S&R": "Get Data From Config",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "OSS_ACCESS_KEY"
+      ]
+    },
+    {
+      "id": 289,
+      "type": "Get Data From Config",
+      "pos": [
+        3090,
+        2210
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "links": [
+            306
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.1.3",
+        "Node name for S&R": "Get Data From Config",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "OSS_SECRET_KEY"
+      ]
+    },
+    {
+      "id": 291,
+      "type": "Multimodal AI assistant",
+      "pos": [
+        1820,
+        670
+      ],
+      "size": [
+        400,
+        354
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 385
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 315
+        },
+        {
+          "name": "api_key",
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": 310
+        }
+      ],
+      "outputs": [
+        {
+          "name": "OutText",
+          "type": "STRING",
+          "links": [
+            376
+          ]
+        },
+        {
+          "name": "OutAudio",
+          "type": "AUDIO",
+          "links": [
+            316
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.1.3",
+        "Node name for S&R": "Multimodal AI assistant",
+        "widget_ue_connectable": {
+          "api_key": true
+        }
+      },
+      "widgets_values": [
+        "",
+        "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "qwen-omni-turbo",
+        "AI翻译+润色",
+        "英文",
+        false,
+        "Cherry",
+        "",
+        "自定义AI",
+        "IP形象设计：一个blender渲染风格的IP形象"
+      ]
+    },
+    {
+      "id": 292,
+      "type": "Get Data From Config",
+      "pos": [
+        1370,
+        1240
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "links": [
+            310,
+            312
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.1.3",
+        "Node name for S&R": "Get Data From Config",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "api_key"
+      ]
+    },
+    {
+      "id": 293,
+      "type": "Flux assistant(advanced)",
+      "pos": [
+        3300,
+        730
+      ],
+      "size": [
+        400,
+        280
+      ],
+      "flags": {},
+      "order": 26,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "api_key",
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": 312
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": 377
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            313
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.1.3",
+        "Node name for S&R": "Flux assistant(advanced)",
+        "widget_ue_connectable": {
+          "api_key": true,
+          "prompt": true
+        }
+      },
+      "widgets_values": [
+        "",
+        "flux-dev",
+        4015368349,
+        "randomize",
+        50,
+        3.5,
+        "1024*1024",
+        "False",
+        ""
+      ]
+    },
+    {
+      "id": 295,
+      "type": "PreviewImage",
+      "pos": [
+        3730,
+        730
+      ],
+      "size": [
+        369.0790100097656,
+        283.09222412109375
+      ],
+      "flags": {},
+      "order": 28,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 313
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.27",
+        "Node name for S&R": "PreviewImage",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 297,
+      "type": "LoadAudio",
+      "pos": [
+        1370,
+        1050
+      ],
+      "size": [
+        315,
+        136
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            315
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.29",
+        "Node name for S&R": "LoadAudio",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": 298,
+      "type": "PreviewAudio",
+      "pos": [
+        2330,
+        1080
+      ],
+      "size": [
+        315,
+        88
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 316
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.29",
+        "Node name for S&R": "PreviewAudio",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 299,
+      "type": "AI Vision-Language-image",
+      "pos": [
+        1840,
+        1090
+      ],
+      "size": [
+        315,
+        256
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.1.3",
+        "Node name for S&R": "AI Vision-Language-image",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "",
+        "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "qwen2-vl-7b-instruct",
+        866661638,
+        "randomize",
+        "默认",
+        "英文",
+        "图中描绘的是什么景象?提示词反推，直接描述，无需引导句"
+      ]
+    },
+    {
+      "id": 306,
+      "type": "easy showAnything",
+      "pos": [
+        4620,
+        2590
+      ],
+      "size": [
+        210,
+        26
+      ],
+      "flags": {},
+      "order": 36,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "shape": 7,
+          "type": "*",
+          "link": 324
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "69aac075e8ba2c11d4dd3531a03eb6c7103fd1d8",
+        "Node name for S&R": "easy showAnything",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 307,
+      "type": "ImageToMask",
+      "pos": [
+        1840,
+        2790
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 25,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 329
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            332
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.29",
+        "Node name for S&R": "ImageToMask",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "red"
+      ]
+    },
+    {
+      "id": 308,
+      "type": "EmptyImage",
+      "pos": [
+        1480,
+        2720
+      ],
+      "size": [
+        315,
+        130
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 327
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 328
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            329
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.29",
+        "Node name for S&R": "EmptyImage",
+        "widget_ue_connectable": {
+          "width": true,
+          "height": true
+        }
+      },
+      "widgets_values": [
+        512,
+        512,
+        1,
+        0
+      ]
+    },
+    {
+      "id": 309,
+      "type": "GetImageSizeAndCount",
+      "pos": [
+        1470,
+        2550
+      ],
+      "size": [
+        277.20001220703125,
+        86
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 358
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            326
+          ]
+        },
+        {
+          "label": "width",
+          "name": "width",
+          "type": "INT",
+          "links": [
+            327
+          ]
+        },
+        {
+          "label": "height",
+          "name": "height",
+          "type": "INT",
+          "links": [
+            328
+          ]
+        },
+        {
+          "label": "count",
+          "name": "count",
+          "type": "INT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-kjnodes",
+        "ver": "1.0.8",
+        "Node name for S&R": "GetImageSizeAndCount",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 310,
+      "type": "Digital Comparator",
+      "pos": [
+        2250,
+        2600
+      ],
+      "size": [
+        315,
+        118
+      ],
+      "flags": {},
+      "order": 27,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "if_True",
+          "shape": 7,
+          "type": "*",
+          "link": 361
+        },
+        {
+          "name": "if_False",
+          "shape": 7,
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "a",
+          "shape": 7,
+          "type": "*",
+          "link": 360
+        },
+        {
+          "name": "b",
+          "shape": 7,
+          "type": "*",
+          "link": 332
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output1",
+          "type": "*",
+          "links": [
+            355
+          ]
+        },
+        {
+          "name": "output2",
+          "type": "*",
+          "links": [
+            342,
+            353,
+            357
+          ]
+        },
+        {
+          "name": "boolean",
+          "type": "BOOLEAN",
+          "links": [
+            348
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.1.3",
+        "Node name for S&R": "Digital Comparator",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "=="
+      ]
+    },
+    {
+      "id": 313,
+      "type": "easy showAnything",
+      "pos": [
+        2730,
+        2740
+      ],
+      "size": [
+        210,
+        88
+      ],
+      "flags": {},
+      "order": 30,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "shape": 7,
+          "type": "*",
+          "link": 342
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "69aac075e8ba2c11d4dd3531a03eb6c7103fd1d8",
+        "Node name for S&R": "easy showAnything",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "tensor([[[0., 0., 0.,  ..., 0., 0., 0.],\n         [0., 0., 0.,  ..., 0., 0., 0.],\n         [0., 0., 0.,  ..., 0., 0., 0.],\n         ...,\n         [0., 0., 0.,  ..., 0., 0., 0.],\n         [0., 0., 0.,  ..., 0., 0., 0.],\n         [0., 0., 0.,  ..., 0., 0., 0.]]])"
+      ]
+    },
+    {
+      "id": 315,
+      "type": "MaskPreview+",
+      "pos": [
+        3020,
+        2670
+      ],
+      "size": [
+        210,
+        246
+      ],
+      "flags": {},
+      "order": 32,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 357
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfyui_essentials",
+        "ver": "1.1.0",
+        "Node name for S&R": "MaskPreview+",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 316,
+      "type": "easy showAnything",
+      "pos": [
+        2730,
+        2880
+      ],
+      "size": [
+        210,
+        88
+      ],
+      "flags": {},
+      "order": 33,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "shape": 7,
+          "type": "*",
+          "link": 348
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "69aac075e8ba2c11d4dd3531a03eb6c7103fd1d8",
+        "Node name for S&R": "easy showAnything",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "false"
+      ]
+    },
+    {
+      "id": 318,
+      "type": "easy showAnything",
+      "pos": [
+        2730,
+        2600
+      ],
+      "size": [
+        210,
+        88
+      ],
+      "flags": {},
+      "order": 29,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "shape": 7,
+          "type": "*",
+          "link": 355
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "69aac075e8ba2c11d4dd3531a03eb6c7103fd1d8",
+        "Node name for S&R": "easy showAnything",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "null"
+      ]
+    },
+    {
+      "id": 324,
+      "type": "easy showAnything",
+      "pos": [
+        1500,
+        2120
+      ],
+      "size": [
+        210,
+        88
+      ],
+      "flags": {},
+      "order": 21,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "shape": 7,
+          "type": "*",
+          "link": 375
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "69aac075e8ba2c11d4dd3531a03eb6c7103fd1d8",
+        "Node name for S&R": "easy showAnything",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "null"
+      ]
+    },
+    {
+      "id": 325,
+      "type": "Output Selector",
+      "pos": [
+        1490,
+        1950
+      ],
+      "size": [
+        315,
+        78
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "if_True",
+          "shape": 7,
+          "type": "*",
+          "link": 383
+        },
+        {
+          "name": "if_False",
+          "shape": 7,
+          "type": "*",
+          "link": 384
+        }
+      ],
+      "outputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "links": [
+            375
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.1.3",
+        "Node name for S&R": "Output Selector",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        true
+      ]
+    },
+    {
+      "id": 326,
+      "type": "easy showAnything",
+      "pos": [
+        2330,
+        720
+      ],
+      "size": [
+        320,
+        230
+      ],
+      "flags": {},
+      "order": 22,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "shape": 7,
+          "type": "*",
+          "link": 376
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": [
+            377
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "69aac075e8ba2c11d4dd3531a03eb6c7103fd1d8",
+        "Node name for S&R": "easy showAnything",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 328,
+      "type": "easy showAnything",
+      "pos": [
+        1550,
+        3580
+      ],
+      "size": [
+        320,
+        140
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "anything",
+          "shape": 7,
+          "type": "*",
+          "link": 380
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "69aac075e8ba2c11d4dd3531a03eb6c7103fd1d8",
+        "Node name for S&R": "easy showAnything",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": []
     },
     {
       "id": 329,
@@ -1383,7 +1430,7 @@
         314
       ],
       "flags": {},
-      "order": 9,
+      "order": 8,
       "mode": 4,
       "inputs": [],
       "outputs": [
@@ -1405,7 +1452,8 @@
       "properties": {
         "cnr_id": "comfy-core",
         "ver": "0.3.27",
-        "Node name for S&R": "LoadImage"
+        "Node name for S&R": "LoadImage",
+        "widget_ue_connectable": {}
       },
       "widgets_values": [
         "ComfyUI_temp_ofpkl_00001_.png",
@@ -1424,7 +1472,7 @@
         314
       ],
       "flags": {},
-      "order": 10,
+      "order": 9,
       "mode": 4,
       "inputs": [],
       "outputs": [
@@ -1444,11 +1492,160 @@
       "properties": {
         "cnr_id": "comfy-core",
         "ver": "0.3.27",
-        "Node name for S&R": "LoadImage"
+        "Node name for S&R": "LoadImage",
+        "widget_ue_connectable": {}
       },
       "widgets_values": [
         "ComfyUI_temp_ofpkl_00001_.png",
         "image"
+      ]
+    },
+    {
+      "id": 331,
+      "type": "MarkdownNote",
+      "pos": [
+        3213.72705078125,
+        -146.9915771484375
+      ],
+      "size": [
+        1004.5322875976562,
+        718.4006958007812
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "# My-Nodes\n\nAI助手\n\n一个支持在Comfyui中使用阿里百炼Qwen模型API及一些小工具的插件\n\n主要为API及其他工具使用，后续可能会加入本地模型\n\n`preview` 分支为测试版\n\n\n## 📑 说明书\n- 阿里百炼大模型-技术文档\n\n  `https://help.aliyun.com/zh/model-studio/getting-started/what-is-model-studio`\n\n\n- 如何获取API\n\n  `https://help.aliyun.com/zh/model-studio/user-guide/first-api-call-to-qwen`\n\n\n- 默认base_url\n\n  `https://dashscope.aliyuncs.com/compatible-mode/v1`\n\n\n- API填写的三种方式：\n  1. 直接输入节点的文本框\n  \n  3. （推荐）获取的API可以填写到本插件目录下的config.json文件中,通过节点`从配置文件获取数据`调取\n\n      将 ':' 后双引号中的内容替换为你的**api_key**，具体操作细节详见` -功能- >> -从配置文件获取数据- `\n\n  3. 将API写入环境变量\n  \n      右键此电脑>>属性>>高级系统设置>>高级-环境变量>>下方系统变量中新建\n      ```\n      变量名：DASHSCOPE_API_KEY\n      变量值：你的API\n      ```\n      **重启comfyui后生效,如未生效可尝试重启电脑或检查输入**\n\n      使用此方法后每次新建节点都会预先填入API\n\n## 🚀 更新内容\n- **V1.2.2**\n\n\t_添加节点_ `提示词逐行读取`\n\n\t_添加节点_ `映射范围`\n\n\t_添加节点_ `重置/重复索引`\n\n\t_添加节点_ `分离颜色`\n\n\t_添加节点_ `合并颜色`\n\n\t_添加节点_ `字符串计数/文本框`\n\n\t_添加节点_ `浮点/张量转整数`\n\n \t`AI图片理解` _添加提示词框_\n\n  \t`AI视频理解` _添加提示词框_\n  \n- **V1.2.1**\n\n  \t_修复部分节点无法无法获取图像URL的问题_\n\n  \t_AI多模态助手 模式为‘图片理解’，‘视频理解’，‘音频理解’时，支持输入自定义提示词_\n\n  \t_AI多模态助手 更改输出语言描述_\n  \n- **v1.2.0**\n\n  \t注意：此版本 DashScope SDK 版本不低于 1.23.1，如安装过旧版使用以下命令升级，urllib3需保持为1.26.20版本，否则comfyui会发生报错。\n\n\t```\n \tpip install -U dashscope\n\tpip install urllib3==1.26.20\n\tsuccess\n\t```\n\n\t_添加节点_ `AI语音合成`\n\n\t_添加节点_ `读取PNG元数据`\n\n\t_添加节点_ `写入PNG元数据`\n\n\t`AI图片处理` _添加模式指令编辑_\n\n  \t_修复节点_ `AI图片理解` _可选模型_\n\n  \t_修复节点_ `AI视频理解` _可选模型_\n\n\t_修复部分节点无法输出图像的问题_\n\n\t_修复部分节点将组件转为输入后没有输入的问题_\n\n\n## 📠 图片转URL(OSS)（可选节点）\n\n- 使用阿里云OSS对象存储将图片转为URL\n\n- 如何加载该节点\n  \n  在comfyui命令行界面输入`pip install oss2`后重启即可成功加载节点\n\n- 如何使用该节点\n  \n  创建对象存储OSS\n  \n  创建Bucket官方教程\n  \n  ```https://developer.aliyun.com/adc/tutorial/612670```\n\n  Bucket权限设置\n  \n  关闭阻止公共访问，读写权限设置为公共读\n  \n  随后在右上角个人-Accesskey获取节点所需的AccessKey ID及AccessKey Secret\n\n\n## ❓ 相关问题\n\n- 连接错误：提示`Connection error`，请检查网络连接或IP代理\n\n- 图片反推：如果使用**多模态AI助手**提示`'NoneType' object has no attribute 'is_cuda'`，可以尝试使用**AI图片理解**节点\n \n- 图片处理：提示格式错误`InvalidParameter:Value error, format of image is not valid : payload.input.mask_image_url`，将mask_url从控件转换为输入即可\n\n- 视频反推：如果提示`Exceeded limit on max bytes per data-uri item : 10485760`，可能因为视频比特率过高\n \n- 网络问题：如发生网络错误，可以尝试关闭梯子或者检查代理\n \n- 配置错误：如使用**从配置文件中获取数据**中key显示为`[ERROR] Load config`，请检查config.json中文件格式，如标点符号需使用英文\n\n- 索引过长：使用Flux助手生图时选择schnell模型会提示`list index out of range`，目前暂未处理，可切换dev、merged模型使用\n\n\n\n\n## 🔖 列表\n- -----Tools\n  \n    |----比较分流器\n  \n    |----选择输出器\n\n    |----宽高比\n\n    |----文件计数器\n\n    |----提示词逐行读取\n  \n    |----映射范围\n  \n    |----重置/重复索引\n  \n    |----字符串计数/文本框\n  \n    |----浮点/张量转整数\n  \n    |----分离颜色\n  \n    |----合并颜色\n- -----PngInfo\n\n    |----读取PNG元数据\n  \n    |----写入PNG元数据\n\n- AI多模态助手\n- AI通用助手\n- AI图片理解\n- AI视频理解\n- AI图片处理\n- AI语音合成\n- Flux助手\n- 从配置文件获取数据\n- （可选）图片转URL(oss)\n\n\n\n\n## ✨ 功能\n_(修改于v1.2.0)_\n\n- **列表**\n  \n  <img src=\"IMG/list.png\" width=\"800\" alt=\"自定义宽度\" />\n\n\n- **AI多模态助手**\n\n  支持输入` -文本 -图片 -音频 -视频路径`\n  \n  支持输出` -文本 -音频`\n\n  <img src=\"IMG/1.png\" width=\"800\" alt=\"自定义宽度\" />\n\n\n- **AI通用助手**\n\n  支持使用openai的大多数模型，**注意**不同模型的temperature值的上限不同，具体参考使用模型的`技术文档`\n  \n  <img src=\"IMG/2.png\" width=\"800\" alt=\"自定义宽度\" />\n\n\n- **AI图片理解**\n  \n  <img src=\"IMG/3.png\" width=\"800\" alt=\"自定义宽度\" />\n  \n\n- **AI视频理解**\n  \n  <img src=\"IMG/3.1.png\" width=\"800\" alt=\"自定义宽度\" />\n\n\n- **AI语音合成**\n\n  <img src=\"IMG/8.png\" width=\"800\" alt=\"自定义宽度\" />\n\n\n- **AI图片处理**\n\n  <img src=\"IMG/9.png\" width=\"800\" alt=\"自定义宽度\" />\n\n\n- `可选`**图片转URL(OSS)**\n\n  <img src=\"IMG/9.1.png\" width=\"800\" alt=\"自定义宽度\" />\n\n\n\n- **Flux助手**\n\n  使用阿里百炼进行flux文生图\n  \n  <img src=\"IMG/4.png\" width=\"800\" alt=\"自定义宽度\" />\n\n\n- **比较分流器**\n\n  通过判断来改变输出方向\n  \n  <img src=\"IMG/5.png\" width=\"800\" alt=\"自定义宽度\" />\n\n  --------------------------------------**if true**-------------------------------**if false**---------------------------------------\n\n  <img src=\"IMG/5.1.png\" width=\"390\" alt=\"自定义宽度\" /><img src=\"IMG/5.2.png\" width=\"390\" alt=\"自定义宽度\" />\n\n\n- **选择输出器**\n\n  通过判断来选择输出结果\n  \n  <img src=\"IMG/6.png\" width=\"800\" alt=\"自定义宽度\" />\n\n\n- **文件计数器**\n\n  适用于easyuse插件for循环的索引\n  \n  <img src=\"IMG/7.png\" width=\"800\" alt=\"自定义宽度\" />\n  <img src=\"IMG/7.1.png\" width=\"800\" alt=\"自定义宽度\" />\n\n\n- **从配置文件获取数据**\n\n  从config.json文件中获取数据(适用于方法2)\n\n  使用文本文档打开\n     `路径：./custom_nodes/ComfyUI-My-Nodes/config.json`\n\n     ```json\n\n     {\n\t\"api_key\": \"YourApiKey\",\n\t\"base_url\": \"https://dashscope.aliyuncs.com/compatible-mode/v1\",\n\t\"OSS_ACCESS_KEY\": \"Your AccessKey ID\",\n\t\"OSS_SECRET_KEY\": \"Your AccessKey Secret\",\n     \"bucket\": \"Your Bucket Name\",\n\t\"Key\": \"Value\"\n\n\n\n     }\n     ```\n  可以将自己需要快速获取的值按照以上示例填入，注意标点符号为英文，不要忘记可能丢失的`\",\"`\n\n  保存后重启comfyui生效（或刷新节点定义后来回切换一次输出项，快捷键为`r`）\n"
+      ],
+      "color": "#c09430",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 332,
+      "type": "MarkdownNote",
+      "pos": [
+        2735.87451171875,
+        110.12762451171875
+      ],
+      "size": [
+        251.4611053466797,
+        88
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "🛈 [About](https://github.com/Tagbliton/ComfyUI-My-Nodes/tree/main)"
+      ],
+      "color": "#c09430",
+      "bgcolor": "rgba(24,24,27,.9)"
+    },
+    {
+      "id": 335,
+      "type": "Prompt Line Reader",
+      "pos": [
+        2962.36083984375,
+        3627.8291015625
+      ],
+      "size": [
+        270,
+        122
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "index",
+          "type": "INT",
+          "widget": {
+            "name": "index"
+          },
+          "link": 388
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "index",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "lines",
+          "type": "INT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.2.0",
+        "widget_ue_connectable": {},
+        "Node name for S&R": "Prompt Line Reader"
+      },
+      "widgets_values": [
+        "汽车提示词.txt",
+        0
+      ]
+    },
+    {
+      "id": 336,
+      "type": "Reset/Repeat Index",
+      "pos": [
+        2590.947509765625,
+        3601.885986328125
+      ],
+      "size": [
+        270,
+        130
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "index",
+          "type": "INT",
+          "widget": {
+            "name": "index"
+          },
+          "link": 387
+        }
+      ],
+      "outputs": [
+        {
+          "name": "index",
+          "type": "INT",
+          "links": [
+            388
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-my-nodes",
+        "ver": "1.2.0",
+        "widget_ue_connectable": {},
+        "Node name for S&R": "Reset/Repeat Index"
+      },
+      "widgets_values": [
+        0,
+        0,
+        14,
+        "reset"
       ]
     }
   ],
@@ -1474,7 +1671,7 @@
       265,
       0,
       263,
-      0,
+      1,
       "STRING"
     ],
     [
@@ -1498,7 +1695,7 @@
       286,
       0,
       263,
-      1,
+      0,
       "STRING"
     ],
     [
@@ -1732,6 +1929,22 @@
       291,
       0,
       "IMAGE"
+    ],
+    [
+      387,
+      177,
+      1,
+      336,
+      0,
+      "INT"
+    ],
+    [
+      388,
+      336,
+      0,
+      335,
+      0,
+      "INT"
     ]
   ],
   "groups": [
@@ -1825,18 +2038,31 @@
       "color": "#3f789e",
       "font_size": 24,
       "flags": {}
+    },
+    {
+      "id": 10,
+      "title": "重置索引",
+      "bounding": [
+        2506.58642578125,
+        3302.474853515625,
+        794.4340209960938,
+        496.5595397949219
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
     }
   ],
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.7400249944258228,
+      "scale": 0.5054470284993021,
       "offset": [
-        -621.7368616914539,
-        -298.9174181202345
+        -582.7877773692674,
+        -1241.3762086398683
       ]
     },
-    "frontendVersion": "1.17.11",
+    "frontendVersion": "1.19.9",
     "node_versions": {
       "comfy-core": "0.3.14",
       "comfyui-custom-scripts": "9f7b3215e6af317603056a9a1666bf6e83e28835",
