@@ -1534,7 +1534,7 @@ class GetDataFromConfig:
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("value",)
     FUNCTION = "action"
-    CATEGORY = "我的节点/Tools"
+    CATEGORY = "我的节点"
 
     def action(self, key):
         # 再次读取确保获取最新值
@@ -1572,7 +1572,6 @@ class PromptLineReader:
             "required": {
                 "file_name": (folder_paths.get_filename_list("prompt"),),
                 "index": ("INT", {"default": 0, "min": 0, "max": 9999, "step": 1, "display": "number"}),
-                "repeat": ("INT", {"default": 1, "min": 1, "max": 9999, "step": 1, "display": "number"})
             },
         }
 
@@ -1588,7 +1587,7 @@ class PromptLineReader:
         # 构建完整文件路径
         file_path = os.path.join(base_path, file_name)
 
-        line=index//repeat
+        line=index
 
         try:
             with open(file_path, "r", encoding="utf-8") as f:
@@ -1657,8 +1656,9 @@ class ResetIndex:
                 "index": ("INT", ),
             },
             "optional": {
-                "add": ("INT", {"default": 0, "min": 0, "display": "number", "tooltips": "index从min起始"}),
-                "step": ("INT", {"default": 0, "min": 0, "display": "number", "tooltips": "当index=max-1时重置"}),
+                "start": ("INT", {"default": 0, "min": 0, "display": "number", "tooltips": "index从start起始，0表示不启用"}),
+                "step": ("INT", {"default": 0, "min": 0, "display": "number", "tooltips": "当index迭代次数等于step时重置，0表示不启用"}),
+                "mode": (["reset", "repeat"])
             }
         }
 
@@ -1667,13 +1667,17 @@ class ResetIndex:
     FUNCTION = "action"
     CATEGORY = "我的节点/Tools"
 
-    def action(self, index, add, step):
+    def action(self, index, start=0, step=0, mode="reset"):
         a=index
-        b=add
+        b=start
         c=step
-        if c != 0:
-            a=a-a//c*c
-        a=a+b
+        if mode == "reset":
+            if c != 0:
+                a=a-a//c*c
+            a=a+b
+        else mode == "repeat":
+            a=a+b
+            a=a//c
         return (a,)
 
 # 分离颜色
@@ -1870,7 +1874,7 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "Get Data From Config": GetDataFromConfig,
                        "Prompt Line Reader": PromptLineReader,
                        "Map Range": MapRange,
-                       "Reset Index": ResetIndex,
+                       "Reset/Repeat Index": ResetIndex,
                        "Separate Color/Image To RGB": SeparateColor,
                        "Combine Color/RGB To Image": CombineColor,
                        "String Length Counter/Text Box": StringLengthCounter,
@@ -1893,7 +1897,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "AI多模态助手",
                               "Get Data From Config": "从配置文件获取数据",
                               "Prompt Line Reader": "提示词逐行读取",
                               "Map Range": "映射范围",
-                              "Reset Index": "重置索引",
+                              "Reset/Repeat Index": "重置/重复索引",
                               "Separate Color/Image To RGB": "分离颜色",
                               "Combine Color/RGB To Image": "合并颜色",
                               "String Length Counter/Text Box": "字符串计数/文本框",
