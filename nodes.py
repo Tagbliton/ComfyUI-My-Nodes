@@ -892,7 +892,7 @@ class AI103:
     FUNCTION = "action"
     CATEGORY = "我的节点"
 
-    def action(self, api_key, mode, image_url, mask_url=None, text=""):
+    def action(self, api_key, mode, image_url, text, mask_url=None):
         function = self.MODE[mode]
 
 
