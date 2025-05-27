@@ -784,7 +784,7 @@ class AI102:
     CATEGORY = "我的节点"
 
 
-    def action(self, api_key, base_url, model, mode, out_language, image, seed):
+    def action(self, api_key, base_url, model, mode, out_language, image, seed, text):
 
         #tensor张量转PIL图片
         image = TensorToPil(image)
