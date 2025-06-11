@@ -784,7 +784,7 @@ class AI102:
     CATEGORY = "我的节点"
 
 
-    def action(self, api_key, base_url, model, mode, out_language, image, seed):
+    def action(self, api_key, base_url, model, mode, out_language, image, seed, text):
 
         #tensor张量转PIL图片
         image = TensorToPil(image)
@@ -1566,7 +1566,7 @@ class GetDataFromConfig:
 
 
 
-# 提示词逐行读取
+# 提示词读取(可选行)
 class PromptLineReader:
     @classmethod
     def INPUT_TYPES(cls):
@@ -1574,6 +1574,7 @@ class PromptLineReader:
             "required": {
                 "file_name": (folder_paths.get_filename_list("prompt"),),
                 "index": ("INT", {"default": 0, "min": 0, "max": 9999, "step": 1, "display": "number"}),
+                "line_by_line": ("BOOLEAN", {"default": False })
             },
         }
 
@@ -1582,7 +1583,7 @@ class PromptLineReader:
     FUNCTION = "action"
     CATEGORY = "我的节点/Tools"
 
-    def action(self, file_name: str, index: int) -> tuple:
+    def action(self, file_name: str, index: int, line_by_line: bool) -> tuple:
         # 确定基础路径
         base_path = folder_paths.get_folder_paths("prompt")[0]
 
@@ -1594,16 +1595,56 @@ class PromptLineReader:
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 lines = f.readlines()
-
-                if index < 0 or index >= len(lines):
-                    raise ValueError(f"Index {line} out of range (0-{len(lines) - 1})")
-
-                return (lines[line].strip(), line, len(lines))
+                if line_by_line == True:
+                    if index < 0 or index >= len(lines):
+                        raise ValueError(f"Index {line} out of range (0-{len(lines) - 1})")
+                    return (lines[line].strip(), line, len(lines))
+                else:
+                    return (lines, index, len(lines))
 
         except Exception as e:
             raise RuntimeError(f"Error reading file: {str(e)}")
 
+# 提示词保存
+class PromptSave:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "file_name": ("STRING", {"default": "ComfyUI"}),
+                "path": ("STRING", {"default": "./models/prompt",}),
+                "mode": (["w", "a"], ),
+                "time_stamp": ("BOOLEAN", {"default": True}),
+                "text": ("STRING", {"multiline": True, "default": ""})
+            },
+        }
 
+    RETURN_TYPES = ()
+
+    FUNCTION = "action"
+    CATEGORY = "我的节点/Tools"
+    OUTPUT_NODE = True
+    def action(self, file_name, path, mode, time_stamp, text):
+
+        # 创建目录（如果不存在）
+        dir_path = path
+        os.makedirs(dir_path, exist_ok=True)
+
+        # 处理时间戳
+        if time_stamp:
+            formatted_time = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
+            file=f"{file_name}{formatted_time}.txt"
+        else:
+            file=f"{file_name}.txt"
+
+        # 构建完整路径
+        full_path = f"{path}/{file}"
+
+        # 写入文件
+        with open(full_path, mode, encoding='utf-8') as f:
+            f.write(text)
+        print(f"{file}保存成功")
+        return ()
 
 # 映射范围
 class MapRange:
@@ -1877,6 +1918,7 @@ NODE_CLASS_MAPPINGS = {"Multimodal AI assistant": AI100,
                        "Write Png Info": WritePngInfo,
                        "Get Data From Config": GetDataFromConfig,
                        "Prompt Line Reader": PromptLineReader,
+                       "Prompt Save": PromptSave,
                        "Map Range": MapRange,
                        "Reset/Repeat Index": ResetIndex,
                        "Separate Color/Image To RGB": SeparateColor,
@@ -1899,7 +1941,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {"Multimodal AI assistant": "AI多模态助手",
                               "Read Png Info": "读取PNG元数据",
                               "Write Png Info": "写入PNG元数据",
                               "Get Data From Config": "从配置文件获取数据",
-                              "Prompt Line Reader": "提示词逐行读取",
+                              "Prompt Line Reader": "提示词读取(可逐行)",
+                              "Prompt Save": "提示词保存",
                               "Map Range": "映射范围",
                               "Reset/Repeat Index": "重置/重复索引",
                               "Separate Color/Image To RGB": "分离颜色",
